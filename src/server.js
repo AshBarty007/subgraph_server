@@ -9,7 +9,7 @@ const server = http.createServer((req, res) => {
 	  res.end('shut down\n')
 })
 
-server.listen(port, () => {
+server.listen(port,hostname, () => {
 	  console.log("server is running...")
 })
 

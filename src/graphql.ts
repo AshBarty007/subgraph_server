@@ -1,71 +1,73 @@
 import { gql, GraphQLClient } from 'graphql-request';
 
-const QuickSwap = new GraphQLClient('https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06');
-const SushiSwap = new GraphQLClient('https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange');
-const PancakeSwap =  new GraphQLClient('https://bsc.streamingfast.io/subgraphs/name/pancakeswap/exchange-v2');
-const ApeSwap = new GraphQLClient('https://api.thegraph.com/subgraphs/name/hhassan01/apeswap-subgraph');
-
-const PolygenQuery = gql`
-{
-pairs(first: 100,skip:0,orderBy: reserveUSD, orderDirection: desc) {
-id
-token0 {
-id     
-symbol
-}
-token1 {
-id     
-symbol
-}
-totalSupply
-reserveETH
-trackedReserveETH
-}
-}
-`;
-
-const BscQuery = gql`
-{
-pairs(first: 100,skip:0,orderBy: reserveUSD, orderDirection: desc) {
-id
-token0 {
-id
-symbol
-}
-token1 {
-id
-symbol
-}
-totalSupply
-reserveBNB
-trackedReserveBNB
-}
-}
-`;
-
+export const QuickSwap = new GraphQLClient('https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06');
+export const SushiSwap = new GraphQLClient('https://api.thegraph.com/subgraphs/name/sushiswap/matic-exchange');
+export const PancakeSwap = new GraphQLClient('https://bsc.streamingfast.io/subgraphs/name/pancakeswap/exchange-v2');
+export const ApeSwap = new GraphQLClient('https://api.thegraph.com/subgraphs/name/hhassan01/apeswap-subgraph');
 
 type RawV2SubgraphPool = {
-id: string;
-token0: {
-id: string;
-symbol: string;
-};
-token1: {
-id: string;
-symbol: string;
-};
-totalSupply:number;
-reserveETH:number;
-trackedReserveETH:number;
+    id: string;
+    token0: {
+        id: string;
+        symbol: string;
+    };
+    token1: {
+        id: string;
+        symbol: string;
+    };
+    totalSupply: number;
+    reserveETH: number;
+    trackedReserveETH: number;
 };
 
 
-export async function query() {
-let pairs: RawV2SubgraphPool[] = [];
-const poolsResult = await QuickSwap.request<{
-pairs: RawV2SubgraphPool[];
-}>(PolygenQuery);  
-pairs = pairs.concat(poolsResult.pairs);
-console.log("pairs number:",pairs.length)
+export async function query(client: GraphQLClient, isPolygon: boolean,first:number): Promise<RawV2SubgraphPool[]> {
+    let query;
+    if (isPolygon == true) {
+        query = gql`
+        {
+        pairs(first: ${first},orderBy: reserveUSD, orderDirection: desc) {
+        id
+        token0 {
+        id     
+        symbol
+        }
+        token1 {
+        id     
+        symbol
+        }
+        totalSupply
+        reserveETH
+        trackedReserveETH
+        }
+        }
+        `;;
+    } else {
+        query = gql`
+        {
+        pairs(first: ${first},orderBy: reserveUSD, orderDirection: desc) {
+        id
+        token0 {
+        id
+        symbol
+        }
+        token1 {
+        id
+        symbol
+        }
+        totalSupply
+        reserveBNB
+        trackedReserveBNB
+        }
+        }
+        `;
+    }
+    let pairs: RawV2SubgraphPool[] = [];
+    const poolsResult = await client.request<{
+        pairs: RawV2SubgraphPool[];
+    }>(query);
+    pairs = pairs.concat(poolsResult.pairs);
+    console.log("receive query entries:", pairs.length)
+    return pairs;
 }
 
