@@ -10,7 +10,7 @@ let url = "mongodb://localhost:27017";
 let MongoClient = mongodb.MongoClient;
 let pairs = [];
 
-function UpdateData(){ 
+function UpdateData() {
     graphql.query(graphql.QuickSwap, true, 140).then(res => {
         for (var i = 0; i < 140; i++) {
             pairs[i] = res[i]
@@ -18,49 +18,113 @@ function UpdateData(){
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             var dbo = db.db("BarterSwap");
-            var whereStr = {  };  
-            dbo.collection("QuickSwap").deleteMany(whereStr, function(err, obj) {
+            var whereStr = {};
+            dbo.collection("QuickSwap").deleteMany(whereStr, function (err, obj) {
                 if (err) throw err;
-                console.log("delete result:", obj.result);
                 db.close();
             });
 
             dbo.collection("QuickSwap").insertMany(pairs, function (err, res) {
                 if (err) throw err;
-                console.log("insert result:", res.result);
+                db.close();
+            });
+        });
+    }).catch(e => { console.log(e) });
+
+    graphql.query(graphql.SushiSwap, true, 40).then(res => {
+        for (var i = 0; i < 40; i++) {
+            pairs[i] = res[i]
+        }
+        MongoClient.connect(url, function (err, db) {
+            if (err) throw err;
+            var dbo = db.db("BarterSwap");
+            var whereStr = {};
+            dbo.collection("SushiSwap").deleteMany(whereStr, function (err, obj) {
+                if (err) throw err;
+                db.close();
+            });
+        
+            dbo.collection("SushiSwap").insertMany(pairs, function (err, res) {
+                if (err) throw err;
+                db.close();
+            });
+        });
+    }).catch(e => { console.log(e) });
+
+
+    graphql.query(graphql.SushiSwap, true, 100).then(res => {
+        for (var i = 0; i < 100; i++) {
+            pairs[i] = res[i]
+        }
+        MongoClient.connect(url, function (err, db) {
+            if (err) throw err;
+            var dbo = db.db("BarterSwap");
+            var whereStr = {};
+            dbo.collection("ApeSwap").deleteMany(whereStr, function (err, obj) {
+                if (err) throw err;
+                db.close();
+            });
+        
+            dbo.collection("ApeSwap").insertMany(pairs, function (err, res) {
+                if (err) throw err;
+                db.close();
+            });
+        });
+    }).catch(e => { console.log(e) });
+
+    graphql.query(graphql.SushiSwap, true, 10).then(res => {
+        for (var i = 0; i < 10; i++) {
+            pairs[i] = res[i]
+        }
+        MongoClient.connect(url, function (err, db) {
+            if (err) throw err;
+            var dbo = db.db("BarterSwap");
+            var whereStr = {};
+            dbo.collection("PancakeSwap").deleteMany(whereStr, function (err, obj) {
+                if (err) throw err;
+                db.close();
+            });
+        
+            dbo.collection("PancakeSwap").insertMany(pairs, function (err, res) {
+                if (err) throw err;
                 db.close();
             });
         });
     }).catch(e => { console.log(e) });
 }
 
-const  scheduleTask = ()=>{
-      schedule.scheduleJob('1 * * * * *',()=>{
+const scheduleTask = () => {
+    schedule.scheduleJob('1 * * * * *', () => {
         UpdateData();
-        console.log(new Date(),'the pairs has updated.');
-      }); 
+        console.log(new Date(), 'the pairs has updated.');
+    });
 }
-  
+
 scheduleTask();
 
 
 var server = http.createServer((req, res) => {
     const http_url = req.url;
-    const http_path = url.split('?')[0];
-    console.log('url is:', http_url);
-    console.log('path is:',http_path);	
+    const http_path = http_url.split('/')[0];
+    console.log('path is:', http_path);
+    let query;
     MongoClient.connect(url, function (err, db) {
         if (err) throw err;
         var dbo = db.db("BarterSwap");
-        dbo.collection("QuickSwap").find({}).toArray(function (err, result) {
+        dbo.collection(http_path).find({}).toArray(function (err, result) {
             if (err) throw err;
-            res.writeHead(200,{"Content-Type":"application/json"});
-	    res.end(JSON.stringify(result));
+            query = result;
             db.close();
         });
+        if (query != nil){
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(JSON.stringify(query));
+        }else{
+            res.writeHead(200,{"Content-Type":"text/plain"});
+			res.end("url error!");
+        }
+
     })
-    //res.writeHead(200,{"Content-Type":"application/json"});
-    //res.end(JSON.stringify(query));
 });
 
 server.listen(port, hostname, () => {
