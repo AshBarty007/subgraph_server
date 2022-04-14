@@ -18,19 +18,20 @@ function UpdateData() {
         MongoClient.connect(url, function (err, db) {
             if (err) throw err;
             var dbo = db.db("BarterSwap");
+		/*
             var whereStr = {};
             dbo.collection("QuickSwap").deleteMany(whereStr, function (err, obj) {
                 if (err) throw err;
                 db.close();
             });
-
+*/
             dbo.collection("QuickSwap").insertMany(pairs, function (err, res) {
                 if (err) throw err;
                 db.close();
             });
         });
     }).catch(e => { console.log(e) });
-
+/*
     graphql.query(graphql.SushiSwap, true, 40).then(res => {
         for (var i = 0; i < 40; i++) {
             pairs[i] = res[i]
@@ -91,6 +92,7 @@ function UpdateData() {
             });
         });
     }).catch(e => { console.log(e) });
+    */
 }
 
 const scheduleTask = () => {
@@ -105,26 +107,34 @@ scheduleTask();
 
 var server = http.createServer((req, res) => {
     const http_url = req.url;
-    const http_path = http_url.split('/')[0];
+    const http_path = http_url.split('/')[1];
     console.log('path is:', http_path);
-    let query;
+        if (http_path == ''){
+		        res.writeHead(200,{"Content-Type":"text/plain"});
+		        res.end("url error!");
+		    }else{
+			    console.log("return data")
+   
     MongoClient.connect(url, function (err, db) {
         if (err) throw err;
         var dbo = db.db("BarterSwap");
-        dbo.collection(http_path).find({}).toArray(function (err, result) {
+        dbo.collection("QuickSwap").find({}).toArray(function (err, result) {
             if (err) throw err;
-            query = result;
+            
+            
             db.close();
+		if (result != null){
+			            res.writeHead(200, { "Content-Type": "application/json" });
+			            res.end(JSON.stringify(result));
+			        }else{
+					            res.writeHead(200,{"Content-Type":"text/plain"});
+					                        res.end("url error!");
+					        }
         });
-        if (query != nil){
-            res.writeHead(200, { "Content-Type": "application/json" });
-            res.end(JSON.stringify(query));
-        }else{
-            res.writeHead(200,{"Content-Type":"text/plain"});
-			res.end("url error!");
-        }
+	
 
     })
+		    }
 });
 
 server.listen(port, hostname, () => {
