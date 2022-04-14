@@ -14,22 +14,21 @@ let url = "mongodb://localhost:27017";
 let MongoClient = mongodb.MongoClient;
 let pairs = [];
 
-graphql.query(graphql.QuickSwap, true, 10).then(res => {
-    for (var i = 0; i < 10; i++) {
+graphql.query(graphql.QuickSwap, true, 140).then(res => {
+    for (var i = 0; i < 140; i++) {
         pairs[i] = res[i]
     }
     console.log("query number of pairs:",pairs.length)
-}).catch(e => { console.log(e) });
-
-MongoClient.connect(url, function (err, db) {
-    if (err) throw err;
-    var dbo = db.db("BarterSwap");
-    dbo.collection("QuickSwap").insertMany(pairs, function (err, res) {
+    MongoClient.connect(url, function (err, db) {
         if (err) throw err;
-        console.log("insert result:", res);
-        db.close();
+        var dbo = db.db("BarterSwap");
+        dbo.collection("QuickSwap").insertMany(pairs, function (err, res) {
+            if (err) throw err;
+            console.log("insert result:", res);
+            db.close();
+        });
     });
-});
+}).catch(e => { console.log(e) });
 
 server.listen(port, hostname, () => {
     console.log("server is running...")
