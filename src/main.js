@@ -45,20 +45,22 @@ scheduleTask();
 
 
 var server = http.createServer((req, res) => {
-    const url = req.url;
-    const path = url.split('?')[0];
-    console.log('url is:', url);
-    console.log('path is:', path);
+    const http_url = req.url;
+    const http_path = url.split('?')[0];
+    console.log('url is:', http_url);
+    console.log('path is:',http_path);	
     MongoClient.connect(url, function (err, db) {
         if (err) throw err;
         var dbo = db.db("BarterSwap");
         dbo.collection("QuickSwap").find({}).toArray(function (err, result) {
             if (err) throw err;
             res.writeHead(200,{"Content-Type":"application/json"});
-            res.end(JSON.stringify(result));
+	    res.end(JSON.stringify(result));
             db.close();
         });
     })
+    //res.writeHead(200,{"Content-Type":"application/json"});
+    //res.end(JSON.stringify(query));
 });
 
 server.listen(port, hostname, () => {
