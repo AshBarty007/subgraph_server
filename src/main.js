@@ -36,17 +36,25 @@ graphql.query(graphql.QuickSwap, true, 10).then(res => {
 
 MongoClient.connect(url, hostname, function (err, db) {
 	if (err) throw err;
-    for(var i=0;i<10;i++){
+    // for(var i=0;i<10;i++){
+    //     var dbo = db.db("BarterSwap");
+    //     var token0 = {id:pairs[i].token0.id,symbol:pairs[i].token0.symbol}
+    //     var token1 = {id:pairs[i].token1.id,symbol:pairs[i].token1.symbol}
+    //     var pair = { id: pairs[i].id, token0: token0, token1: token1,totalSupply: pairs[i].totalSupply, reserveETH:pairs[i].reserveETH,trackedReserveETH:pairs[i].trackedReserveETH};
+    //     dbo.collection("QuickSwap").insertOne(pair, function(err, res) {
+    //         if (err) throw err;
+    //         console.log("insert result:",res);
+    //         db.close();
+    //     });
+    // }
         var dbo = db.db("BarterSwap");
-        var token0 = {id:pairs[i].token0.id,symbol:pairs[i].token0.symbol}
-        var token1 = {id:pairs[i].token1.id,symbol:pairs[i].token1.symbol}
-        var pair = { id: pairs[i].id, token0: token0, token1: token1,totalSupply: pairs[i].totalSupply, reserveETH:pairs[i].reserveETH,trackedReserveETH:pairs[i].trackedReserveETH};
-        dbo.collection("QuickSwap").insertOne(pair, function(err, res) {
+        var data = { id: pairs[i].id, token0: token0, token1: token1,totalSupply: pairs[i].totalSupply, reserveETH:pairs[i].reserveETH,trackedReserveETH:pairs[i].trackedReserveETH};
+        dbo.collection("QuickSwap").insertOne(data, function(err, res) {
             if (err) throw err;
+           
             console.log("insert result:",res);
             db.close();
         });
-    }
 });
 
 server.listen(port, () => {
