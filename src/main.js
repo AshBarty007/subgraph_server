@@ -3,7 +3,7 @@ var graphql = require('./graphql')
 var mongodb = require('mongodb')
 
 var hostname = "0.0.0.0"
-var port = 3000
+var port = 9001
 
 let url = "mongodb://localhost:27017";
 let MongoClient = mongodb.MongoClient;
@@ -31,18 +31,21 @@ function UpdateData(){
         const path = url.split('?')[0];
         console.log('url is:', url);
         console.log('path is:', path);
-    
-        MongoClient.connect(url, function (err, db) {
-            if (err) throw err;
-            var dbo = db.db("BarterSwap");
-            dbo.collection("QuickSwap").find({}).toArray(function (err, result) {
-                if (err) throw err;
-                res.statusCode = 200
-                res.setHeader('Content-Type', 'text/plain')
-                res.end(result)
-                db.close();
-            });
-        })
+        res.statusCode = 200
+        res.setHeader('Content-Type', 'text/plain')
+        res.end(pairs)
+        db.close();
+        // MongoClient.connect(url, function (err, db) {
+        //     if (err) throw err;
+        //     var dbo = db.db("BarterSwap");
+        //     dbo.collection("QuickSwap").find({}).toArray(function (err, result) {
+        //         if (err) throw err;
+        //         res.statusCode = 200
+        //         res.setHeader('Content-Type', 'text/plain')
+        //         res.end(result)
+        //         db.close();
+        //     });
+        // })
     });
     
     server.listen(port, hostname, () => {
