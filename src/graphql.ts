@@ -15,9 +15,9 @@ type RawV2SubgraphPool = {
         id: string;
         symbol: string;
     };
-    totalSupply: number;
-    reserveETH: number;
-    trackedReserveETH: number;
+    totalSupply: string;
+    reserveETH: string;
+    trackedReserveETH: string;
 };
 
 
