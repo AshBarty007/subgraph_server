@@ -18,7 +18,7 @@ function UpdateData() {
         updatePairs(res, "SushiSwap");
     }).catch(e => { console.log(e) });
 
-    graphql.query(graphql.PancakeSwap, true, 10).then(res => {
+    graphql.query(graphql.PancakeSwap, false, 10).then(res => {
         updatePairs(res, "PancakeSwap");
     }).catch(e => { console.log(e) });
 }
@@ -41,7 +41,17 @@ var server = http.createServer((req, res) => {
         res.writeHead(200, { "Content-Type": "text/plain" });
         res.end("url error!");
     } else {
-        var result = findPairs();
+	    MongoClient.connect(url, function(err, db) {
+		        if (err) throw err;
+		        var dbo = db.db("runoob");
+		        dbo.collection("site"). find({}).toArray(function(err, result) { // 返回集合中所有数据
+				        if (err) throw err;
+				        console.log(result);
+				        db.close();
+				    });
+	    });
+        var result =  findPairs(http_path);
+	console.log(result)
         if (result != null) {
             res.writeHead(200, { "Content-Type": "application/json" });
             res.end(JSON.stringify(result));
@@ -72,7 +82,7 @@ async function updatePairs(pair, dex) {
     }
 }
 
-async function findPairs() {
+async function findPairs(dex) {
     var conn = null;
     var result = null;
     try {
