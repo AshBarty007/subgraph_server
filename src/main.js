@@ -41,8 +41,6 @@ var server = http.createServer((req, res) => {
         res.writeHead(200, { "Content-Type": "text/plain" });
         res.end("url error!");
     } else {
-        //MongoClient.connect(url, function (err, db) {
-        //if (err) throw err;
         var result = findPairs();
         if (result != null) {
             res.writeHead(200, { "Content-Type": "application/json" });
@@ -51,7 +49,6 @@ var server = http.createServer((req, res) => {
             res.writeHead(200, { "Content-Type": "text/plain" });
             res.end("url error!");
         }
-        //})
     }
 });
 
@@ -77,27 +74,16 @@ async function updatePairs(pair, dex) {
 
 async function findPairs() {
     var conn = null;
+    var result = null;
     try {
         conn = await MongoClient.connect(url);
         const test = conn.db("BarterSwap").collection(dex);
-        // delete
-        await test.deleteMany();
-        //add
-        await test.insertMany(pair);
+        // find
+        result = await test.find().toArray();
     } catch (err) {
         console.log("error:" + err.message);
     } finally {
         if (conn != null) conn.close();
     }
-
-    MongoClient.connect(url, function (err, db) {
-        if (err) throw err;
-        var dbo = db.db("BarterSwap");
-        dbo.collection("QuickSwap").find({}).toArray(function (err, result) {
-            if (err) throw err;
-            db.close();
-            //console.log("find result",result);
-            return result;
-        });
-    })
+    return result;
 }
