@@ -110,17 +110,18 @@ var server = http.createServer((req, res) => {
         res.writeHead(200, { "Content-Type": "text/plain" });
         res.end("url error!");
     } else {
-        MongoClient.connect(url, function (err, db) {
-            if (err) throw err;
+        //MongoClient.connect(url, function (err, db) {
+            //if (err) throw err;
             var result = findPairs();
             if (result != null) {
+		    console.log(result,"ok");
                 res.writeHead(200, { "Content-Type": "application/json" });
                 res.end(JSON.stringify(result));
             } else {
                 res.writeHead(200, { "Content-Type": "text/plain" });
                 res.end("url error!");
             }
-        })
+        //})
     }
 });
 
@@ -137,7 +138,7 @@ async function updatePairs(pair,dex) {
         // delete
         await test.deleteMany();
 		//add
-		await test.insertOne(pair);
+		await test.insertMany(pair);
     } catch (err) {
         console.log("error:" + err.message);
     } finally {
@@ -146,10 +147,14 @@ async function updatePairs(pair,dex) {
 }
 
 async function findPairs() {
+	MongoClient.connect(url, function (err, db) {
+		if (err) throw err;
     var dbo = db.db("BarterSwap");
     dbo.collection("QuickSwap").find({}).toArray(function (err, result) {
         if (err) throw err;
         db.close();
+	//console.log("find result",result);
         return result;
     });
+	})
 }
