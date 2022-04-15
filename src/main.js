@@ -41,24 +41,21 @@ var server = http.createServer((req, res) => {
         res.writeHead(200, { "Content-Type": "text/plain" });
         res.end("url error!");
     } else {
-	    MongoClient.connect(url, function(err, db) {
-		        if (err) throw err;
-		        var dbo = db.db("runoob");
-		        dbo.collection("site"). find({}).toArray(function(err, result) { // 返回集合中所有数据
-				        if (err) throw err;
-				        console.log(result);
-				        db.close();
-				    });
-	    });
-        var result =  findPairs(http_path);
-	console.log(result)
-        if (result != null) {
-            res.writeHead(200, { "Content-Type": "application/json" });
-            res.end(JSON.stringify(result));
-        } else {
-            res.writeHead(200, { "Content-Type": "text/plain" });
-            res.end("url error!");
-        }
+        MongoClient.connect(url, function (err, db) {
+            if (err) throw err;
+            var dbo = db.db("BarterSwap");
+            dbo.collection(http_path).find({}).toArray(function (err, result) { 
+                if (err) throw err;
+                if (result != null) {
+                    res.writeHead(200, { "Content-Type": "application/json" });
+                    res.end(JSON.stringify(result));
+                } else {
+                    res.writeHead(200, { "Content-Type": "text/plain" });
+                    res.end("url error!");
+                }
+                db.close();
+            });
+        });
     }
 });
 
