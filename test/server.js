@@ -14,9 +14,9 @@ const server = http.createServer((req, res) => {
     try {
         conn = await MongoClient.connect(url);
         const test1 = conn.db("BarterSwap").collection("QuickSwap");
-		result1 = await test1.find().toArray();
+		result1 =  test1.find().toArray();
 		const test2 = conn.db("BarterSwap").collection("SushiSwap");
-		result2 = await test2.find().toArray();
+		result2 =  test2.find().toArray();
 		pairs = {"QuickSwap":result1,"SushiSwap":result2}
     } catch (err) {
         console.log("error:" + err.message);
