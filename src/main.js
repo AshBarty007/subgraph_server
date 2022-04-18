@@ -26,7 +26,7 @@ function UpdateData() {
         updatePairs(res, "UniSwap_v3");
     }).catch(e => { console.log(e) });
 
-    graphql.query1(graphql.UniSwap_v2, 1, 10).then(res => {
+    graphql.query1(graphql.UniSwap_v2, 1, 550).then(res => {
         updatePairs(res, "UniSwap_v2");
     }).catch(e => { console.log(e) });
 }

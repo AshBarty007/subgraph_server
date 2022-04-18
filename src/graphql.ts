@@ -56,7 +56,7 @@ type Subgraph3 = {
 export async function query1(client: GraphQLClient, first: number): Promise<Subgraph1[]> {
     let query = gql`
         {
-        pairs(first: ${first},orderBy: reserveUSD, orderDirection: desc) {
+        pairs(first: ${first}) {
         id
         token0 {
         id     
@@ -84,7 +84,7 @@ export async function query1(client: GraphQLClient, first: number): Promise<Subg
 export async function query2(client: GraphQLClient, first: number): Promise<Subgraph2[]> {
     let query = gql`
         {
-        pairs(first: ${first},orderBy: reserveUSD, orderDirection: desc) {
+        pairs(first: ${first}) {
         id
         token0 {
         id
@@ -112,7 +112,7 @@ export async function query2(client: GraphQLClient, first: number): Promise<Subg
 export async function query3(client: GraphQLClient, first: number): Promise<Subgraph3[]> {
     let query = gql`
         {
-            pools(first: ${first}, orderBy: totalValueLockedUSD, orderDirection: desc) {
+            pools(first: ${first}) {
               id
               feeTier
               liquidity
