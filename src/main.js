@@ -10,16 +10,24 @@ let url = "mongodb://localhost:27017";
 let MongoClient = mongodb.MongoClient;
 
 function UpdateData() {
-    graphql.query(graphql.QuickSwap, true, 140).then(res => {
+    graphql.query1(graphql.QuickSwap, 1, 140).then(res => {
         updatePairs(res, "QuickSwap");
     }).catch(e => { console.log(e) });
 
-    graphql.query(graphql.SushiSwap, true, 40).then(res => {
+    graphql.query1(graphql.SushiSwap, 1, 40).then(res => {
         updatePairs(res, "SushiSwap");
     }).catch(e => { console.log(e) });
 
-    graphql.query(graphql.PancakeSwap, false, 10).then(res => {
+    graphql.query2(graphql.PancakeSwap, 2, 10).then(res => {
         updatePairs(res, "PancakeSwap");
+    }).catch(e => { console.log(e) });
+
+    graphql.query3(graphql.UniSwap_v3, 3, 10).then(res => {
+        updatePairs(res, "UniSwap_v3");
+    }).catch(e => { console.log(e) });
+
+    graphql.query1(graphql.UniSwap_v2, 1, 10).then(res => {
+        updatePairs(res, "UniSwap_v2");
     }).catch(e => { console.log(e) });
 }
 

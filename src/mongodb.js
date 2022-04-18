@@ -1,6 +1,6 @@
-var url = "mongodb://localhost:27017";
+var url = "mongodb://root:Mr0s8#dFdf#8s386di2ds@barterswap.cluster-ck74h9ydda33.ap-southeast-1.docdb.amazonaws.com:27017/?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false";
 var MongoClient = require('mongodb').MongoClient;
-
+//mongo --host barterswap.cluster-ck74h9ydda33.ap-southeast-1.docdb.amazonaws.com:27017 --username root --password Mr0s8#dFdf#8s386di2ds
 MongoClient.connect(url, function (err, db) {
 	if (err) throw err;
 	console.log("Connected to MongoDB!");
