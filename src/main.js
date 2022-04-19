@@ -105,7 +105,7 @@ async function findPairs(dex) {
         conn = await MongoClient.connect(dburl);
         let test = conn.db("BarterSwap").collection("Pairs");
         for(var i=0;i<dex.length;i++){
-            let whereStr = {dex:dex}
+            let whereStr = {dex:dex[i]}
             pairs = await test.find(whereStr).toArray();
             result.push(pairs);
         }
