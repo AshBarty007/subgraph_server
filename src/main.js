@@ -10,24 +10,25 @@ const url = "mongodb://root:" + encodeURIComponent("Mr0s8#dFdf#8s386di2ds") + "@
 let MongoClient = mongodb.MongoClient;
 
 function UpdateData() {
+    clearPairs();
     graphql.query1(graphql.QuickSwap, 1, 140).then(res => {
-        updatePairs(res, "QuickSwap");
+        updatePairs(res, "QuickSwap",137);
     }).catch(e => { console.log(e) });
 
     graphql.query1(graphql.SushiSwap, 1, 40).then(res => {
-        updatePairs(res, "SushiSwap");
+        updatePairs(res, "SushiSwap",137);
     }).catch(e => { console.log(e) });
 
     graphql.query2(graphql.PancakeSwap, 2, 10).then(res => {
-        updatePairs(res, "PancakeSwap");
+        updatePairs(res, "PancakeSwap",56);
     }).catch(e => { console.log(e) });
 
     graphql.query3(graphql.UniSwap_v3, 3, 10).then(res => {
-        updatePairs(res, "UniSwap_v3");
+        updatePairs(res, "UniSwap_v3",137);
     }).catch(e => { console.log(e) });
 
     graphql.query1(graphql.UniSwap_v2, 1, 550).then(res => {
-        updatePairs(res, "UniSwap_v2");
+        updatePairs(res, "UniSwap_v2",1);
     }).catch(e => { console.log(e) });
 }
 
@@ -65,15 +66,31 @@ server.listen(port, hostname, () => {
     console.log("server is running...")
 })
 
-async function updatePairs(pair) {
+async function updatePairs(pairs,dex,networkID) {
+    var conn = null;
+	var obj = {
+        dex:dex,
+        networkID:networkID,
+        pairs:pairs
+    };
+    try {
+        conn = await MongoClient.connect(url);
+        let col = conn.db("BarterSwap").collection("Pairs");
+        await col.insertOne(obj);
+    } catch (err) {
+        console.log("error:" + err.message);
+    } finally {
+        if (conn != null) conn.close();
+    }
+}
+
+async function clearPairs() {
     var conn = null;
     try {
         conn = await MongoClient.connect(url);
-        const test = conn.db("BarterSwap").collection(dex);
+        let test = conn.db("BarterSwap").collection("Pairs");
         // delete
-        //await test.deleteMany();
-        //add
-        await test.insertMany(pair);
+        test.deleteMany();
     } catch (err) {
         console.log("error:" + err.message);
     } finally {
@@ -83,24 +100,19 @@ async function updatePairs(pair) {
 
 async function findPairs(dex) {
     var conn = null;
-    var result1 = null;
-    var result2 = null;
+    var result = {
+        result :[]
+    };
     try {
         conn = await MongoClient.connect(url);
-        var test1 = conn.db("BarterSwap").collection("QuickSwap");
-        result1 = await test1.find().toArray();
-        var test2 = conn.db("BarterSwap").collection("SushiSwap");
-        result2 = await test2.find().toArray();
-	var result = {"QuickSwap":result1,"SushiSwap":result2}
-	return result;
+        let whereStr = {dex:dex}
+        let test = conn.db("BarterSwap").collection("Pairs");
+        pairs = await test.find(whereStr).toArray();
+	    result.result.push(pairs)
+	    return result;
     } catch (err) {
         console.log("error:" + err.message);
     } finally {
         if (conn != null) conn.close();
     }
-    //var result = {"QuickSwap":result1,"SushiSwap":result2}
-    //return result;
 }
-
-//dex 数据新添加uniswap-v2和uniswap-v3，
-//

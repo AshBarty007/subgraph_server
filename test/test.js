@@ -1,41 +1,57 @@
 var http = require('http')
-const url = "mongodb://root:" + encodeURIComponent("Mr0s8#dFdf#8s386di2ds") + "@barterswap.cluster-ck74h9ydda33.ap-southeast-1.docdb.amazonaws.com:27017/?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false";
-var MongoClient = require('mongodb').MongoClient;
-
 var hostname = "0.0.0.0"
 var port = 9002
 
+var pairs = [{"data1":1,"data2":"ok"},{"data1":2,"data2":"ok"}]
 const server = http.createServer((req, res) => {
-	MongoClient.connect(url).then((conn) => {
-		console.log("connecting...");
-		const test = conn.db("BarterSwap");
-		// add
-		test.collection("QuickSwap").then(() => {
-			// query
-			return test.find().toArray().then((arr) => {
-				console.log(arr);
-			});
-		}).then(() => {
-			// query
-			return test.collection("SushiSwap").find().toArray().then((arr) => {
-				console.log(arr);
-			});
-		}).then(() => {
-			// query
-			return test.collection("ApeSwap").find().toArray().then((arr) => {
-				console.log(arr);
-			});
-		}).catch((err) => {
-			console.log("operate error:" + err.message);
-		}).finally(() => {
-			conn.close();
-		});
-	}).catch((err) => {
-		console.log("connect fail",err);
-	});
-
+	let dex = "UniSwap_V3"
+	let networkID = 1;
+	var obj;
+	switch (dex){
+        case "QuickSwap":
+            obj = {
+                QuickSwap: pairs,
+                networkID:networkID
+            };
+			break;
+        case "SushiSwap":
+            obj = {
+                SushiSwap: pairs,
+                networkID:networkID
+            };
+			break;
+        case "ApeSwap":
+            obj = {
+                ApeSwap: pairs,
+                networkID:networkID
+            };
+			break;
+        case "PancakeSwap":
+            obj = {
+                PancakeSwap: pairs,
+                networkID:networkID
+            };
+			break;
+        case "UniSwap_V2":
+            obj = {
+                UniSwap_V2: pairs,
+                networkID:networkID
+            };     
+			break;
+        case "UniSwap_V3":
+            obj = {
+                UniSwap_V3: pairs,
+                networkID:networkID
+            };        
+			break;
+        default:
+            obj = {
+                unKnow:pairs,
+                networkID:networkID
+            }                                                        
+    }
     res.writeHead(200,{"Content-Type":"application/json"});
-    res.end(JSON.stringify(pair));
+    res.end(JSON.stringify(obj));
 })
 
 server.listen(port, hostname, () => {
