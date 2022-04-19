@@ -77,6 +77,7 @@ async function findPairs(dex) {
         if (conn != null) conn.close();
     }
 }
-clearPairs()
+
 UpdateData();
-findPairs("quickswap") 
+let ok = findPairs("quickswap")
+console.log("ok",ok);
