@@ -1,34 +1,44 @@
-var graphql = require('../src/graphql')
+
+var graphql = require('./graphql')
 var mongodb = require('mongodb')
+const schedule = require('node-schedule');
 
 
 const dburl = "mongodb://root:" + encodeURIComponent("Mr0s8#dFdf#8s386di2ds") + "@barterswap.cluster-ck74h9ydda33.ap-southeast-1.docdb.amazonaws.com:27017/?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false";
 let MongoClient = mongodb.MongoClient;
 
 function UpdateData() {
-    //clearPairs();
-    graphql.query1(graphql.QuickSwap, 2).then(res => {
+    clearPairs();
+    graphql.query1(graphql.QuickSwap, 140).then(res => {
         updatePairs(res, "quickswap",137);
     }).catch(e => { console.log(e) });
 
-    graphql.query1(graphql.SushiSwap, 2).then(res => {
+    graphql.query1(graphql.SushiSwap, 40).then(res => {
         updatePairs(res, "sushiswap",137);
     }).catch(e => { console.log(e) });
 
-    // graphql.query2(graphql.PancakeSwap, 2, 10).then(res => {
-    //     updatePairs(res, "pancakeswap",56);
-    // }).catch(e => { console.log(e) });
+    graphql.query2(graphql.PancakeSwap, 10).then(res => {
+        updatePairs(res, "pancakeswap",56);
+    }).catch(e => { console.log(e) });
 
-    // graphql.query3(graphql.UniSwap_v3, 3, 10).then(res => {
-    //     updatePairs(res, "uniswap-v3",137);
-    // }).catch(e => { console.log(e) });
+    graphql.query3(graphql.UniSwap_v3, 10).then(res => {
+        updatePairs(res, "uniswap-v3",137);
+    }).catch(e => { console.log(e) });
 
-    // graphql.query1(graphql.UniSwap_v2, 1, 550).then(res => {
-    //     updatePairs(res, "uniswap-v2",1);
-    // }).catch(e => { console.log(e) });
+    graphql.query1(graphql.UniSwap_v2, 550).then(res => {
+        updatePairs(res, "uniswap-v2",1);
+    }).catch(e => { console.log(e) });
 }
 
+const scheduleTask = () => {
+    schedule.scheduleJob('1 * * * * *', () => {
+        UpdateData();
+		findPairs("quickswap") 
+        console.log(new Date(), 'the pairs has updated.');
+    });
+}
 
+scheduleTask();
 
 async function updatePairs(pairs,dex,networkID) {
     var conn = null;
@@ -41,7 +51,6 @@ async function updatePairs(pairs,dex,networkID) {
         conn = await MongoClient.connect(dburl);
         let col = conn.db("BarterSwap").collection("Pairs");
         await col.insertOne(obj);
-		console.log("insert ok",obj);
     } catch (err) {
         console.log("error:" + err.message);
     } finally {
@@ -65,19 +74,19 @@ async function clearPairs() {
 
 async function findPairs(dex) {
     var conn = null;
+    var result = {
+        result :[]
+    };
     try {
         conn = await MongoClient.connect(dburl);
         let whereStr = {dex:dex}
         let test = conn.db("BarterSwap").collection("Pairs");
         pairs = await test.find(whereStr).toArray();
-		console.log("=========================")
-        console.log("pairs",pairs)
+	    result.result.push(pairs)
+	    return result;
     } catch (err) {
         console.log("error:" + err.message);
     } finally {
         if (conn != null) conn.close();
     }
 }
-
-UpdateData()
-findPairs("quickswap")
