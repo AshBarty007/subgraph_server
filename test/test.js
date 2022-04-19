@@ -79,7 +79,7 @@ async function findPairs(dex) {
 }
 
 clearPairs().then(()=>{
-	console.log("delete ok";
+	console.log("delete ok");
 	//UpdateData();
 })
 
