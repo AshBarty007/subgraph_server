@@ -8,28 +8,21 @@ var port = 9002
 const server = http.createServer((req, res) => {
 	MongoClient.connect(url).then((conn) => {
 		console.log("connecting...");
-		const test = conn.db("testdb").collection("test");
+		const test = conn.db("BarterSwap");
 		// add
-		test.insertOne({ "site": "barterSwap.com" }).then((res) => {
+		test.collection("QuickSwap").then(() => {
 			// query
 			return test.find().toArray().then((arr) => {
 				console.log(arr);
 			});
 		}).then(() => {
-			// update
-			return test.updateMany({ "site": "barterSwap.com" },
-				{ $set: { "site": "example.com" } });
-		}).then((res) => {
 			// query
-			return test.find().toArray().then((arr) => {
+			return test.collection("SushiSwap").find().toArray().then((arr) => {
 				console.log(arr);
 			});
 		}).then(() => {
-			// delete
-			return test.deleteMany({ "site": "example.com" });
-		}).then((res) => {
 			// query
-			return test.find().toArray().then((arr) => {
+			return test.collection("ApeSwap").find().toArray().then((arr) => {
 				console.log(arr);
 			});
 		}).catch((err) => {

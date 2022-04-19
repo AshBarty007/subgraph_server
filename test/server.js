@@ -5,7 +5,7 @@ var mongodb = require('mongodb')
 var hostname = "0.0.0.0"
 var port = 9001
 
-let url = "mongodb://localhost:27017";
+const url = "mongodb://root:" + encodeURIComponent("Mr0s8#dFdf#8s386di2ds") + "@barterswap.cluster-ck74h9ydda33.ap-southeast-1.docdb.amazonaws.com:27017/?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false";
 let MongoClient = mongodb.MongoClient;
 
 const server = http.createServer((req, res) => {
@@ -23,6 +23,7 @@ const server = http.createServer((req, res) => {
     } finally {
         if (conn != null) conn.close();
     }
+	
 	if (pairs != null) {
 		res.writeHead(200, { "Content-Type": "application/json" });
 		res.end(JSON.stringify(pairs));

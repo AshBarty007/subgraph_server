@@ -49,11 +49,22 @@ var server = http.createServer((req, res) => {
         res.writeHead(200, { "Content-Type": "text/plain" });
         res.end("url error!");
     } else {
-        MongoClient.connect(url, function (err, db) {
-            if (err) throw err;
-            var dbo = db.db("BarterSwap");
-            dbo.collection(http_path).find({}).toArray(function (err, result) { 
-                if (err) throw err;
+        // MongoClient.connect(url, function (err, db) {
+        //     if (err) throw err;
+        //     var dbo = db.db("BarterSwap");
+        //     dbo.collection(http_path).find({}).toArray(function (err, result) { 
+        //         if (err) throw err;
+        //         if (result != null) {
+        //             res.writeHead(200, { "Content-Type": "application/json" });
+        //             res.end(JSON.stringify(result));
+        //         } else {
+        //             res.writeHead(200, { "Content-Type": "text/plain" });
+        //             res.end("url error!");
+        //         }
+        //         db.close();
+        //     });
+        // });
+        findPairs(http_path).then((result)=>{
                 if (result != null) {
                     res.writeHead(200, { "Content-Type": "application/json" });
                     res.end(JSON.stringify(result));
@@ -61,9 +72,7 @@ var server = http.createServer((req, res) => {
                     res.writeHead(200, { "Content-Type": "text/plain" });
                     res.end("url error!");
                 }
-                db.close();
-            });
-        });
+        })
     }
 });
 
@@ -89,16 +98,19 @@ async function updatePairs(pair, dex) {
 
 async function findPairs(dex) {
     var conn = null;
-    var result = null;
+    var result1 = null;
+    var result2 = null;
     try {
         conn = await MongoClient.connect(url);
-        const test = conn.db("BarterSwap").collection(dex);
-        // find
-        result = await test.find().toArray();
+        const test1 = conn.db("BarterSwap").collection("QuickSwap");
+        result1 = await test.find().toArray();
+        const test2 = conn.db("BarterSwap").collection("SushiSwap");
+        result2 = await test.find().toArray();
     } catch (err) {
         console.log("error:" + err.message);
     } finally {
         if (conn != null) conn.close();
     }
+    var result = {"QuickSwap":result1,"SushiSwap":result2}
     return result;
 }
