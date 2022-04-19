@@ -69,8 +69,8 @@ async function findPairs(dex) {
         let whereStr = {dex:dex}
         let test = conn.db("BarterSwap").collection("Pairs");
         pairs = await test.find(whereStr).toArray();
-	    result.result.push(pairs)
-	    return result;
+		console.log("=========================")
+        console.log(pairs)
     } catch (err) {
         console.log("error:" + err.message);
     } finally {
