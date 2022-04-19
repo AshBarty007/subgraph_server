@@ -37,6 +37,8 @@ async function updatePairs(pairs,dex,networkID) {
     try {
         conn = await MongoClient.connect(dburl);
         let col = conn.db("BarterSwap").collection("Pairs");
+		let wherestr = {dex:dex}
+		await col.deleteOne(wherestr);
         await col.insertOne(obj);
     } catch (err) {
         console.log("error:" + err.message);
@@ -78,11 +80,7 @@ async function findPairs(dex) {
     }
 }
 
-clearPairs().then(()=>{
-	console.log("delete ok");
-	//UpdateData();
+UpdateData();
+findPairs("quickswap").then((r)=> {
+	console.log("r",r);
 })
-
-// findPairs("quickswap").then((r)=> {
-// 	console.log("r",r);
-// })
