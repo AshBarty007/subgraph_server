@@ -81,8 +81,8 @@ async function updatePairs(pairs,dex,networkID) {
     };
     try {
         conn = await MongoClient.connect(dburl);
-        let col = conn.db("BarterSwap").collection("Pairs");
-        await col.insertOne(obj);
+        //let col = conn.db("BarterSwap").collection("Pairs");
+        //await col.insertOne(obj);
     } catch (err) {
         console.log("error:" + err.message);
     } finally {

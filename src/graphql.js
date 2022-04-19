@@ -60,7 +60,6 @@ function query1(client, first) {
                 case 1:
                     poolsResult = _a.sent();
                     pairs = pairs.concat(poolsResult.pairs);
-                    console.log("receive entries", pairs);
                     return [2 /*return*/, pairs];
             }
         });
@@ -79,7 +78,6 @@ function query2(client, first) {
                 case 1:
                     poolsResult = _a.sent();
                     pairs = pairs.concat(poolsResult.pairs);
-                    console.log("receive entries", pairs);
                     return [2 /*return*/, pairs];
             }
         });
@@ -98,7 +96,6 @@ function query3(client, first) {
                 case 1:
                     poolsResult = _a.sent();
                     pairs = pairs.concat(poolsResult.pools);
-                    console.log("receive entries", pairs);
                     return [2 /*return*/, pairs];
             }
         });

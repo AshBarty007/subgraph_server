@@ -77,7 +77,6 @@ export async function query1(client: GraphQLClient, first: number): Promise<Subg
         pairs: Subgraph1[];
     }>(query);
     pairs = pairs.concat(poolsResult.pairs);
-    console.log("receive entries",pairs)
     return pairs;
 }
 
@@ -105,7 +104,6 @@ export async function query2(client: GraphQLClient, first: number): Promise<Subg
         pairs: Subgraph2[];
     }>(query);
     pairs = pairs.concat(poolsResult.pairs);
-    console.log("receive entries",pairs)
     return pairs;
 }
 
@@ -134,6 +132,5 @@ export async function query3(client: GraphQLClient, first: number): Promise<Subg
         pools: Subgraph3[];
     }>(query);
     pairs = pairs.concat(poolsResult.pools);
-    console.log("receive entries",pairs)
     return pairs;
 }
