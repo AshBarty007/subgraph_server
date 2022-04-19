@@ -78,6 +78,10 @@ async function findPairs(dex) {
     }
 }
 
-UpdateData();
-let ok = findPairs("quickswap")
-console.log("ok",ok);
+clearPairs().then(()=>{
+	UpdateData();
+})
+
+findPairs("quickswap").then((r)=> {
+	console.log("r",r);
+})
