@@ -102,15 +102,17 @@ async function findPairs(dex) {
     var result2 = null;
     try {
         conn = await MongoClient.connect(url);
-        const test1 = conn.db("BarterSwap").collection("QuickSwap");
-        result1 = await test.find().toArray();
-        const test2 = conn.db("BarterSwap").collection("SushiSwap");
-        result2 = await test.find().toArray();
+        var test1 = conn.db("BarterSwap").collection("QuickSwap");
+        result1 = await test1.find().toArray();
+        var test2 = conn.db("BarterSwap").collection("SushiSwap");
+        result2 = await test2.find().toArray();
+	var result = {"QuickSwap":result1,"SushiSwap":result2}
+	return result;
     } catch (err) {
         console.log("error:" + err.message);
     } finally {
         if (conn != null) conn.close();
     }
-    var result = {"QuickSwap":result1,"SushiSwap":result2}
-    return result;
+    //var result = {"QuickSwap":result1,"SushiSwap":result2}
+    //return result;
 }
