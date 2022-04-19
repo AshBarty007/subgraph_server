@@ -1,4 +1,5 @@
 var http = require('http')
+var url = require('url')
 var graphql = require('./graphql')
 var mongodb = require('mongodb')
 const schedule = require('node-schedule');
@@ -6,7 +7,7 @@ const schedule = require('node-schedule');
 var hostname = "0.0.0.0"
 var port = 9001
 
-const url = "mongodb://root:" + encodeURIComponent("Mr0s8#dFdf#8s386di2ds") + "@barterswap.cluster-ck74h9ydda33.ap-southeast-1.docdb.amazonaws.com:27017/?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false";
+const dburl = "mongodb://root:" + encodeURIComponent("Mr0s8#dFdf#8s386di2ds") + "@barterswap.cluster-ck74h9ydda33.ap-southeast-1.docdb.amazonaws.com:27017/?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false";
 let MongoClient = mongodb.MongoClient;
 
 function UpdateData() {
@@ -79,7 +80,7 @@ async function updatePairs(pairs,dex,networkID) {
         pairs:pairs
     };
     try {
-        conn = await MongoClient.connect(url);
+        conn = await MongoClient.connect(dburl);
         let col = conn.db("BarterSwap").collection("Pairs");
         await col.insertOne(obj);
     } catch (err) {
@@ -92,7 +93,7 @@ async function updatePairs(pairs,dex,networkID) {
 async function clearPairs() {
     var conn = null;
     try {
-        conn = await MongoClient.connect(url);
+        conn = await MongoClient.connect(dburl);
         let test = conn.db("BarterSwap").collection("Pairs");
         // delete
         test.deleteMany();
@@ -109,7 +110,7 @@ async function findPairs(dex) {
         result :[]
     };
     try {
-        conn = await MongoClient.connect(url);
+        conn = await MongoClient.connect(dburl);
         let whereStr = {dex:dex}
         let test = conn.db("BarterSwap").collection("Pairs");
         pairs = await test.find(whereStr).toArray();
