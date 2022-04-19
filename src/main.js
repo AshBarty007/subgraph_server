@@ -12,23 +12,23 @@ let MongoClient = mongodb.MongoClient;
 function UpdateData() {
     clearPairs();
     graphql.query1(graphql.QuickSwap, 1, 140).then(res => {
-        updatePairs(res, "QuickSwap",137);
+        updatePairs(res, "quickswap",137);
     }).catch(e => { console.log(e) });
 
     graphql.query1(graphql.SushiSwap, 1, 40).then(res => {
-        updatePairs(res, "SushiSwap",137);
+        updatePairs(res, "sushiswap",137);
     }).catch(e => { console.log(e) });
 
     graphql.query2(graphql.PancakeSwap, 2, 10).then(res => {
-        updatePairs(res, "PancakeSwap",56);
+        updatePairs(res, "pancakeswap",56);
     }).catch(e => { console.log(e) });
 
     graphql.query3(graphql.UniSwap_v3, 3, 10).then(res => {
-        updatePairs(res, "UniSwap_v3",137);
+        updatePairs(res, "uniswap-v3",137);
     }).catch(e => { console.log(e) });
 
     graphql.query1(graphql.UniSwap_v2, 1, 550).then(res => {
-        updatePairs(res, "UniSwap_v2",1);
+        updatePairs(res, "uniswap-v2",1);
     }).catch(e => { console.log(e) });
 }
 
@@ -43,14 +43,15 @@ scheduleTask();
 
 
 var server = http.createServer((req, res) => {
-    const http_url = req.url;
-    const http_path = http_url.split('/')[1];
-    console.log('path is:', http_path);
-    if (http_path == '') {
-        res.writeHead(200, { "Content-Type": "text/plain" });
-        res.end("url error!");
-    } else {
-        findPairs(http_path).then((result)=>{
+    let http_url = req.url;
+	let ok = url.parse(http_url,true);
+	if (ok.path != '/favicon.ico'){
+		let str = JSON.stringify(ok.query);
+        str = JSON.parse(str);
+        if (str.protocol != null){
+			let obj = str.protocol;
+			let dex = obj.split('_');
+			findPairs(dex).then((result)=>{
                 if (result != null) {
                     res.writeHead(200, { "Content-Type": "application/json" });
                     res.end(JSON.stringify(result));
@@ -58,8 +59,12 @@ var server = http.createServer((req, res) => {
                     res.writeHead(200, { "Content-Type": "text/plain" });
                     res.end("url error!");
                 }
-        })
-    }
+            })
+		}else{
+			res.writeHead(200, { "Content-Type": "text/plain" });
+			res.end("url error!");
+		} 
+	}
 });
 
 server.listen(port, hostname, () => {
