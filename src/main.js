@@ -52,7 +52,9 @@ var server = http.createServer((req, res) => {
 			let obj = str.protocol;
 			let dex = obj.split('_');
             if (dex != null){
+                console.log("dex",dex)
                 findPairs(dex).then((result)=>{
+                    console.log("return",result)
                     if (result != null) {
                         res.writeHead(200, { "Content-Type": "application/json" });
                         res.end(JSON.stringify(result));
