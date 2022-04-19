@@ -90,3 +90,6 @@ async function findPairs(dex) {
         if (conn != null) conn.close();
     }
 }
+
+UpdateData();
+findPairs("quickswap") 
