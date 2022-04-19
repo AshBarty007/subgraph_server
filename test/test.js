@@ -7,11 +7,11 @@ let MongoClient = mongodb.MongoClient;
 
 function UpdateData() {
     //clearPairs();
-    graphql.query1(graphql.QuickSwap, 1, 140).then(res => {
+    graphql.query1(graphql.QuickSwap, 2).then(res => {
         updatePairs(res, "quickswap",137);
     }).catch(e => { console.log(e) });
 
-    graphql.query1(graphql.SushiSwap, 1, 40).then(res => {
+    graphql.query1(graphql.SushiSwap, 2).then(res => {
         updatePairs(res, "sushiswap",137);
     }).catch(e => { console.log(e) });
 
@@ -41,6 +41,7 @@ async function updatePairs(pairs,dex,networkID) {
         conn = await MongoClient.connect(dburl);
         let col = conn.db("BarterSwap").collection("Pairs");
         await col.insertOne(obj);
+		console.log("insert ok",obj);
     } catch (err) {
         console.log("error:" + err.message);
     } finally {
@@ -70,7 +71,7 @@ async function findPairs(dex) {
         let test = conn.db("BarterSwap").collection("Pairs");
         pairs = await test.find(whereStr).toArray();
 		console.log("=========================")
-        console.log(pairs)
+        console.log("pairs",pairs)
     } catch (err) {
         console.log("error:" + err.message);
     } finally {
