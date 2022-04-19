@@ -6,7 +6,7 @@ const schedule = require('node-schedule');
 var hostname = "0.0.0.0"
 var port = 9001
 
-let url = "mongodb://localhost:27017";
+const url = "mongodb://root:" + encodeURIComponent("Mr0s8#dFdf#8s386di2ds") + "@barterswap.cluster-ck74h9ydda33.ap-southeast-1.docdb.amazonaws.com:27017/?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false";
 let MongoClient = mongodb.MongoClient;
 
 function UpdateData() {
@@ -49,21 +49,6 @@ var server = http.createServer((req, res) => {
         res.writeHead(200, { "Content-Type": "text/plain" });
         res.end("url error!");
     } else {
-        // MongoClient.connect(url, function (err, db) {
-        //     if (err) throw err;
-        //     var dbo = db.db("BarterSwap");
-        //     dbo.collection(http_path).find({}).toArray(function (err, result) { 
-        //         if (err) throw err;
-        //         if (result != null) {
-        //             res.writeHead(200, { "Content-Type": "application/json" });
-        //             res.end(JSON.stringify(result));
-        //         } else {
-        //             res.writeHead(200, { "Content-Type": "text/plain" });
-        //             res.end("url error!");
-        //         }
-        //         db.close();
-        //     });
-        // });
         findPairs(http_path).then((result)=>{
                 if (result != null) {
                     res.writeHead(200, { "Content-Type": "application/json" });
@@ -80,13 +65,13 @@ server.listen(port, hostname, () => {
     console.log("server is running...")
 })
 
-async function updatePairs(pair, dex) {
+async function updatePairs(pair) {
     var conn = null;
     try {
         conn = await MongoClient.connect(url);
         const test = conn.db("BarterSwap").collection(dex);
         // delete
-        await test.deleteMany();
+        //await test.deleteMany();
         //add
         await test.insertMany(pair);
     } catch (err) {
@@ -114,3 +99,6 @@ async function findPairs(dex) {
     var result = {"QuickSwap":result1,"SushiSwap":result2}
     return result;
 }
+
+//dex 数据新添加uniswap-v2和uniswap-v3，
+//
