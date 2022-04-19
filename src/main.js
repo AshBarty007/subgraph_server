@@ -12,23 +12,23 @@ let MongoClient = mongodb.MongoClient;
 
 function UpdateData() {
     clearPairs();
-    graphql.query1(graphql.QuickSwap, 1, 140).then(res => {
+    graphql.query1(graphql.QuickSwap, 140).then(res => {
         updatePairs(res, "quickswap",137);
     }).catch(e => { console.log(e) });
 
-    graphql.query1(graphql.SushiSwap, 1, 40).then(res => {
+    graphql.query1(graphql.SushiSwap, 40).then(res => {
         updatePairs(res, "sushiswap",137);
     }).catch(e => { console.log(e) });
 
-    graphql.query2(graphql.PancakeSwap, 2, 10).then(res => {
+    graphql.query2(graphql.PancakeSwap, 10).then(res => {
         updatePairs(res, "pancakeswap",56);
     }).catch(e => { console.log(e) });
 
-    graphql.query3(graphql.UniSwap_v3, 3, 10).then(res => {
+    graphql.query3(graphql.UniSwap_v3, 10).then(res => {
         updatePairs(res, "uniswap-v3",137);
     }).catch(e => { console.log(e) });
 
-    graphql.query1(graphql.UniSwap_v2, 1, 550).then(res => {
+    graphql.query1(graphql.UniSwap_v2, 550).then(res => {
         updatePairs(res, "uniswap-v2",1);
     }).catch(e => { console.log(e) });
 }
