@@ -79,9 +79,10 @@ async function findPairs(dex) {
 }
 
 clearPairs().then(()=>{
-	UpdateData();
+	console.log("delete ok";
+	//UpdateData();
 })
 
-findPairs("quickswap").then((r)=> {
-	console.log("r",r);
-})
+// findPairs("quickswap").then((r)=> {
+// 	console.log("r",r);
+// })
