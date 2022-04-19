@@ -1,5 +1,5 @@
 
-var graphql = require('./graphql')
+var graphql = require('../src/graphql')
 var mongodb = require('mongodb')
 const schedule = require('node-schedule');
 
