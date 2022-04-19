@@ -1,8 +1,5 @@
-
 var graphql = require('../src/graphql')
 var mongodb = require('mongodb')
-const schedule = require('node-schedule');
-
 
 const dburl = "mongodb://root:" + encodeURIComponent("Mr0s8#dFdf#8s386di2ds") + "@barterswap.cluster-ck74h9ydda33.ap-southeast-1.docdb.amazonaws.com:27017/?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false";
 let MongoClient = mongodb.MongoClient;
@@ -30,15 +27,6 @@ function UpdateData() {
     }).catch(e => { console.log(e) });
 }
 
-const scheduleTask = () => {
-    schedule.scheduleJob('1 * * * * *', () => {
-        UpdateData();
-		findPairs("quickswap") 
-        console.log(new Date(), 'the pairs has updated.');
-    });
-}
-
-scheduleTask();
 
 async function updatePairs(pairs,dex,networkID) {
     var conn = null;
