@@ -4,8 +4,8 @@ var mongodb = require('mongodb')
 const dburl = "mongodb://root:" + encodeURIComponent("Mr0s8#dFdf#8s386di2ds") + "@barterswap.cluster-ck74h9ydda33.ap-southeast-1.docdb.amazonaws.com:27017/?replicaSet=rs0&readPreference=secondaryPreferred&retryWrites=false";
 let MongoClient = mongodb.MongoClient;
 
-function UpdateData() {
-    clearPairs();
+async function UpdateData() {
+    await clearPairs();
     graphql.query1(graphql.QuickSwap, 140).then(res => {
         updatePairs(res, "quickswap",137);
     }).catch(e => { console.log(e) });
