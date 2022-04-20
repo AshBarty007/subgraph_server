@@ -122,39 +122,32 @@ async function findPairs(dex) {
                 case "quickswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.quickswap = pairs[0].pairs;
-                    console.log("1");
                     break;
                 case "sushiswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.sushiswap = pairs[0].pairs;
-                    console.log("2");
                     break;   
                 case "apeswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.apeswap = pairs[0].pairs;
-                    console.log("3");
+
                     break; 
                 case "pancakeswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
-                    console.log("pancake",pairs)
                     output.pancakeswap = pairs[0].pairs;
-                    console.log("pancake pairs",pairs.pairs)
-                    console.log("4");
                     break; 
                 case "uniswap-v2":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.uniswap_v2 = pairs[0].pairs;
-                    console.log("5");
+
                     break; 
                 case "uniswap-v3":
                     pairs = await test.find({dex:dex[i]}).toArray();
+                    console.log("uniswap-v3",pairs)
                     output.uniswap_v3 = pairs[0].pairs;
-                    console.log("6");
                     break;                                                                                                       
             }
-            console.log("pairs",pairs.pairs);
         }
-        console.log("output1",output)
         if (output.quickswap==null){
             delete output.quickswap;
         }
@@ -173,7 +166,7 @@ async function findPairs(dex) {
         if (output.uniswap_v3=null){
             delete output.uniswap_v3;
         }
-        console.log("output2",output)
+        console.log("output",output)
 	    return output;
     } catch (err) {
         console.log("error:" + err.message);
