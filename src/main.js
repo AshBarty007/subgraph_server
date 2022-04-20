@@ -122,32 +122,32 @@ async function findPairs(dex) {
                 case "quickswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.quickswap = pairs.pairs;
-                    console.log("1",pairs.pairs.length);
+                    console.log("1");
                     break;
                 case "sushiswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.sushiswap = pairs.pairs;
-                    console.log("2",pairs.pairs.length);
+                    console.log("2");
                     break;   
                 case "apeswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.apeswap = pairs.pairs;
-                    console.log("3",pairs.pairs.length);
+                    console.log("3");
                     break; 
                 case "pancakeswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.pancakeswap = pairs.pairs;
-                    console.log("4",pairs.pairs.length);
+                    console.log("4");
                     break; 
                 case "uniswap_v2":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.uniswap_v2 = pairs.pairs;
-                    console.log("5",pairs.pairs.length);
+                    console.log("5");
                     break; 
                 case "uniswap_v3":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.uniswap_v3 = pairs.pairs;
-                    console.log("6",pairs.pairs.length);
+                    console.log("6");
                     break;                                                                                                       
             }
             console.log("pairs",pairs);
