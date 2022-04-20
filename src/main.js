@@ -111,7 +111,7 @@ async function findPairs(dex) {
 	var pairs = {
         dex:null,
         networkID:null,
-        pairs:[]
+        pairs:nul
     };
 
     try {
@@ -121,34 +121,34 @@ async function findPairs(dex) {
             switch (dex[i]){
                 case "quickswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
-                    output.quickswap = pairs.pairs;
+                    output.quickswap = pairs[0].pairs;
                     console.log("1");
                     break;
                 case "sushiswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
-                    output.sushiswap = pairs.pairs;
+                    output.sushiswap = pairs[0].pairs;
                     console.log("2");
                     break;   
                 case "apeswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
-                    output.apeswap = pairs.pairs;
+                    output.apeswap = pairs[0].pairs;
                     console.log("3");
                     break; 
                 case "pancakeswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     console.log("pancake",pairs)
-                    output.pancakeswap = pairs.pairs;
+                    output.pancakeswap = pairs[0].pairs;
                     console.log("pancake pairs",pairs.pairs)
                     console.log("4");
                     break; 
                 case "uniswap-v2":
                     pairs = await test.find({dex:dex[i]}).toArray();
-                    output.uniswap_v2 = pairs.pairs;
+                    output.uniswap_v2 = pairs[0].pairs;
                     console.log("5");
                     break; 
                 case "uniswap-v3":
                     pairs = await test.find({dex:dex[i]}).toArray();
-                    output.uniswap_v3 = pairs.pairs;
+                    output.uniswap_v3 = pairs[0].pairs;
                     console.log("6");
                     break;                                                                                                       
             }
