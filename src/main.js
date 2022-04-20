@@ -111,7 +111,7 @@ async function findPairs(dex) {
 	var pairs = {
         dex:null,
         networkID:null,
-        pairs:nul
+        pairs:null
     };
 
     try {
