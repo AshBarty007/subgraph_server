@@ -109,9 +109,9 @@ async function findPairs(dex) {
         "uniswap_v3":null
     }
 	var pairs = {
-        dex:dex,
-        networkID:networkID,
-        pairs:pairs
+        dex:null,
+        networkID:null,
+        pairs:null
     };
 
     try {
