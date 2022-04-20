@@ -147,31 +147,24 @@ async function findPairs(dex) {
                     break;                                                                                                       
             }
         }
-        console.log("output1",output)
         if (output.quickswap==null){
             delete output.quickswap;
         }
-        console.log("output2",output)
         if (output.sushiswap==null){
             delete output.sushiswap;
         }
-        console.log("output3",output)
         if (output.apeswap==null){
             delete output.apeswap;
         }
-        console.log("output4",output)
         if (output.pancakeswap==null){
             delete output.pancakeswap;
         }
-        console.log("output5",output)
         if (output.uniswap_v2==null){
             delete output.uniswap_v2;
         }
-        console.log("output6",output)
-        if (output.uniswap_v3=null){
+        if (output.uniswap_v3==null){
             delete output.uniswap_v3;
         }
-        console.log("output7",output)
 	    return output;
     } catch (err) {
         console.log("error:" + err.message);
