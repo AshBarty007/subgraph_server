@@ -102,7 +102,7 @@ async function findPairs(dex) {
     var conn = null;
     let output = {
         "quickswap":null,
-        "sishiswap":null,
+        "sushiswap":null,
         "apeswap":null,
         "pancakeswap":null,
         "uniswap_v2":null,
@@ -123,27 +123,27 @@ async function findPairs(dex) {
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.quickswap = pairs.pairs;
                     console.log("quickswap",pairs);
-                    break;
+                    //break;
                 case "sushiswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.sushiswap = pairs.pairs;
-                    break;   
+                    //break;   
                 case "apeswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.apeswap = pairs.pairs;
-                    break; 
+                    //break; 
                 case "pancakeswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.pancakeswap = pairs.pairs;
-                    break; 
+                    //break; 
                 case "uniswap_v2":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.uniswap_v2 = pairs.pairs;
-                    break; 
+                    //break; 
                 case "uniswap_v3":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.uniswap_v3 = pairs.pairs;
-                    break;                                                                                                       
+                    //break;                                                                                                       
             }
             console.log("pairs",pairs);
         }
