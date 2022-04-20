@@ -143,11 +143,13 @@ async function findPairs(dex) {
                     break; 
                 case "uniswap-v3":
                     pairs = await test.find({dex:dex[i]}).toArray();
-                    console.log("uniswap-v3",pairs)
+                    console.log("pairs",pairs)
                     output.uniswap_v3 = pairs[0].pairs;
+                    console.log("output.uniswap_v3",output.uniswap_v3)
                     break;                                                                                                       
             }
         }
+        console.log("output1",output)
         if (output.quickswap==null){
             delete output.quickswap;
         }
@@ -166,7 +168,7 @@ async function findPairs(dex) {
         if (output.uniswap_v3=null){
             delete output.uniswap_v3;
         }
-        console.log("output",output)
+        console.log("output2",output)
 	    return output;
     } catch (err) {
         console.log("error:" + err.message);
