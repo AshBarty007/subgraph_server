@@ -100,16 +100,70 @@ async function updatePairs(pairs,dex,networkID) {
 
 async function findPairs(dex) {
     var conn = null;
-    var result = [];
+    let output = {
+        "quickswap":null,
+        "sishiswap":null,
+        "apeswap":null,
+        "pancakeswap":null,
+        "uniswap_v2":null,
+        "uniswap_v3":null
+    }
+	var pairs = {
+        dex:dex,
+        networkID:networkID,
+        pairs:pairs
+    };
+
     try {
         conn = await MongoClient.connect(dburl);
         let test = conn.db("BarterSwap").collection("Pairs");
         for(var i=0;i<dex.length;i++){
-            let whereStr = {dex:dex[i]}
-            pairs = await test.find(whereStr).toArray();
-            result.push(pairs);
+            switch (dex[i]){
+                case "quickswap":
+                    pairs = await test.find({dex:dex[i]}).toArray();
+                    output.quickswap = pairs.pairs;
+                    break;
+                case "sushiswap":
+                    pairs = await test.find({dex:dex[i]}).toArray();
+                    output.sushiswap = pairs.pairs;
+                    break;   
+                case "apeswap":
+                    pairs = await test.find({dex:dex[i]}).toArray();
+                    output.apeswap = pairs.pairs;
+                    break; 
+                case "pancakeswap":
+                    pairs = await test.find({dex:dex[i]}).toArray();
+                    output.pancakeswap = pairs.pairs;
+                    break; 
+                case "uniswap_v2":
+                    pairs = await test.find({dex:dex[i]}).toArray();
+                    output.uniswap_v2 = pairs.pairs;
+                    break; 
+                case "uniswap_v3":
+                    pairs = await test.find({dex:dex[i]}).toArray();
+                    output.uniswap_v3 = pairs.pairs;
+                    break;                                                                                                       
+            }
         }
-	    return result;
+        if (output.quickswap==null){
+            delete output.quickswap;
+        }
+        if (output.sushiswap==null){
+            delete output.sushiswap;
+        }
+        if (output.apeswap==null){
+            delete output.apeswap;
+        }
+        if (output.pancakeswap==null){
+            delete output.pancakeswap;
+        }
+        if (output.uniswap_v2==null){
+            delete output.uniswap_v2;
+        }
+        if (output.uniswap_v3=null){
+            delete output.uniswap_v3;
+        }
+	    return output;
     } catch (err) {
         console.log("error:" + err.message);
     } finally {
