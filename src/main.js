@@ -150,8 +150,9 @@ async function findPairs(dex) {
                     console.log("6");
                     break;                                                                                                       
             }
-            console.log("pairs",pairs);
+            console.log("pairs",pairs.pairs);
         }
+        console.log("output1",output)
         if (output.quickswap==null){
             delete output.quickswap;
         }
@@ -170,6 +171,7 @@ async function findPairs(dex) {
         if (output.uniswap_v3=null){
             delete output.uniswap_v3;
         }
+        console.log("output2",output)
 	    return output;
     } catch (err) {
         console.log("error:" + err.message);
