@@ -50,7 +50,7 @@ var server = http.createServer((req, res) => {
         str = JSON.parse(str);
         if (str.protocol != null){
 			let obj = str.protocol;
-			let dex = obj.split('_');
+			let dex = obj.split(',');
             if (dex != null){
                 console.log("dex",dex)
                 findPairs(dex).then((result)=>{
