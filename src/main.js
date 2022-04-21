@@ -25,12 +25,10 @@ function UpdateData() {
 
     graphql.query3(graphql.UniSwap_v3, 10).then(res => {
         updatePairs(res, "uniswap_v3",137);
-        console.log("update uniswap_v3",res)
     }).catch(e => { console.log(e) });
 
     graphql.query1(graphql.UniSwap_v2, 550).then(res => {
         updatePairs(res, "uniswap_v2",1);
-        console.log("update uniswap_v3",res)
     }).catch(e => { console.log(e) });
 }
 
@@ -56,7 +54,6 @@ var server = http.createServer((req, res) => {
             if (dex != null){
                 console.log("dex",dex)
                 findPairs(dex).then((result)=>{
-                    console.log("return",result)
                     if (result != null) {
                         res.writeHead(200, { "Content-Type": "application/json" });
                         res.end(JSON.stringify(result));
@@ -132,7 +129,6 @@ async function findPairs(dex) {
                 case "apeswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.apeswap = pairs[0].pairs;
-
                     break; 
                 case "pancakeswap":
                     pairs = await test.find({dex:dex[i]}).toArray();
@@ -141,11 +137,9 @@ async function findPairs(dex) {
                 case "uniswap_v2":
                     pairs = await test.find({dex:dex[i]}).toArray();
                     output.uniswap_v2 = pairs[0].pairs;
-                    console.log("uniswap_v2",pairs[0].pairs)
                     break; 
                 case "uniswap_v3":
                     pairs = await test.find({dex:dex[i]}).toArray();
-                    console.log("uniswap_v3",pairs[0].pairs)
                     output.uniswap_v3 = pairs[0].pairs;
                     break;                                                                                                       
             }
@@ -163,11 +157,9 @@ async function findPairs(dex) {
             delete output.pancakeswap;
         }
         if (output.uniswap_v2==null){
-            console.log("output.uniswap_v2",output.uniswap_v2)
             delete output.uniswap_v2;
         }
         if (output.uniswap_v3==null){
-            console.log("output.uniswap_v3",output.uniswap_v3)
             delete output.uniswap_v3;
         }
 	    return output;
