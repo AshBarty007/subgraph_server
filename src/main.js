@@ -24,11 +24,11 @@ function UpdateData() {
     }).catch(e => { console.log(e) });
 
     graphql.query3(graphql.UniSwap_v3, 10).then(res => {
-        updatePairs(res, "uniswap-v3",137);
+        updatePairs(res, "uniswap_v3",137);
     }).catch(e => { console.log(e) });
 
     graphql.query1(graphql.UniSwap_v2, 550).then(res => {
-        updatePairs(res, "uniswap-v2",1);
+        updatePairs(res, "uniswap_v2",1);
     }).catch(e => { console.log(e) });
 }
 
