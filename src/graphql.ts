@@ -56,7 +56,7 @@ type Subgraph3 = {
 export async function query1(client: GraphQLClient, first: number): Promise<Subgraph1[]> {
     let query = gql`
         {
-        pairs(first: ${first}, orderBy: reserveETH, orderDirection: desc) {
+        pairs(first: ${first}, orderBy: trackedReserveETH, orderDirection: desc) {
         id
         token0 {
         id     
