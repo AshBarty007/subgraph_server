@@ -1,15 +1,34 @@
-let pair1 = [{"id":1,"name":"a"},{"id":2,"name":"b"}]
-let pair2 = [{"id":3,"name":"c"},{"id":4,"name":"d"}]
-let dex = "quickswp"
-let result = {
-    "quickswap":null,
-    "sishiswap":pair1,
-    "apeswap":pair1,
-    "pancakeswap":pair2,
-    "uniswap_v2":pair2,
-    "uniswap_v3":pair2,
+var retry = require('retry')
+var graphql = require('../src/graphql')
+
+
+function retryGet() {
+    var options = {
+        retries: 5,
+        maxTimeout:2000
+    }
+    var operation = retry.operation(options);
+    operation.attempt(function (currentAttempt) {
+        console.log("Connect Times:" + currentAttempt);
+        graphql.query2(graphql.PancakeSwap, 10).then(res => {
+            console.log(res);
+        }).catch(err => {
+            if (operation.retry(err)) {
+                console.log(Dete(),"err1:",err);
+                return;
+            }
+            //cb(err ? operation.mainError() : null);
+            console.log("err2:",err) 
+        });
+    });
 }
+retryGet();
 
-delete result.uniswap_v2;
+// const pause = (duration) => new Promise((reslove) => setTimeout(reslove, duration));
 
-console.log(result)
+// const backoff = (retries, fn, delay = 500) => {
+//   fn().catch((err) => retries>1
+//     ? pause(delay).then(() => backoff(retries-1, fn, delay))
+//     : Promise.reject(err)
+//   );
+// }

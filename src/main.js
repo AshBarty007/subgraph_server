@@ -77,11 +77,12 @@ server.listen(port, hostname, () => {
     console.log("server is running...")
 })
 
-async function updatePairs(pairs,dex,networkID) {
+async function updatePairs(pairs,dex,chainID) {
     var conn = null;
 	var obj = {
         dex:dex,
-        networkID:networkID,
+        chainID:chainID,
+        updateTime: Date.now(),
         pairs:pairs
     };
     try {

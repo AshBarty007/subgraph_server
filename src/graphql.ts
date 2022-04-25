@@ -83,7 +83,7 @@ export async function query1(client: GraphQLClient, first: number): Promise<Subg
 export async function query2(client: GraphQLClient, first: number): Promise<Subgraph2[]> {
     let query = gql`
         {
-        pairs(first: ${first}, orderBy: reserveBNB, orderDirection: desc) {
+        pairs(first: ${first}, orderBy: trackedReserveBNB, orderDirection: desc) {
         id
         token0 {
         id
