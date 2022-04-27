@@ -73,9 +73,9 @@ export class BarterSwap_MongoDB {
         let client = await this.connectDB()
         let collection = client.collection(collectionName)
         if (many){
-            await collection.updateOne(filter, updateFilter).catch((err)=>{console.log(err)});
-        }else{
             await collection.updateMany(filter, updateFilter).catch((err)=>{console.log(err)});
+        }else{
+            await collection.updateOne(filter, updateFilter).catch((err)=>{console.log(err)});
         }
     }
 
