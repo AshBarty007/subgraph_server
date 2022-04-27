@@ -1,12 +1,15 @@
 import {MongoClient,Db,Filter, UpdateFilter} from 'mongodb'
 import MongoDBConfig  from '../utils/config'
 
+interface Res {
+    db: MongoClient
+    Db: Db
+  }
+
 export class BarterSwap_MongoDB {
     private url:string
     private dbName:string
-    private conn:MongoClient
-///instance
-///close
+
     static instance:BarterSwap_MongoDB | null
     static getInstance() {
         if(!BarterSwap_MongoDB.instance) this.instance = new BarterSwap_MongoDB()
@@ -21,11 +24,10 @@ export class BarterSwap_MongoDB {
         this.dbName = dbName
     }
 
-    async connectDB():Promise<Db>{
-        return new Promise((rej) => {
-            MongoClient.connect(this.url).then((DB) => {
-                this.conn = DB
-                this.conn.db(this.dbName)
+    async connectDB():Promise<Res>{
+        return new Promise((res, rej) => {
+            MongoClient.connect(this.url).then((db) => {
+                res({db,Db:db.db(this.dbName)})
             }).catch((err) => {
                 rej(err)
             })
@@ -34,70 +36,68 @@ export class BarterSwap_MongoDB {
 
     async insertData<T>(collectionName: string, data: T[] | T, many = false) {
         let client = await this.connectDB()
-        let collection = client.collection(collectionName)
+        let collection = client.Db.collection(collectionName)
         if (many && Array.isArray(data)) {
-            console.log("1")
             collection.insertMany(data as any).catch((err)=>{
                 console.log(err)
             }).finally(()=>{
-                this.conn.close()
+                client.db.close();
             })
         }else{
-            console.log("2")
             collection.insertOne(data as any).catch((err)=>{
                 console.log(err)
             }).finally(()=>{
-                this.conn.close()
+                client.db.close();
             })
         }
     }
 
     async findData<T>(collectionName: string, filter: Filter<T>){
         let client = await this.connectDB()
-        let collection = client.collection(collectionName)
+        let collection = client.Db.collection(collectionName)
         return new Promise((res,rej)=>{
             collection.find(filter).toArray().then((data)=>{
                 res(data)
             }).catch((err)=>{
                 rej(err)
             }).finally(()=>{
-                this.conn.close()
+                client.db.close();
             })
         })
     }
 
     async deleteData<T>(collectionName: string, filter: Filter<T>, many = false) {
         let client = await this.connectDB()
-        let collection = client.collection(collectionName)
+        let collection = client.Db.collection(collectionName)
         if (many && Array.isArray(filter)) {
-            console.log("3")
             collection.deleteMany(filter as any).catch((err)=>{
                 console.log(err)
             }).finally(()=>{
-                this.conn.close()
+                client.db.close();
             })
         }else{
-            console.log("4")
             collection.deleteOne(filter as any).catch((err)=>{
                 console.log(err)
             }).finally(()=>{
-                this.conn.close()
+                client.db.close();
             })
         }
     }
 
     async updateData<T>(collectionName: string, filter: Filter<T> ,updateFilter: UpdateFilter<T>, many = false) {
         let client = await this.connectDB()
-        let collection = client.collection(collectionName)
+        let collection = client.Db.collection(collectionName)
         if (many){
-            console.log("5")
-            //await collection.updateMany(filter, updateFilter).catch((err)=>{console.log(err)});
+            await collection.updateMany(filter, updateFilter)
+            .catch((err)=>{console.log(err)})
+            .finally(()=>{
+                client.db.close();
+            });
         }else{
-            console.log("6")
             await collection.updateOne(filter, updateFilter)
             .catch((err)=>{console.log(err)})
             .finally(()=>{
-                this.conn.close()
+                client.db.close();
             });
         }
     }
