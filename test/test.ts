@@ -8,21 +8,21 @@ let filter = {}
 
 dbClient.connectDB();
 
-function test1(){
-   dbClient.insertData(Table,firstData);
-   let result1 = dbClient.findData(Table,firstData);
+async function test1(){
+   await dbClient.insertData(Table,firstData);
+   let result1 = await dbClient.findData(Table,firstData);
    console.log("1.",result1)
 }
 
-function test2(){
-   dbClient.updateData(Table,firstData,newData);
-   let result2 = dbClient.findData(Table,newData);
+async function test2(){
+   await dbClient.updateData(Table,firstData,newData);
+   let result2 = await dbClient.findData(Table,newData);
    console.log("2.",result2)
 
 }
-function test3(){
-   dbClient.deleteData(Table,filter);
-   let result3 = dbClient.findData(Table,filter);
+async function test3(){
+   await dbClient.deleteData(Table,filter);
+   let result3 = await dbClient.findData(Table,filter);
    console.log("3.",result3)
 }
 
