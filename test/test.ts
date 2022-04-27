@@ -83,9 +83,10 @@ let firstData = {'a':1}
 let newData = {$set:{'b':2}}
 let filter = {}
 
-dbClient.connectDB();
+
 
 async function test1(){
+   dbClient.connectDB();
    await dbClient.insertData(Table,{'a':1});
    let result1 = await dbClient.findData(Table,filter);
    console.log("1.",result1)
