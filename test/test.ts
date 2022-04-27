@@ -1,21 +1,25 @@
-import {ApeSwap_Query} from "../src/providers/apeswap/subgraph-provider"
-import {UniSwapV2_Query} from "../src/providers/uniswap_v2/subgraph-provider"
-import {UniSwapV3_Query} from "../src/providers/uniswap_v3/subgraph-provider"
-import {PancakeSwap_Query} from "../src/providers/pancakeswap/subgraph-provider"
-import {QuickSwap_Query} from "../src/providers/quickswap/subgraph-provider"
-import {SushiSwap_Query} from "../src/providers/sushiswap/subgraph-provider"
-import {ChainId} from "../src/providers/utils/url"
+import {BarterSwap_MongoDB} from '../src/mongodb/operator/client'
 
-let a = new ApeSwap_Query(ChainId.BSC);
-let b = new UniSwapV2_Query(ChainId.MAINNET);
-let c = new UniSwapV3_Query(ChainId.POLYGON);
-let d = new PancakeSwap_Query(ChainId.BSC);
-let e = new QuickSwap_Query(ChainId.POLYGON);
-let f = new SushiSwap_Query(ChainId.POLYGON);
+function test(){
+   let dbClient = new BarterSwap_MongoDB();
+   let Table = "Test"
+   let firstData = {'a':1}
+   let newData = {'b':2}
+   let filter = {}
 
-async function TestQuery() {
-   await c.retryQuery()
-   console.log("end")
+   dbClient.connectDB();
+
+   dbClient.insertData(Table,firstData);
+   let result1 = dbClient.findData(Table,firstData);
+   console.log("1.",result1)
+
+   dbClient.updateData(Table,firstData,newData);
+   let result2 = dbClient.findData(Table,newData);
+   console.log("2.",result2)
+
+   dbClient.deleteData(Table,filter);
+   let result3 = dbClient.findData(Table,filter);
+   console.log("3.",result3)
 }
 
-TestQuery()
+test()
