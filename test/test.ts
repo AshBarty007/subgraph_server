@@ -10,8 +10,14 @@ dbClient.connectDB();
 
 async function test1(){
    await dbClient.insertData(Table,firstData);
-   let result1 = await dbClient.findData(Table,firstData);
+   let result1 = await dbClient.findData(Table,filter);
    console.log("1.",result1)
+   await dbClient.updateData(Table,firstData,newData);
+   let result2 = await dbClient.findData(Table,filter);
+   console.log("2.",result2)
+   await dbClient.deleteData(Table,newData);
+   let result3 = await dbClient.findData(Table,filter);
+   console.log("3.",result3)
 }
 
 async function test2(){
@@ -27,5 +33,5 @@ async function test3(){
 }
 
 test1()
-test2()
-test3()
+// test2()
+// test3()
