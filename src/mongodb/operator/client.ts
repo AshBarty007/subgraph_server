@@ -41,12 +41,14 @@ export class BarterSwap_MongoDB {
             collection.insertMany(data as any).catch((err)=>{
                 console.log(err)
             }).finally(()=>{
+                console.log("close")
                 client.db.close();
             })
         }else{
             collection.insertOne(data as any).catch((err)=>{
                 console.log(err)
             }).finally(()=>{
+                console.log("close")
                 client.db.close();
             })
         }
@@ -61,6 +63,7 @@ export class BarterSwap_MongoDB {
             }).catch((err)=>{
                 rej(err)
             }).finally(()=>{
+                console.log("close")
                 client.db.close();
             })
         })
@@ -73,12 +76,14 @@ export class BarterSwap_MongoDB {
             collection.deleteMany(filter as any).catch((err)=>{
                 console.log(err)
             }).finally(()=>{
+                console.log("close")
                 client.db.close();
             })
         }else{
             collection.deleteOne(filter as any).catch((err)=>{
                 console.log(err)
             }).finally(()=>{
+                console.log("close")
                 client.db.close();
             })
         }
@@ -97,6 +102,7 @@ export class BarterSwap_MongoDB {
             await collection.updateOne(filter, updateFilter)
             .catch((err)=>{console.log(err)})
             .finally(()=>{
+                console.log("close")
                 client.db.close();
             });
         }
