@@ -33,10 +33,12 @@ export class BarterSwap_MongoDB {
         let client = await this.connectDB()
         let collection = client.collection(collectionName)
         if (many && Array.isArray(data)) {
+            console.log("1")
             collection.insertMany(data as any).catch((err)=>{
                 console.log(err)
             })
         }else{
+            console.log("2")
             collection.insertOne(data as any).catch((err)=>{
                 console.log(err)
             })
@@ -59,10 +61,12 @@ export class BarterSwap_MongoDB {
         let client = await this.connectDB()
         let collection = client.collection(collectionName)
         if (many && Array.isArray(filter)) {
+            console.log("3")
             collection.deleteMany(filter as any).catch((err)=>{
                 console.log(err)
             })
         }else{
+            console.log("4")
             collection.deleteOne(filter as any).catch((err)=>{
                 console.log(err)
             })
@@ -73,8 +77,10 @@ export class BarterSwap_MongoDB {
         let client = await this.connectDB()
         let collection = client.collection(collectionName)
         if (many){
+            console.log("5")
             await collection.updateMany(filter, updateFilter).catch((err)=>{console.log(err)});
         }else{
+            console.log("6")
             await collection.updateOne(filter, updateFilter).catch((err)=>{console.log(err)});
         }
     }
