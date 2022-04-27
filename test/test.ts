@@ -3,7 +3,7 @@ import {BarterSwap_MongoDB} from '../src/mongodb/operator/client'
 let dbClient = new BarterSwap_MongoDB("mongodb://127.0.0.1:27017","TestDB");
 let Table = "Test"
 let firstData = {'a':1}
-let newData = {'b':2}
+let newData = {$set:{'b':2}}
 let filter = {}
 
 dbClient.connectDB();
