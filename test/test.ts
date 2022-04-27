@@ -9,13 +9,13 @@ let filter = {}
 dbClient.connectDB();
 
 async function test1(){
-   await dbClient.insertData(Table,firstData);
+   await dbClient.insertData(Table,{'a':1});
    let result1 = await dbClient.findData(Table,filter);
    console.log("1.",result1)
-   await dbClient.updateData(Table,firstData,newData);
+   await dbClient.updateData(Table,{'a':1},{$set:{'b':2}});
    let result2 = await dbClient.findData(Table,filter);
    console.log("2.",result2)
-   await dbClient.deleteData(Table,newData);
+   await dbClient.deleteData(Table,{'a':1});
    let result3 = await dbClient.findData(Table,filter);
    console.log("3.",result3)
 }
