@@ -4,7 +4,9 @@ import MongoDBConfig  from '../utils/config'
 export class BarterSwap_MongoDB {
     private url:string
     private dbName:string
-
+    private conn:MongoClient
+///instance
+///close
     static instance:BarterSwap_MongoDB | null
     static getInstance() {
         if(!BarterSwap_MongoDB.instance) this.instance = new BarterSwap_MongoDB()
@@ -20,9 +22,10 @@ export class BarterSwap_MongoDB {
     }
 
     async connectDB():Promise<Db>{
-        return new Promise((res, rej) => {
+        return new Promise((rej) => {
             MongoClient.connect(this.url).then((DB) => {
-                res(DB.db(this.dbName))
+                this.conn = DB
+                this.conn.db(this.dbName)
             }).catch((err) => {
                 rej(err)
             })
@@ -36,11 +39,15 @@ export class BarterSwap_MongoDB {
             console.log("1")
             collection.insertMany(data as any).catch((err)=>{
                 console.log(err)
+            }).finally(()=>{
+                this.conn.close()
             })
         }else{
             console.log("2")
             collection.insertOne(data as any).catch((err)=>{
                 console.log(err)
+            }).finally(()=>{
+                this.conn.close()
             })
         }
     }
@@ -53,6 +60,8 @@ export class BarterSwap_MongoDB {
                 res(data)
             }).catch((err)=>{
                 rej(err)
+            }).finally(()=>{
+                this.conn.close()
             })
         })
     }
@@ -64,11 +73,15 @@ export class BarterSwap_MongoDB {
             console.log("3")
             collection.deleteMany(filter as any).catch((err)=>{
                 console.log(err)
+            }).finally(()=>{
+                this.conn.close()
             })
         }else{
             console.log("4")
             collection.deleteOne(filter as any).catch((err)=>{
                 console.log(err)
+            }).finally(()=>{
+                this.conn.close()
             })
         }
     }
@@ -81,7 +94,11 @@ export class BarterSwap_MongoDB {
             //await collection.updateMany(filter, updateFilter).catch((err)=>{console.log(err)});
         }else{
             console.log("6")
-            await collection.updateOne(filter, updateFilter).catch((err)=>{console.log(err)});
+            await collection.updateOne(filter, updateFilter)
+            .catch((err)=>{console.log(err)})
+            .finally(()=>{
+                this.conn.close()
+            });
         }
     }
 
