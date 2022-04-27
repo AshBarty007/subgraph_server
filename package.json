@@ -19,5 +19,8 @@
     "retry": "^0.13.1",
     "ts-node": "^10.7.0",
     "url": "^0.11.0"
+  },
+  "devDependencies": {
+    "@types/async-retry": "^1.4.3"
   }
 }

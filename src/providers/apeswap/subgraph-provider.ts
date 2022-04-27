@@ -1,44 +1,41 @@
 import { GraphQLClient } from 'graphql-request';
 import { default as retry } from 'async-retry';
-import { SUBGRAPH_URL_BY_APESWAP } from '../utils/url'
+import { SUBGRAPH_URL_BY_APESWAP,ChainId } from '../utils/url'
 import { ApeSwap_Subgraph } from '../utils/interfaces'
 import { QueryPairsOfApeSwap } from '../utils/graphql'
 
-export default class ApeSwap_SubGraph{
+export class ApeSwap_Query{
     private ApeSwap: GraphQLClient;
     
     constructor(    
-        private chainId: number,
-        private retries: number,
-        private maxTimeout = 10000,
+        private chainId: ChainId,
+        private retries = 5,     //The maximum amount of times to retry the operation.
+        private maxTimeout = 10000,  //The maximum number of milliseconds between two retries.
     ){
-        this.ApeSwap = new GraphQLClient(SUBGRAPH_URL_BY_APESWAP[this.chainId]);
+        let subgraphUrl = SUBGRAPH_URL_BY_APESWAP[this.chainId]
+        if (!subgraphUrl) {
+            throw new Error(`No subgraph url for chain id: ${this.chainId}`);
+          }
+        this.ApeSwap = new GraphQLClient(subgraphUrl);
     }   
 
-    async query(): Promise<ApeSwap_Subgraph[]> {
+    async retryQuery(): Promise<ApeSwap_Subgraph[]>{
         let pairs: ApeSwap_Subgraph[] = [];
-        const poolsResult = await this.ApeSwap.request<{
-            pairs: ApeSwap_Subgraph[];
-        }>(QueryPairsOfApeSwap);
-        pairs = pairs.concat(poolsResult.pairs);
-        return pairs;
-    }
-
-    async retryQuery(){
         await retry(
             async () => {
-                this.query().then((res:ApeSwap_Subgraph[]) => {
-                   return res;
-                }).catch(err => {
-                    console.log(err);
-                });
+                const poolsResult = await this.ApeSwap.request<{
+                    pairs: ApeSwap_Subgraph[];
+                }>(QueryPairsOfApeSwap);
+                pairs = pairs.concat(poolsResult.pairs);
             },      
             {
-                retries: this.retries,       //The maximum amount of times to retry the operation. Default is 10
-                maxTimeout: this.maxTimeout, //The maximum number of milliseconds between two retries. Default is Infinity.
+                retries: this.retries,       
+                maxTimeout: this.maxTimeout,
+                onRetry: (err, retry) => {
+                    console.log("error message:",err,",retry times:",retry)
+                },
             }
         );
+        return pairs;
     }
 }
-
-

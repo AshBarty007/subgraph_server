@@ -59,7 +59,7 @@ export type SushiSwap_Subgraph = {
     trackedReserveETH: string;
 };
 
-export type Pancake_Subgraph = {
+export type PancakeSwap_Subgraph = {
     id: string;
     token0: {
         id: string;

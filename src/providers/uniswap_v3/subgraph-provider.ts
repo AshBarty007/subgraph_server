@@ -1,47 +1,41 @@
-import { gql, GraphQLClient } from 'graphql-request';
+import { GraphQLClient } from 'graphql-request';
+import { default as retry } from 'async-retry';
+import { SUBGRAPH_URL_BY_UNISWAP_V3,ChainId } from '../utils/url'
+import { UniSwapV3_Subgraph } from '../utils/interfaces'
+import { QueryPairsOfUniSwapV3 } from '../utils/graphql'
 
-const UniSwap_V3 = new GraphQLClient('https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3');
+export class UniSwapV3_Query{
+    private UniSwapV3: GraphQLClient;
+    
+    constructor(    
+        private chainId: ChainId,
+        private retries = 5,     //The maximum amount of times to retry the operation.
+        private maxTimeout = 10000,  //The maximum number of milliseconds between two retries.
+    ){
+        let subgraphUrl = SUBGRAPH_URL_BY_UNISWAP_V3[this.chainId]
+        if (!subgraphUrl) {
+            throw new Error(`No subgraph url for chain id: ${this.chainId}`);
+        }
+        this.UniSwapV3 = new GraphQLClient(subgraphUrl);
+    }   
 
-type Subgraph = {
-    id: string;
-    token0: {
-        id: string;
-        symbol: string;
-    };
-    token1: {
-        id: string;
-        symbol: string;
-    };
-    totalSupply: string;
-    reserveETH: string;
-    trackedReserveETH: string;
-};
-
-export async function query(first: number): Promise<Subgraph[]> {
-    let query = gql`
-        {
-            pools(first: ${first}, orderBy: liquidity, orderDirection: desc) {
-              id
-              feeTier
-              liquidity
-              token0 {
-                id
-                symbol
-              }
-              token1 {
-                id
-                symbol
-              }
-              totalValueLockedUSD
-              totalValueLockedETH
+    async retryQuery(): Promise<UniSwapV3_Subgraph[]>{
+        let pairs:   UniSwapV3_Subgraph[] = [];
+        await retry(
+            async () => {
+                const poolsResult = await this.UniSwapV3.request<{
+                    pools: UniSwapV3_Subgraph[];
+                }>(QueryPairsOfUniSwapV3);
+                pairs = pairs.concat(poolsResult.pools);
+            },      
+            {
+                retries: this.retries,       
+                maxTimeout: this.maxTimeout,
+                onRetry: (err, retry) => {
+                    console.log("error message:",err,",retry times:",retry)
+                },
             }
-          }
-        `
-    let pairs: Subgraph[] = [];
-    const poolsResult = await UniSwap_V3.request<{
-        pairs: Subgraph[];
-    }>(query);
-    pairs = pairs.concat(poolsResult.pairs);
-    return pairs;
+        );
+        return pairs;
+    }
 }
-

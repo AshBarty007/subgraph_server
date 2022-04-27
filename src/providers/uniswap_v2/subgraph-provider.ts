@@ -1,46 +1,41 @@
-import { gql, GraphQLClient } from 'graphql-request';
+import { GraphQLClient } from 'graphql-request';
+import { default as retry } from 'async-retry';
+import { SUBGRAPH_URL_BY_UNISWAP_V2,ChainId } from '../utils/url'
+import { UniSwapV2_Subgraph } from '../utils/interfaces'
+import { QueryPairsOfUniSwapV2 } from '../utils/graphql'
 
-const UniSwap_V2 = new GraphQLClient('https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2');
+export class UniSwapV2_Query{
+    private UniSwapV2: GraphQLClient;
+    
+    constructor(    
+        private chainId: ChainId,
+        private retries = 5,     //The maximum amount of times to retry the operation.
+        private maxTimeout = 10000,  //The maximum number of milliseconds between two retries.
+    ){
+        let subgraphUrl = SUBGRAPH_URL_BY_UNISWAP_V2[this.chainId]
+        if (!subgraphUrl) {
+            throw new Error(`No subgraph url for chain id: ${this.chainId}`);
+          }
+        this.UniSwapV2 = new GraphQLClient(subgraphUrl);
+    }   
 
-type Subgraph = {
-    id: string;
-    token0: {
-        id: string;
-        symbol: string;
-    };
-    token1: {
-        id: string;
-        symbol: string;
-    };
-    totalSupply: string;
-    reserveETH: string;
-    trackedReserveETH: string;
-};
-
-export async function query(first: number): Promise<Subgraph[]> {
-    let query = gql`
-        {
-        pairs(first: ${first}, orderBy: trackedReserveETH, orderDirection: desc) {
-        id
-        token0 {
-        id     
-        symbol
-        }
-        token1 {
-        id     
-        symbol
-        }
-        totalSupply
-        reserveETH
-        trackedReserveETH
-        }
-        }
-        `;
-    let pairs: Subgraph[] = [];
-    const poolsResult = await UniSwap_V2.request<{
-        pairs: Subgraph[];
-    }>(query);
-    pairs = pairs.concat(poolsResult.pairs);
-    return pairs;
+    async retryQuery(): Promise<UniSwapV2_Subgraph[]>{
+        let pairs: UniSwapV2_Subgraph[] = [];
+        await retry(
+            async () => {
+                const poolsResult = await this.UniSwapV2.request<{
+                    pairs: UniSwapV2_Subgraph[];
+                }>(QueryPairsOfUniSwapV2);
+                pairs = pairs.concat(poolsResult.pairs);
+            },      
+            {
+                retries: this.retries,       
+                maxTimeout: this.maxTimeout,
+                onRetry: (err, retry) => {
+                    console.log("error message:",err,",retry times:",retry)
+                },
+            }
+        );
+        return pairs;
+    }
 }
-
