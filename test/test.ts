@@ -18,6 +18,7 @@ async function test1(){
    await dbClient.deleteData(Table,{'a':1});
    let result3 = await dbClient.findData(Table,filter);
    console.log("3.",result3)
+   return
 }
 
 async function test2(){
