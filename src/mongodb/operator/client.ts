@@ -88,11 +88,11 @@ export class BarterSwap_MongoDB {
         let client = await this.connectDB()
         let collection = client.Db.collection(collectionName)
         if (many){
-            await collection.updateMany(filter, updateFilter)
-            .catch((err)=>{console.log(err)})
-            .finally(()=>{
-                client.db.close();
-            });
+            // await collection.updateMany(filter, updateFilter)
+            // .catch((err)=>{console.log(err)})
+            // .finally(()=>{
+            //     client.db.close();
+            // });
         }else{
             await collection.updateOne(filter, updateFilter)
             .catch((err)=>{console.log(err)})
