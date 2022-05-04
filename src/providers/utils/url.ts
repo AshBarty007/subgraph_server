@@ -1,13 +1,4 @@
-
-export enum ChainId {
-    MAINNET = 1,
-    ROPSTEN = 3,
-    RINKEBY = 4,
-    GÖRLI = 5,
-    KOVAN = 42,
-    POLYGON = 137,
-    BSC = 56,
-  }
+import {ChainId} from './ChainId'
 
 export const SUBGRAPH_URL_BY_SUSHISWAP: { [chainId in ChainId]?: string } = {
     [ChainId.POLYGON]:
