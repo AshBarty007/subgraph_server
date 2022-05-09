@@ -8,11 +8,10 @@ const dbClient = new BarterSwapDB();
 const server = createServer((request: IncomingMessage, response: ServerResponse) => {
     let http_url = request.url;
     let ok = url.parse(http_url, true);
-    console.log(ok)
     if (ok.path != '/favicon.ico') {
-        let str = JSON.stringify(ok.query);
+        let str:any = JSON.stringify(ok.query);
         str = JSON.parse(str);
-        console.log(str)
+        console.log(str.protocol,str.chainId)
         let filter = {}
         let result
         switch (str){
