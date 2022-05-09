@@ -1,4 +1,26 @@
-import {queryV2PoolGQL,quickQueryV2PoolGQL} from '../src/providers/utils/gql'
+import { PancakeSwapSubgraphProvider } from '../src/providers/pancakeswap-subgraph-provider'
+import { QuickSwapSubgraphProvider } from '../src/providers/quickswap-subgraph-provider'
+import { ChainId } from '../src/providers/utils/chainId'
+const schedule = require('node-schedule');
 
-console.log(quickQueryV2PoolGQL(10,'ETH'))
-console.log(queryV2PoolGQL(10,'ETH'))
+
+const PancakeSwapSubgraph = new PancakeSwapSubgraphProvider(ChainId.BSC)
+const QuickSwapSubgraph = new QuickSwapSubgraphProvider(ChainId.POLYGON)
+
+const scheduleTask = () => {
+    schedule.scheduleJob('*/2 * * * * *', () => {
+        PancakeSwapSubgraph.quickGetPools()
+        QuickSwapSubgraph.quickGetPools()
+
+        console.log(new Date(), 'the SimplePools has updated.');
+    });
+
+    schedule.scheduleJob('*/5 * * * * *', () => {
+        PancakeSwapSubgraph.getPools()
+        QuickSwapSubgraph.getPools()
+        
+        console.log(new Date(), 'the DetailedPoolsTable have updated.');
+    });
+}
+
+scheduleTask();

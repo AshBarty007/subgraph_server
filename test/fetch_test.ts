@@ -41,7 +41,7 @@ query get_tvl($block: Int) {
   }
 }
 `;
-async function tvl(timestamp, ethBlock, chainBlocks) {
+async function tvl(timestamp, chainBlocks) {
   if (Math.abs(timestamp - Date.now() / 1000) < 3600) {
     const tvl = await request(graphEndpoint, currentQuery, {}, {
       "referer": "https://pancakeswap.finance/",
@@ -75,7 +75,7 @@ async function tvl(timestamp, ethBlock, chainBlocks) {
 const factory = '0xBCfCcbde45cE874adCB698cC183deBcF17952812'
 const cakeToken = '0x0e09fabb73bd3ade0a17ecc321fd13a19e81ce82'
 const masterChef = '0x73feaa1eE314F8c655E354234017bE2193C9E24E'
-async function staking(timestamp, ethBlock, chainBlocks) {
+async function staking(chainBlocks) {
   const balances = {}
   const stakedCake = sdk.api.erc20.balanceOf({
     target: cakeToken,
