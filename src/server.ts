@@ -42,8 +42,8 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         //         break;  
         // }
         filter = {                        
-            name: str,
-            chainId :str,
+            name: str.protocol,
+            chainId :str.chainId,
         }
         result = dbClient.findData(TableName.DetailedPools,filter)
         response.writeHead(200, { "Content-Type": "application/json" });
