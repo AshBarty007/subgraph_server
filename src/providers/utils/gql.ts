@@ -18,10 +18,20 @@ export function queryV2PoolGQL(first:number, tokenType:string) {
       id
       token0 {
         id
+        symbol
+        decimals
+        totalSupply
+        liquidity
       }
       token1 {
         id
+        symbol
+        decimals
+        totalSupply
+        liquidity
       }
+      token0Price
+      token1Price
       totalSupply
       reserve${tokenType}
       trackedReserve${tokenType}
@@ -47,6 +57,8 @@ export function queryV3PoolGQL(first:number) {
                 id
                 symbol
               }
+              token1Price
+              token0Price
               totalValueLockedUSD
               totalValueLockedETH
             }
@@ -62,9 +74,11 @@ export function quickQueryV2PoolGQL(first:number, tokenType:string) {
       id
       token0 {
         id
+        symbol
       }
       token1 {
         id
+        symbol
       }
     }
 }
@@ -80,9 +94,11 @@ export function quickQueryV3PoolGQL(first:number) {
               id
               token0 {
                 id
+                symbol
               }
               token1 {
                 id
+                symbol
               }
             }
           }
