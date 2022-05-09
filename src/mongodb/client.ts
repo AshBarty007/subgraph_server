@@ -78,8 +78,8 @@ export class BarterSwapDB {
         let client = await this.connectDB()
         let collection = client.Db.collection(collectionName)
         if (many){
-            await collection.updateMany(filter, updateFilter)
-            .catch((err)=>{console.log(err)})
+            // await collection.updateMany(filter, updateFilter)
+            // .catch((err)=>{console.log(err)})
         }else{
             await collection.updateOne(filter, updateFilter)
             .catch((err)=>{console.log(err)})
