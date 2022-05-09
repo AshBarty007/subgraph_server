@@ -9,7 +9,7 @@ import { BarterSwapDB,TableName } from '../mongodb/client'
 
 export class PancakeSwapSubgraphProvider implements ISubgraphProvider{
     private client: GraphQLClient;
-    private DB: BarterSwapDB;
+    private DB = new BarterSwapDB();
 
     constructor(    
         private chainId: ChainId,
@@ -21,7 +21,6 @@ export class PancakeSwapSubgraphProvider implements ISubgraphProvider{
             throw new Error(`No subgraph url for chain id: ${this.chainId}`);
           }
         this.client = new GraphQLClient(subgraphUrl);
-        this.DB = new BarterSwapDB();
     }   
 
     async  getPools(){

@@ -8,7 +8,7 @@ import { BarterSwapDB,TableName } from '../mongodb/client'
 
 export class UniSwapV3SubgraphProvider implements ISubgraphProvider{
     private client: GraphQLClient;
-    private DB: BarterSwapDB;
+    private DB = new BarterSwapDB();
 
     constructor(    
         private chainId: ChainId,
