@@ -45,5 +45,5 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
 });
 
 
-server.listen(port);
+server.listen(port,"0.0.0.0");
 console.log(`server is running on http://localhost:9002`)
