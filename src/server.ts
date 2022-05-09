@@ -40,12 +40,12 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         //         response.end("url error!");
         //         break;  
         // }
-        // filter = {                        
-        //     name: str.protocol,
-        //     chainId :str.chainId,
-        // }
+        filter = {                        
+            name: str.protocol,
+            chainId :str.chainId,
+        }
         dbClient.findData(TableName.DetailedPools,filter).then((result)=>{
-            console.log('result',result)
+            console.log('result',filter)
             response.writeHead(200, { "Content-Type": "application/json" });
             response.end(JSON.stringify(result));
         })
