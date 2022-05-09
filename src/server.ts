@@ -45,11 +45,11 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         //     name: str.protocol,
         //     chainId :str.chainId,
         // }
-        console.log('filter',filter)
-        result = dbClient.findData(TableName.DetailedPools,filter)
-        console.log('result',result)
-        response.writeHead(200, { "Content-Type": "application/json" });
-        response.end(JSON.stringify(result));
+        result = dbClient.findData(TableName.DetailedPools,filter).then(()=>{
+            console.log('result',result)
+            response.writeHead(200, { "Content-Type": "application/json" });
+            response.end(JSON.stringify(result));
+        })
     }
 
 });
