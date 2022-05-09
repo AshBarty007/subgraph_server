@@ -1,4 +1,4 @@
-import {ChainId} from './ChainId'
+import {ChainId} from './chainId'
 
 export const SUBGRAPH_URL_BY_SUSHISWAP: { [chainId in ChainId]?: string } = {
     [ChainId.POLYGON]:
