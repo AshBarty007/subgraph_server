@@ -1,6 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 import { default as retry } from 'async-retry';
-import { ChainId } from './utils/ChainId'
+import { ChainId } from './utils/chainId'
 import { SUBGRAPH_URL_BY_UNISWAP_V3 } from './utils/url'
 import { ISubgraphProvider,RawETHV3SubgraphPool } from './utils/interfaces'
 import { LiquidityMoreThan90Percent, queryV3PoolGQL,quickQueryV3PoolGQL } from './utils/gql'
