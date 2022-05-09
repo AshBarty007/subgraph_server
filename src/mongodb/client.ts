@@ -54,6 +54,7 @@ export class BarterSwapDB {
         return new Promise((res,rej)=>{
             collection.find(filter).toArray().then((data)=>{
                 res(data)
+                console.log('data',data)
             }).catch((err)=>{
                 rej(err)
             })
