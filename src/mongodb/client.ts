@@ -34,7 +34,7 @@ export class BarterSwapDB {
         })
     }
 
-    async insertData<T>(collectionName: string, data: T[] | T, many = false) {
+    async insertData<Document>(collectionName: string, data: Document[] | Document, many = false) {
         let client = await this.connectDB()
         let collection = client.Db.collection(collectionName)
         if (many && Array.isArray(data)) {
@@ -48,7 +48,7 @@ export class BarterSwapDB {
         }
     }
 
-    async findData<T>(collectionName: string, filter: Filter<T>){
+    async findData<Document>(collectionName: string, filter: Filter<Document>){
         let client = await this.connectDB()
         let collection = client.Db.collection(collectionName)
         return new Promise((res,rej)=>{
@@ -60,7 +60,7 @@ export class BarterSwapDB {
         })
     }
 
-    async deleteData<T>(collectionName: string, filter: Filter<T>, many = false) {
+    async deleteData<Document>(collectionName: string, filter: Filter<Document>, many = false) {
         let client = await this.connectDB()
         let collection = client.Db.collection(collectionName)
         if (many && Array.isArray(filter)) {
@@ -74,7 +74,7 @@ export class BarterSwapDB {
         }
     }
 
-    async updateData<T>(collectionName: string, filter: Filter<T> ,updateFilter: UpdateFilter<T>, many = false) {
+    async updateData<Document>(collectionName: string, filter: Filter<Document> ,updateFilter: UpdateFilter<Document>, many = false) {
         let client = await this.connectDB()
         let collection = client.Db.collection(collectionName)
         if (many){
