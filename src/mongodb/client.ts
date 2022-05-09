@@ -48,13 +48,12 @@ export class BarterSwapDB {
         }
     }
 
-    async findData<Document>(collectionName: string, filter: Filter<Document>){
+    async findData<Document>(collectionName: string, filter: Filter<Document>): Promise<Document>{
         let client = await this.connectDB()
         let collection = client.Db.collection(collectionName)
         return new Promise((res,rej)=>{
             collection.find(filter).toArray().then((data)=>{
                 res(data)
-                console.log('data',data)
             }).catch((err)=>{
                 rej(err)
             })
