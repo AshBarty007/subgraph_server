@@ -14,7 +14,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         console.log(str.protocol,str.chainId)
         let filter = {}
         let result
-        switch (str){
+        switch (str.protocol){
             case TableName.DetailedPools:
                 filter = {                        
                     name: str,
