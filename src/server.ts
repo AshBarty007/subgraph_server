@@ -14,33 +14,40 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         console.log(str.protocol,str.chainId)
         let filter = {}
         let result
-        switch (str.protocol){
-            case TableName.DetailedPools:
-                filter = {                        
-                    name: str,
-                    chainId :str,
-                }
-                result = dbClient.findData(TableName.DetailedPools,filter)
-                response.writeHead(200, { "Content-Type": "application/json" });
-                response.end(JSON.stringify(result));
-                break
-            case TableName.SimplePools:
-                filter = {                        
-                    name: str,
-                    chainId :str,
-                }
-                result = dbClient.findData(TableName.SimplePools,filter)
-                response.writeHead(200, { "Content-Type": "application/json" });
-                response.end(JSON.stringify(result));
-                break
-            default:
-                response.on('error', (err) => {
-                    console.error(err);
-                });
-                response.writeHead(200, { "Content-Type": "text/plain" });
-                response.end("url error!");
-                break;  
+        // switch (str.protocol){
+        //     case TableName.DetailedPools:
+        //         filter = {                        
+        //             name: str,
+        //             chainId :str,
+        //         }
+        //         result = dbClient.findData(TableName.DetailedPools,filter)
+        //         response.writeHead(200, { "Content-Type": "application/json" });
+        //         response.end(JSON.stringify(result));
+        //         break
+        //     case TableName.SimplePools:
+        //         filter = {                        
+        //             name: str,
+        //             chainId :str,
+        //         }
+        //         result = dbClient.findData(TableName.SimplePools,filter)
+        //         response.writeHead(200, { "Content-Type": "application/json" });
+        //         response.end(JSON.stringify(result));
+        //         break
+        //     default:
+        //         response.on('error', (err) => {
+        //             console.error(err);
+        //         });
+        //         response.writeHead(200, { "Content-Type": "text/plain" });
+        //         response.end("url error!");
+        //         break;  
+        // }
+        filter = {                        
+            name: str,
+            chainId :str,
         }
+        result = dbClient.findData(TableName.DetailedPools,filter)
+        response.writeHead(200, { "Content-Type": "application/json" });
+        response.end(JSON.stringify(result));
     }
 
 });
