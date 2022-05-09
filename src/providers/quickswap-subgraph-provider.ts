@@ -3,15 +3,17 @@ import { default as retry } from 'async-retry';
 import { ChainId } from './utils/ChainId'
 import { SUBGRAPH_URL_BY_QUICKSWAP } from './utils/url'
 import { ISubgraphProvider,RawETHV2SubgraphPool } from './utils/interfaces'
-import { UniV2Gql,LiquidityMoreThan90Percent } from './utils/gql'
+import { LiquidityMoreThan90Percent, queryV2PoolGQL,quickQueryV2PoolGQL } from './utils/gql'
+import { BarterSwapDB,TableName } from '../mongodb/client'
 
 export class QuickSwapSubgraphProvider implements ISubgraphProvider{
     private client: GraphQLClient;
-    
+    private DB: BarterSwapDB;
+
     constructor(    
         private chainId: ChainId,
-        private retries = 5,     //The maximum amount of times to retry the operation.
-        private maxTimeout = 10000,  //The maximum number of milliseconds between two retries.
+        private retries = 2,     //The maximum amount of times to retry the operation.
+        private maxTimeout = 5000,  //The maximum number of milliseconds between two retries.
     ){
         let subgraphUrl = SUBGRAPH_URL_BY_QUICKSWAP[this.chainId]
         if (!subgraphUrl) {
@@ -20,15 +22,47 @@ export class QuickSwapSubgraphProvider implements ISubgraphProvider{
         this.client = new GraphQLClient(subgraphUrl);
     }   
 
-    async getPool(): Promise<RawETHV2SubgraphPool[]>{
-        let pairs: RawETHV2SubgraphPool[] = [];
+    async getPools(){
         await retry(
             async () => {
-                let gql = UniV2Gql(LiquidityMoreThan90Percent.QuickSwap,"trackedReserveETH")
-                const poolsResult = await this.client.request<{
+                await this.client.request<{
                     pairs: RawETHV2SubgraphPool[];
-                }>(gql);
-                pairs = pairs.concat(poolsResult.pairs);
+                }>(queryV2PoolGQL(LiquidityMoreThan90Percent.QuickSwap,'ETH')).then((res)=>{
+                    let data = {
+                        updateTime: Date.parse(new Date().toString()),
+                        name: "QuickSwap",
+                        chainId :this.chainId,
+                        result : res,
+                    }
+                    this.DB.insertData(TableName.DetailedPools,data)
+                });
+            },      
+            {
+                retries: this.retries,       
+                maxTimeout: this.maxTimeout,
+                onRetry: (err, retry) => {
+                    
+                    console.log("error message:",err,",retry times:",retry)
+                },
+            }
+        );
+
+    }
+
+    async quickGetPools(){
+        await retry(
+            async () => {
+                await this.client.request<{
+                    pairs: RawETHV2SubgraphPool[];
+                }>(quickQueryV2PoolGQL(LiquidityMoreThan90Percent.QuickSwap,'ETH')).then((res)=>{
+                    let data = {
+                        updateTime: Date.parse(new Date().toString()),
+                        name: "QuickSwap",
+                        chainId :this.chainId,
+                        result : res,
+                    }
+                    this.DB.insertData(TableName.SimplePools,data)
+                });
             },      
             {
                 retries: this.retries,       
@@ -38,6 +72,5 @@ export class QuickSwapSubgraphProvider implements ISubgraphProvider{
                 },
             }
         );
-        return pairs;
     }
 }

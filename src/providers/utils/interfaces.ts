@@ -1,7 +1,11 @@
 export interface ISubgraphProvider {
-  getPool: () => any | undefined;
+  //fetch details from graphql and storage to mongodb
+  getPools: () => any | undefined;
+  //fetch simple message from graphql quickly and storage to mongodb 
+  quickGetPools: () => any | undefined;
 }
 
+//several formats http returns
 export interface V3SubgraphPool {
   id: string;
   feeTier: string;
@@ -28,6 +32,7 @@ export interface V2SubgraphPool {
   reserve: number;
 }
 
+//several types graphql fetch data
 export type RawETHV2SubgraphPool = {
   id: string;
   token0: {
@@ -78,6 +83,7 @@ export type RawBNBV2SubgraphPool = {
 const bscThreshold = 0.25;
 const ethThreshold = 0.025;
 
+//the type graphql fetch data transfer to the format http return
 export function sanitizeBSCPools(
   pools: RawBNBV2SubgraphPool[]
 ): V2SubgraphPool[] {

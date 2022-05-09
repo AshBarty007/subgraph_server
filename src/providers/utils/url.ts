@@ -17,11 +17,6 @@ export const SUBGRAPH_URL_BY_QUICKSWAP: { [chainId in ChainId]?: string } = {
       'https://api.thegraph.com/subgraphs/name/sameepsi/quickswap06',
   };
 
-export const SUBGRAPH_URL_BY_APESWAP: { [chainId in ChainId]?: string } = {
-    [ChainId.BSC]:
-      'https://api.thegraph.com/subgraphs/name/hhassan01/apeswap-subgraph',
-  };
-
 export const SUBGRAPH_URL_BY_UNISWAP_V2: { [chainId in ChainId]?: string } = {
     [ChainId.MAINNET]:
       'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2',

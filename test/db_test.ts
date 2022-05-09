@@ -1,14 +1,149 @@
-import {MongoClient} from 'mongodb'
-import {BarterSwap_MongoDB} from '../src/mongodb/client'
+import mongodb from 'mongodb'
 
-var data = {'name':'a','value':1}
-var client = MongoClient.connect("mongodb://localhost:27017/")
+const MongoClient = mongodb.MongoClient
+interface DBI {
+    // 
+    insert<T>(collectionName: string, doc: T): Promise<boolean>
+    // 
+    insertMany<T>(collectionName: string, docs: T[]): Promise<boolean>
+    // 
+    delete(collectionName: string, filter: object): Promise<boolean>
+    // 
+    update(collectionName: string, filter: object, update: object): Promise<boolean>
+    // 
+    find(collectionName: string, filter: object): Promise<any[]>
+    //
+    aggregate(collectionName: string, pipeline: object[]): Promise<any[]>
+}
 
-// MongoClient.connect("mongodb://localhost:27017/TestDB", function(err, db) {
-//     if (err) throw err;
-//     console.log("database is ok");
-//     db.close();
-//   });
+class Db implements DBI {
+    public client: mongodb.MongoClient | undefined
+    static instance: Db | null
 
-var a = new BarterSwap_MongoDB("mongodb://localhost:27017/","TestDB");
-a.insertData("test1",data)
+    static getInstance() {
+        if (!Db.instance) this.instance = new Db()
+        return this.instance
+    }
+
+    constructor() {
+        console.log('constructor')
+        this.connection()
+    }
+
+    insert<T>(collectionName: string, doc: T): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            this.connection().then((client) => {
+                const db = client.db()
+                const result = db.collection(collectionName).insertOne(doc, (err, result) => {
+                    if (err) {
+                        resolve(false)
+                        reject(err)
+                    } else {
+                        resolve(true)
+                    }
+                })
+            })
+        })
+    }
+
+    insertMany<T>(collectionName: string, doc: T[]): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            this.connection().then((client) => {
+                const db = client.db()
+                const result = db.collection(collectionName).insertMany(doc, (err, result) => {
+                    if (err) {
+                        resolve(false)
+                        reject(err)
+                    } else {
+                        resolve(true)
+                    }
+                })
+            })
+        })
+    }
+
+
+    delete(collectionName:string, filter:object):Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            this.connection().then((client) => {
+                const db = client.db()
+                db.collection(collectionName).deleteOne(filter, (err, result) => {
+                    if(err) {
+                        resolve(false)
+                        reject(err)
+                    } else {
+                        resolve(true)
+                    }
+                })
+            })
+        })
+    }
+
+    update(collectionName:string, filter:object, update:object):Promise<boolean>{
+        return new Promise<boolean>((resolve, reject) => {
+            this.connection().then((client) => {
+                const db = client.db()
+                db.collection(collectionName).updateOne(filter, {$set: update}, (err, result) => {
+                    if(err){
+                        resolve(false)
+                        reject(err)
+                    } else {
+                        resolve(true)
+                    }
+                })
+            })
+        })
+    }
+    
+    // 
+    find(collectionName:string, filter:object):Promise<any[]> {
+        return new Promise<any[]>((resolve, reject) => {
+            this.connection().then((client) => {
+                 const db = client.db()
+                 const result = db.collection(collectionName).find(filter)
+                 result.toArray((err, docs) => {
+                     if(err) {
+                         reject(err)
+                     } else {
+                         resolve(docs)
+                     }
+                 })
+            })
+        })
+    }
+
+    aggregate(collectionName:string, pipeline:object[]):Promise<any[]> {
+        return new Promise<any[]>((resolve, reject) => {
+            this.connection().then((client) => {
+                const db = client.db()
+                db.collection(collectionName).aggregate(pipeline).toArray((err, docs) => {
+                    if(err) {
+                        reject(err)
+                    } else {
+                        resolve(docs)
+                    }
+                })
+            })
+        })
+    }
+
+    connection(): Promise<mongodb.MongoClient> {
+        return new Promise<mongodb.MongoClient>((resolve, reject) => {
+            if (!this.client) {
+                MongoClient.connect('mongodb://localhost:27017/TestDB', (err, client) => {
+                    if (err) {
+                        reject(err)
+                    } else {
+                        console.log('db server start success!')
+                        this.client = client
+                        resolve(client)
+                    }
+                })
+            } else {
+                resolve(this.client)
+            }
+        })
+    }
+}
+
+var a = new Db()

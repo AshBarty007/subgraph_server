@@ -6,13 +6,13 @@ interface Res {
     Db: Db
   }
 
-export class BarterSwap_MongoDB {
+export class BarterSwapDB {
     private url:string
     private dbName:string
 
-    static instance:BarterSwap_MongoDB | null
+    static instance:BarterSwapDB | null
     static getInstance() {
-        if(!BarterSwap_MongoDB.instance) this.instance = new BarterSwap_MongoDB()
+        if(!BarterSwapDB.instance) this.instance = new BarterSwapDB()
         return this.instance
     }
 
@@ -40,14 +40,10 @@ export class BarterSwap_MongoDB {
         if (many && Array.isArray(data)) {
             collection.insertMany(data as any).catch((err)=>{
                 console.log(err)
-            }).finally(()=>{
-                client.db.close();
             })
         }else{
             collection.insertOne(data as any).catch((err)=>{
                 console.log(err)
-            }).finally(()=>{
-                client.db.close();
             })
         }
     }
@@ -60,8 +56,6 @@ export class BarterSwap_MongoDB {
                 res(data)
             }).catch((err)=>{
                 rej(err)
-            }).finally(()=>{
-                client.db.close();
             })
         })
     }
@@ -72,14 +66,10 @@ export class BarterSwap_MongoDB {
         if (many && Array.isArray(filter)) {
             collection.deleteMany(filter as any).catch((err)=>{
                 console.log(err)
-            }).finally(()=>{
-                client.db.close();
             })
         }else{
             collection.deleteOne(filter as any).catch((err)=>{
                 console.log(err)
-            }).finally(()=>{
-                client.db.close();
             })
         }
     }
@@ -90,16 +80,15 @@ export class BarterSwap_MongoDB {
         if (many){
             await collection.updateMany(filter, updateFilter)
             .catch((err)=>{console.log(err)})
-            .finally(()=>{
-                client.db.close();
-            });
         }else{
             await collection.updateOne(filter, updateFilter)
             .catch((err)=>{console.log(err)})
-            .finally(()=>{
-                client.db.close();
-            });
         }
     }
 
 }
+
+export enum TableName {
+    DetailedPools = 'DetailedPools',
+    SimplePools = 'SimplePools',
+  }

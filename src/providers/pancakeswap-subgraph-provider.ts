@@ -3,32 +3,68 @@ import { default as retry } from 'async-retry';
 import { ChainId } from './utils/ChainId'
 import { SUBGRAPH_URL_BY_PANCAKESWAP } from './utils/url'
 import { ISubgraphProvider,RawBNBV2SubgraphPool } from './utils/interfaces'
-import { UniV2Gql,LiquidityMoreThan90Percent } from './utils/gql'
+import { LiquidityMoreThan90Percent, queryV2PoolGQL,quickQueryV2PoolGQL } from './utils/gql'
+import { BarterSwapDB,TableName } from '../mongodb/client'
+
 
 export class PancakeSwapSubgraphProvider implements ISubgraphProvider{
     private client: GraphQLClient;
-    
+    private DB: BarterSwapDB;
+
     constructor(    
         private chainId: ChainId,
-        private retries = 5,     //The maximum amount of times to retry the operation.
-        private maxTimeout = 10000,  //The maximum number of milliseconds between two retries.
+        private retries = 2,     //The maximum amount of times to retry the operation.
+        private maxTimeout = 5000,  //The maximum number of milliseconds between two retries.
     ){
         let subgraphUrl = SUBGRAPH_URL_BY_PANCAKESWAP[this.chainId]
         if (!subgraphUrl) {
             throw new Error(`No subgraph url for chain id: ${this.chainId}`);
           }
         this.client = new GraphQLClient(subgraphUrl);
+        this.DB = new BarterSwapDB();
     }   
 
-    async getPool(): Promise<RawBNBV2SubgraphPool[]>{
-        let pairs: RawBNBV2SubgraphPool[] = [];
+    async  getPools(){
         await retry(
             async () => {
-                let gql = UniV2Gql(LiquidityMoreThan90Percent.PancakeSwap,"trackedReserveBNB")
-                const poolsResult = await this.client.request<{
+                await this.client.request<{
                     pairs: RawBNBV2SubgraphPool[];
-                }>(gql);
-                pairs = pairs.concat(poolsResult.pairs);
+                }>(queryV2PoolGQL(LiquidityMoreThan90Percent.PancakeSwap,'BNB')).then((res)=>{
+                    let data = {
+                        updateTime: Date.parse(new Date().toString()),
+                        name: "PancakeSwap",
+                        chainId :this.chainId,
+                        result : res,
+                    }
+                    this.DB.insertData(TableName.DetailedPools,data)
+                });
+            },      
+            {
+                retries: this.retries,       
+                maxTimeout: this.maxTimeout,
+                onRetry: (err, retry) => {
+                    
+                    console.log("error message:",err,",retry times:",retry)
+                },
+            }
+        );
+
+    }
+
+    async  quickGetPools(){
+        await retry(
+            async () => {
+                await this.client.request<{
+                    pairs: RawBNBV2SubgraphPool[];
+                }>(quickQueryV2PoolGQL(LiquidityMoreThan90Percent.PancakeSwap,'BNB')).then((res)=>{
+                    let data = {
+                        updateTime: Date.parse(new Date().toString()),
+                        name: "PancakeSwap",
+                        chainId :this.chainId,
+                        result : res,
+                    }
+                    this.DB.insertData(TableName.SimplePools,data)
+                });
             },      
             {
                 retries: this.retries,       
@@ -38,6 +74,6 @@ export class PancakeSwapSubgraphProvider implements ISubgraphProvider{
                 },
             }
         );
-        return pairs;
     }
+
 }

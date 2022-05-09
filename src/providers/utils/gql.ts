@@ -9,11 +9,12 @@ export enum LiquidityMoreThan90Percent {
   UniSwap_V3 = 10,
 }
 
-export function UniV2Gql(first:number, tokenType:string) {
+//gql needed to query graph data
+export function queryV2PoolGQL(first:number, tokenType:string) {
 
   return gql`
 {
-    pairs(first: ${first}, orderBy: ${tokenType}, orderDirection: desc) {
+    pairs(first: ${first}, orderBy: trackedReserve${tokenType}, orderDirection: desc) {
       id
       token0 {
         id
@@ -22,15 +23,15 @@ export function UniV2Gql(first:number, tokenType:string) {
         id
       }
       totalSupply
-      ${tokenType}
+      reserve${tokenType}
+      trackedReserve${tokenType}
     }
 }
 `;
 
 }
 
-
-export function UniV3Gql(first:number) {
+export function queryV3PoolGQL(first:number) {
 
   return  gql`
         {
@@ -53,3 +54,37 @@ export function UniV3Gql(first:number) {
 `;
 }
 
+export function quickQueryV2PoolGQL(first:number, tokenType:string) {
+
+  return gql`
+{
+    pairs(first: ${first}, orderBy: trackedReserve${tokenType}, orderDirection: desc) {
+      id
+      token0 {
+        id
+      }
+      token1 {
+        id
+      }
+    }
+}
+`;
+
+}
+
+export function quickQueryV3PoolGQL(first:number) {
+
+  return  gql`
+        {
+            pools(first: ${first}, orderBy: liquidity, orderDirection: desc) {
+              id
+              token0 {
+                id
+              }
+              token1 {
+                id
+              }
+            }
+          }
+`;
+}
