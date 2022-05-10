@@ -13,6 +13,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         str = JSON.parse(str);
         console.log(str.protocol,str.chainId)
         let filter = {}
+        // let result
         // switch (str.protocol){
         //     case TableName.DetailedPools:
         //         filter = {                        
@@ -42,7 +43,6 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         // }
         filter = {                        
             name: str.protocol,
-            chainId :str.chainId,
         }
         dbClient.findData(TableName.DetailedPools,filter).then((result)=>{
             console.log('result',filter)
