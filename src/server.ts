@@ -43,6 +43,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         // }
         filter = {                        
             name: str.protocol,
+            chainId: str.chainId
         }
         dbClient.findData(TableName.DetailedPools,filter).then((result)=>{
             console.log('result',filter)
