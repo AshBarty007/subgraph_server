@@ -31,7 +31,7 @@ export class PancakeSwapSubgraphProvider implements ISubgraphProvider{
                 }>(queryV2PoolGQL(LiquidityMoreThan90Percent.PancakeSwap,'BNB')).then((res)=>{
                     let data = {
                         updateTime: Date.parse(new Date().toString()),
-                        name: "PancakeSwap",
+                        name: "pancakeswap",
                         chainId :this.chainId,
                         result : res,
                     }
@@ -58,7 +58,7 @@ export class PancakeSwapSubgraphProvider implements ISubgraphProvider{
                 }>(quickQueryV2PoolGQL(LiquidityMoreThan90Percent.PancakeSwap,'BNB')).then((res)=>{
                     let data = {
                         updateTime: Date.parse(new Date().toString()),
-                        name: "PancakeSwap",
+                        name: "pancakeswap",
                         chainId :this.chainId,
                         result : res,
                     }

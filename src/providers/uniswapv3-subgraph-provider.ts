@@ -30,7 +30,7 @@ export class UniSwapV3SubgraphProvider implements ISubgraphProvider{
                 }>(queryV3PoolGQL(LiquidityMoreThan90Percent.UniSwap_V3)).then((res)=>{
                     let data = {
                         updateTime: Date.parse(new Date().toString()),
-                        name: "UniswapV3Swap",
+                        name: "uniswap_v3",
                         chainId :this.chainId,
                         result : res,
                     }
@@ -57,7 +57,7 @@ export class UniSwapV3SubgraphProvider implements ISubgraphProvider{
                 }>(quickQueryV3PoolGQL(LiquidityMoreThan90Percent.UniSwap_V3)).then((res)=>{
                     let data = {
                         updateTime: Date.parse(new Date().toString()),
-                        name: "UniswapV3Swap",
+                        name: "uniswap_v3",
                         chainId :this.chainId,
                         result : res,
                     }

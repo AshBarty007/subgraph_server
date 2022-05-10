@@ -30,7 +30,7 @@ export class UniSwapV2SubgraphProvider implements ISubgraphProvider{
                 }>(queryV2PoolGQL(LiquidityMoreThan90Percent.UniSwap_V2,'ETH')).then((res)=>{
                     let data = {
                         updateTime: Date.parse(new Date().toString()),
-                        name: "UniswapV2Swap",
+                        name: "uniswap_v2",
                         chainId :this.chainId,
                         result : res,
                     }
@@ -57,7 +57,7 @@ export class UniSwapV2SubgraphProvider implements ISubgraphProvider{
                 }>(quickQueryV2PoolGQL(LiquidityMoreThan90Percent.UniSwap_V2,'ETH')).then((res)=>{
                     let data = {
                         updateTime: Date.parse(new Date().toString()),
-                        name: "UniswapV2Swap",
+                        name: "uniswap_v2",
                         chainId :this.chainId,
                         result : res,
                     }

@@ -30,7 +30,7 @@ export class QuickSwapSubgraphProvider implements ISubgraphProvider{
                 }>(queryV2PoolGQL(LiquidityMoreThan90Percent.QuickSwap,'ETH')).then((res)=>{
                     let data = {
                         updateTime: Date.parse(new Date().toString()),
-                        name: "QuickSwap",
+                        name: "quickswap",
                         chainId :this.chainId,
                         result : res,
                     }
@@ -57,7 +57,7 @@ export class QuickSwapSubgraphProvider implements ISubgraphProvider{
                 }>(quickQueryV2PoolGQL(LiquidityMoreThan90Percent.QuickSwap,'ETH')).then((res)=>{
                     let data = {
                         updateTime: Date.parse(new Date().toString()),
-                        name: "QuickSwap",
+                        name: "quickswap",
                         chainId :this.chainId,
                         result : res,
                     }

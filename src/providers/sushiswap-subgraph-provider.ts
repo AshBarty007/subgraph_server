@@ -31,7 +31,7 @@ export class SushiSwapSubgraphProvider implements ISubgraphProvider{
                 }>(queryV2PoolGQL(LiquidityMoreThan90Percent.SushiSwap,'ETH')).then((res)=>{
                     let data = {
                         updateTime: Date.parse(new Date().toString()),
-                        name: "SushiSwap",
+                        name: "sushiswap",
                         chainId :this.chainId,
                         result : res,
                     }
@@ -57,7 +57,7 @@ export class SushiSwapSubgraphProvider implements ISubgraphProvider{
                 }>(quickQueryV2PoolGQL(LiquidityMoreThan90Percent.SushiSwap,'ETH')).then((res)=>{
                     let data = {
                         updateTime: Date.parse(new Date().toString()),
-                        name: "SushiSwap",
+                        name: "sushiswap",
                         chainId :this.chainId,
                         result : res,
                     }
