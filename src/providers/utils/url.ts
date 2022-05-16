@@ -30,3 +30,15 @@ export const SUBGRAPH_URL_BY_UNISWAP_V3: { [chainId in ChainId]?: string } = {
     [ChainId.POLYGON]:
       'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon',
   };
+
+  export const CHAIN_RPC:{ [chainId in ChainId]?: string } = {
+    [ChainId.MAINNET]:
+      'https://api.mycryptoapi.com/eth',
+    [ChainId.POLYGON]:
+      'https://polygon-rpc.com/',
+    [ChainId.BSC]:
+      'https://bsc-dataseed.binance.org/',
+  }
+
+  export const ETH_PRICE_API = 'https://api.etherscan.io/api?module=stats&action=ethprice&apikey=39M44K1IVEI2QWXV669BE81JIYUZ6JB8TQ'
+  
