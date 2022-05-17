@@ -5,7 +5,7 @@ import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/i
 
 
 //const provider = new ethers.providers.JsonRpcProvider('https://api.etherscan.io/api?module=contract&action=getabi&address=0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413&apikey=39M44K1IVEI2QWXV669BE81JIYUZ6JB8TQ')
-const provider = ethers.getDefaultProvider()
+const provider = new ethers.providers.JsonRpcProvider('https://api.mycryptoapi.com/eth')
 
 const poolAddress = '0x8ad599c3A0ff1De082011EFDDc58f1908eb6e6D8'
 
@@ -73,9 +73,9 @@ async function getPoolState() {
 async function main() {
   const [immutables, state] = await Promise.all([getPoolImmutables(), getPoolState()])
 
-  const TokenA = new Token(3, immutables.token0, 6, 'USDC', 'USD Coin')
+  const TokenA = new Token(1, immutables.token0, 6, 'USDC', 'USD Coin')
 
-  const TokenB = new Token(3, immutables.token1, 18, 'WETH', 'Wrapped Ether')
+  const TokenB = new Token(1, immutables.token1, 18, 'WETH', 'Wrapped Ether')
 
   const poolExample = new Pool(
     TokenA,
@@ -85,6 +85,8 @@ async function main() {
     state.liquidity.toString(),
     state.tick
   )
+  console.log(TokenA)
+  console.log(TokenB)
   console.log(poolExample.liquidity.toString())
 }
 

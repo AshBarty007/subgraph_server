@@ -1,11 +1,9 @@
 import { ethers } from 'ethers'
-import { Pool } from '@uniswap/v3-sdk'
-import { Token } from '@uniswap/sdk-core'
 import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json'
+import { ChainId } from '../providers/utils/chainId'
+import { BarterSwapDB, TableName } from '../mongodb/client'
 
-
-//const provider = new ethers.providers.JsonRpcProvider('https://api.etherscan.io/api?module=contract&action=getabi&address=0xBB9bc244D798123fDe783fCc1C72d3Bb8C189413&apikey=39M44K1IVEI2QWXV669BE81JIYUZ6JB8TQ')
-const provider = ethers.getDefaultProvider()
+const provider = new ethers.providers.JsonRpcProvider('https://api.mycryptoapi.com/eth')
 
 interface Immutables {
   factory: string
@@ -27,7 +25,7 @@ interface State {
   unlocked: boolean
 }
 
-async function getPoolImmutables(poolContract:ethers.Contract) {
+async function getPoolImmutables(poolContract: ethers.Contract) {
   const [factory, token0, token1, fee, tickSpacing, maxLiquidityPerTick] = await Promise.all([
     poolContract.factory(),
     poolContract.token0(),
@@ -48,7 +46,8 @@ async function getPoolImmutables(poolContract:ethers.Contract) {
   return immutables
 }
 
-async function getPoolState(poolContract:ethers.Contract) {
+async function getPoolState(poolContract: ethers.Contract) {
+
   const [liquidity, slot] = await Promise.all([poolContract.liquidity(), poolContract.slot0()])
 
   const PoolState: State = {
@@ -65,28 +64,31 @@ async function getPoolState(poolContract:ethers.Contract) {
   return PoolState
 }
 
-export async function onchainQuery(poolAddress:string,decimals0: number,decimals1: number) {
+export async function onchainQuery(chainId: ChainId, poolAddress: string, token0Address: string, token1Address: string) {
+  let DB = new BarterSwapDB();
   const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI, provider)
-
   const [immutables, state] = await Promise.all([getPoolImmutables(poolContract), getPoolState(poolContract)])
 
-  const TokenA = new Token(3, immutables.token0, decimals0)
-
-  const TokenB = new Token(3, immutables.token1, decimals1)
-
   let result = {
-      id : poolAddress,
-      fee : immutables.fee,
-      liquidity : state.liquidity.toString(),
-      token0:{
-          id: TokenA.address,
-          symbol: TokenA.symbol
-      },
-      token1:{
-        id: TokenB.address,
-        symbol: TokenA.symbol
-      }
+    id: poolAddress,
+    fee: immutables.fee,
+    liquidity: state.liquidity.toString(),
+    token0: {
+      id: token0Address,
+    },
+    token1: {
+      id: token1Address,
+    }
   }
-  return result
+  //  console.log(result)
+  let data = {
+    updateTime: Date.parse(new Date().toString()),
+    name: "uniswapv2swap",
+    chainId: chainId,
+    result: result,
+  }
+
+  DB.insertData(TableName.OnChainPools, data)
 }
 
+//onchainQuery('0x5777d92f208679db4b9778590fa3cab3ac9e2168','','')

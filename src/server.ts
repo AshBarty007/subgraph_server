@@ -17,54 +17,21 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
     if (ok.path != '/favicon.ico') {
         let str: any = JSON.stringify(ok.query);
         str = JSON.parse(str);
-        //console.log(str.protocol, str.chainId)
         let filter = {}
         filter = {
             name: str.protocol,
-            chainId: Number(str.chainId),
+            //chainId: Number(str.chainId),
         }
-        dbClient.findData(TableName.DetailedPools, filter).then((result:any) => {
-            if (result.updatetime - Date.parse(new Date().toString())<3000000){
-                response.writeHead(200, { "Content-Type": "application/json" });
-                response.end(JSON.stringify(result));
-            }else{
-                //TODO
-                onchain(str.protocol,result.token0.id,result.token0.id,result.id,result.token0.decimals,result.token1.decimals).then((result) => {
-                    response.writeHead(200, { "Content-Type": "application/json" });
-                    response.end(JSON.stringify(result));
-                }).catch((err) => {
-                    console.log(err)
-                    dbClient.findData(TableName.SimplePools, filter).then((result) => {
-                        response.writeHead(200, { "Content-Type": "application/json" });
-                        response.end(JSON.stringify(result));
-                    }).catch(() => {
-                        response.on('error', (err) => {
-                            console.error(err);
-                        });
-                        response.writeHead(200, { "Content-Type": "text/plain" });
-                        response.end("url error!");
-                    })
-                })
-            }
-
+        dbClient.findData(TableName.SimplePools, filter).then((result:any) => {
+            response.writeHead(200, { "Content-Type": "application/json" });
+            response.end(JSON.stringify(result));
         }).catch((err) => {
             console.log(err)
-            dbClient.findData(TableName.SimplePools, filter).then((result:any) => {
-                //TODO
-                onchain(str.protocol,result.token0.id,result.token0.id,result.id,result.token0.decimals,result.token1.decimals).then((data) => {
-                    response.writeHead(200, { "Content-Type": "application/json" });
-                    response.end(JSON.stringify(data));
-                }).catch(() => {
-                    response.writeHead(200, { "Content-Type": "application/json" });
-                    response.end(JSON.stringify(result));
-                })
-            }).catch(() => {
-                response.on('error', (err) => {
-                    console.error(err);
-                });
-                response.writeHead(200, { "Content-Type": "text/plain" });
-                response.end("url error!");
-            })
+            response.on('error', (err) => {
+                console.error(err);
+            });
+            response.writeHead(200, { "Content-Type": "text/plain" });
+            response.end("url error!");
         })
     }
 
@@ -73,12 +40,12 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
 server.listen(port);
 console.log(`server is running ...`)
 
-async function onchain(dexName: string,token0Adress:string,token1Adress:string,poolAdress:string,decimals0: number,decimals1: number) {
+async function onchain(dexName: string,token0Adress:string,token1Adress:string,poolAdress:string) {
     switch (dexName) {
         case "uniswap_v2":
             return uniSwapV2OnChain(ChainId.MAINNET, token0Adress, token1Adress)
         case "uniswap_v3":
-            return uniSwapV3OnChian(poolAdress,decimals0,decimals1)
+            return uniSwapV3OnChian(ChainId.POLYGON,poolAdress, token0Adress, token1Adress)
         case "quickswap":
             return quickSwapOnChian(ChainId.POLYGON, token0Adress, token1Adress)
         case "sushiswap":

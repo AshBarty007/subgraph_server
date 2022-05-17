@@ -91,4 +91,5 @@ export class BarterSwapDB {
 export enum TableName {
     DetailedPools = 'DetailedPools',
     SimplePools = 'SimplePools',
+    OnChainPools = 'OnChainPools',
   }
