@@ -3,13 +3,12 @@ import { ChainId } from '../providers/utils/chainId'
 import { CHAIN_RPC, ETH_PRICE_API } from '../providers/utils/url'
 import { providers, } from 'ethers'
 const request = require('request');
-import { BarterSwapDB,TableName } from '../mongodb/client'
+import { BarterSwapDB, TableName } from '../mongodb/client'
 
 
 let ethprice = 0
 
 export async function onchainQuery(chainId: ChainId, token0Address: string, token1Address: string) {
-    let DB = new BarterSwapDB();
     let provider = new providers.JsonRpcProvider(CHAIN_RPC[chainId]);
     const token0 = await Fetcher.fetchTokenData(Number(chainId), token0Address, provider)
     const token1 = await Fetcher.fetchTokenData(Number(chainId), token1Address, provider)
@@ -19,8 +18,8 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
     let reserve1 = Number(pair.reserve1.toFixed(pair.token1.decimals))
     let token0Price = Number(pair.token0Price.scalar.numerator.toString()) / Number(pair.token0Price.scalar.denominator.toString()) * Number(pair.token0Price.numerator.toString()) / Number(pair.token0Price.denominator.toString())
     let token1Price = Number(pair.token1Price.scalar.numerator.toString()) / Number(pair.token1Price.scalar.denominator.toString()) * Number(pair.token1Price.numerator.toString()) / Number(pair.token1Price.denominator.toString())
-    
-    
+
+
     await request(ETH_PRICE_API, { json: true }, (err: any, res: any, body: any) => {
         if (err) {
             return console.log(err);
@@ -36,7 +35,7 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
         if (ethprice != 0) {
             reserveUSD = reserveETH * ethprice
         }
-    
+
         let result = {
             reserve0,
             reserve1,
@@ -54,21 +53,32 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
             }
         }
         //console.log(result)
-        let data = {
+        return  {
             updateTime: Date.parse(new Date().toString()),
             name: "pancakeswap",
-            chainId :chainId,
-            result : result,
+            chainId: chainId,
+            result: result,
         }
-        DB.insertData(TableName.OnChainPools, {name: "pancakeswap"})
-        DB.insertData(TableName.OnChainPools,data)
+
     });
 }
 
 export async function onchainPools() {
     let DB = new BarterSwapDB();
-    DB.findData(TableName.SimplePools,{name: "pancakeswap"}).then((result:any)=>{
-        JSON.stringify(result)
+    let pools : any
+    await DB.findData(TableName.SimplePools, { name: "pancakeswap" }).then((result: any) => {
+        pools = result[0].result.pairs
     })
+    let len = pools.length
+    let data = [len]
+    for (let i = 0; i < len; i++) {
+        let token0 = pools[i].token0.id
+        let token1 = pools[i].token1.id
+        data[i] = await onchainQuery(ChainId.BSC,token0,token1)
+    }
+    DB.deleteData(TableName.OnChainPools, { name: "pancakeswap" })
+    DB.insertData(TableName.OnChainPools, data)
+    console.log(data)
 }
+onchainPools()
 //onchainQuery(ChainId.BSC,'0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56','0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c')

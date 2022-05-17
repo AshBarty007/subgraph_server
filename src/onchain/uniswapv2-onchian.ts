@@ -59,7 +59,7 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
             chainId :chainId,
             result : result,
         }
-        DB.insertData(TableName.OnChainPools, {name: "uniswap_v2"})
+        DB.deleteData(TableName.OnChainPools, {name: "uniswap_v2"})
         DB.insertData(TableName.OnChainPools,data)
     });
 }
