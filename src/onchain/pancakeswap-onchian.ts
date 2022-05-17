@@ -52,9 +52,9 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
                 decimals: token1.decimals
             }
         }
-        console.log(result)
-        return  result
     });
+    console.log(result)
+    return  result
 }
 
 export async function onchainPools() {
