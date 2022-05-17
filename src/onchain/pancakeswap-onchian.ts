@@ -76,7 +76,9 @@ export async function onchainPools() {
         let token1 = pools[i].token1.id
         await onchainQuery(ChainId.BSC,token0,token1).then((res)=>{
             data[i] = res
+            console.log(i,data[i],res)
         })
+        console.log(i,data[i])
     }
     //DB.deleteData(TableName.OnChainPools, { name: "pancakeswap" })
     //DB.insertData(TableName.OnChainPools, data)
