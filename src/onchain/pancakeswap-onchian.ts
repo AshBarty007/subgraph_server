@@ -53,15 +53,16 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
                 decimals: token1.decimals
             }
         }
-        console.log(result)
+        //console.log(result)
         let data = {
             updateTime: Date.parse(new Date().toString()),
             name: "pancakeswap",
             chainId :chainId,
             result : result,
         }
+        DB.insertData(TableName.OnChainPools, {name: "pancakeswap"})
         DB.insertData(TableName.OnChainPools,data)
     });
 }
 
-onchainQuery(ChainId.BSC,'0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56','0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c')
+//onchainQuery(ChainId.BSC,'0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56','0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c')

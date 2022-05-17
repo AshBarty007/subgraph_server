@@ -34,6 +34,7 @@ export class QuickSwapSubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
+                    this.DB.deleteData(TableName.DetailedPools,{name: "quickswap"})
                     this.DB.insertData(TableName.DetailedPools,data)
                 });
             },      
@@ -41,7 +42,6 @@ export class QuickSwapSubgraphProvider implements ISubgraphProvider{
                 retries: this.retries,       
                 maxTimeout: this.maxTimeout,
                 onRetry: (err, retry) => {
-                    
                     console.log("error message:",err,",retry times:",retry)
                 },
             }
@@ -61,6 +61,7 @@ export class QuickSwapSubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
+                    this.DB.deleteData(TableName.SimplePools,{name: "quickswap"})
                     this.DB.insertData(TableName.SimplePools,data)
                 });
             },      

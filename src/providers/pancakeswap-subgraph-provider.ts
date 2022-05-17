@@ -35,6 +35,7 @@ export class PancakeSwapSubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
+                    this.DB.deleteData(TableName.DetailedPools,{name: "pancakeswap"})
                     this.DB.insertData(TableName.DetailedPools,data)
                 });
             },      
@@ -42,7 +43,6 @@ export class PancakeSwapSubgraphProvider implements ISubgraphProvider{
                 retries: this.retries,       
                 maxTimeout: this.maxTimeout,
                 onRetry: (err, retry) => {
-                    
                     console.log("error message:",err,",retry times:",retry)
                 },
             }
@@ -62,6 +62,7 @@ export class PancakeSwapSubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
+                    this.DB.deleteData(TableName.SimplePools,{name: "pancakeswap"})
                     this.DB.insertData(TableName.SimplePools,data)
                 });
             },      

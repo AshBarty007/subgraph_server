@@ -35,6 +35,7 @@ export class SushiSwapSubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
+                    this.DB.deleteData(TableName.DetailedPools,{name: "sushiswap"})
                     this.DB.insertData(TableName.DetailedPools,data)
                 });
             },      
@@ -61,6 +62,7 @@ export class SushiSwapSubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
+                    this.DB.deleteData(TableName.SimplePools,{name: "sushiswap"})
                     this.DB.insertData(TableName.SimplePools,data)
                 });
             },      
