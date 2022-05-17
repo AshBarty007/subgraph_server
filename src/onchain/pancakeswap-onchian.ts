@@ -52,7 +52,7 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
                 decimals: token1.decimals
             }
         }
-        //console.log(result)
+        console.log(result)
         return  {
             updateTime: Date.parse(new Date().toString()),
             name: "pancakeswap",
@@ -78,7 +78,6 @@ export async function onchainPools() {
             data[i] = res
             console.log(i,data[i],res)
         })
-        console.log(i,data[i])
     }
     //DB.deleteData(TableName.OnChainPools, { name: "pancakeswap" })
     //DB.insertData(TableName.OnChainPools, data)
