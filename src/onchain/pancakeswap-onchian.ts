@@ -19,7 +19,7 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
     let token0Price = Number(pair.token0Price.scalar.numerator.toString()) / Number(pair.token0Price.scalar.denominator.toString()) * Number(pair.token0Price.numerator.toString()) / Number(pair.token0Price.denominator.toString())
     let token1Price = Number(pair.token1Price.scalar.numerator.toString()) / Number(pair.token1Price.scalar.denominator.toString()) * Number(pair.token1Price.numerator.toString()) / Number(pair.token1Price.denominator.toString())
 
-    let result:any
+    let result
     await request(ETH_PRICE_API, { json: true }, (err: any, res: any, body: any) => {
         if (err) {
             return console.log(err);
@@ -52,11 +52,9 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
                 decimals: token1.decimals
             }
         }
-    }).then(()=>{
         console.log(result)
         return  result
     });
-
 }
 
 export async function onchainPools() {
@@ -70,10 +68,8 @@ export async function onchainPools() {
     for (let i = 0; i < len; i++) {
         let token0 = pools[i].token0.id
         let token1 = pools[i].token1.id
-        await onchainQuery(ChainId.BSC,token0,token1).then((res)=>{
-            data[i] = res
-            console.log(i,data[i])
-        })
+        data[i] = await onchainQuery(ChainId.BSC,token0,token1)
+        console.log(i,data[i])
     }
     let storageData = {
         updateTime: Date.parse(new Date().toString()),
