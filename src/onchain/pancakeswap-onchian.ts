@@ -19,7 +19,7 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
     let token0Price = Number(pair.token0Price.scalar.numerator.toString()) / Number(pair.token0Price.scalar.denominator.toString()) * Number(pair.token0Price.numerator.toString()) / Number(pair.token0Price.denominator.toString())
     let token1Price = Number(pair.token1Price.scalar.numerator.toString()) / Number(pair.token1Price.scalar.denominator.toString()) * Number(pair.token1Price.numerator.toString()) / Number(pair.token1Price.denominator.toString())
 
-
+    let result
     await request(ETH_PRICE_API, { json: true }, (err: any, res: any, body: any) => {
         if (err) {
             return console.log(err);
@@ -36,7 +36,7 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
             reserveUSD = reserveETH * ethprice
         }
 
-        let result = {
+        result = {
             reserve0,
             reserve1,
             reserveUSD,
@@ -52,15 +52,13 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
                 decimals: token1.decimals
             }
         }
-        console.log(result)
-        return  {
-            updateTime: Date.parse(new Date().toString()),
-            name: "pancakeswap",
-            chainId: chainId,
-            result: result,
-        }
-
     });
+    return  {
+        updateTime: Date.parse(new Date().toString()),
+        name: "pancakeswap",
+        chainId: chainId,
+        result: result,
+    }
 }
 
 export async function onchainPools() {
