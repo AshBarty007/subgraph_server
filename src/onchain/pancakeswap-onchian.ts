@@ -52,9 +52,9 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
                 decimals: token1.decimals
             }
         }
+        console.log(result)
+        return  result
     });
-    console.log(result)
-    return  result
 }
 
 export async function onchainPools() {
@@ -84,4 +84,3 @@ export async function onchainPools() {
     console.log('data',storageData)
 }
 onchainPools()
-//onchainQuery(ChainId.BSC,'0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56','0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c')
