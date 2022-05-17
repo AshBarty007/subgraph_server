@@ -53,12 +53,8 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
             }
         }
     });
-    return  {
-        updateTime: Date.parse(new Date().toString()),
-        name: "pancakeswap",
-        chainId: chainId,
-        result: result,
-    }
+    console.log(result)
+    return  result
 }
 
 export async function onchainPools() {
@@ -74,12 +70,18 @@ export async function onchainPools() {
         let token1 = pools[i].token1.id
         await onchainQuery(ChainId.BSC,token0,token1).then((res)=>{
             data[i] = res
-            console.log(i,data[i],res)
+            console.log(i,data[i])
         })
+    }
+    let storageData = {
+        updateTime: Date.parse(new Date().toString()),
+        name: "pancakeswap",
+        chainId: ChainId.BSC,
+        result: data,
     }
     //DB.deleteData(TableName.OnChainPools, { name: "pancakeswap" })
     //DB.insertData(TableName.OnChainPools, data)
-    console.log('data',data)
+    console.log('data',storageData)
 }
 onchainPools()
 //onchainQuery(ChainId.BSC,'0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56','0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c')
