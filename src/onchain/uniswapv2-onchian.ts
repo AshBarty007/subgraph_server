@@ -52,7 +52,7 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
                 decimals: token1.decimals
             }
         }
-        //console.log(result)
+        console.log(result)
         let data = {
             updateTime: Date.parse(new Date().toString()),
             name: "uniswapv2swap",
@@ -63,4 +63,4 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
     });
 }
 
-//onchainQuery(ChainId.MAINNET,'0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48','0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2')
+onchainQuery(ChainId.MAINNET,'0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48','0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2')

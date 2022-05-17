@@ -80,7 +80,7 @@ export async function onchainQuery(chainId: ChainId, poolAddress: string, token0
       id: token1Address,
     }
   }
-  //  console.log(result)
+    console.log(result)
   let data = {
     updateTime: Date.parse(new Date().toString()),
     name: "uniswapv2swap",
@@ -91,4 +91,4 @@ export async function onchainQuery(chainId: ChainId, poolAddress: string, token0
   DB.insertData(TableName.OnChainPools, data)
 }
 
-//onchainQuery('0x5777d92f208679db4b9778590fa3cab3ac9e2168','','')
+onchainQuery(ChainId.POLYGON,'0x5777d92f208679db4b9778590fa3cab3ac9e2168','','')
