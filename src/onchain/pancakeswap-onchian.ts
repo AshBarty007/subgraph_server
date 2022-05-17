@@ -52,9 +52,9 @@ export async function onchainQuery(chainId: ChainId, token0Address: string, toke
                 decimals: token1.decimals
             }
         }
-        console.log(result)
-        return  result
     });
+    console.log(result)
+    return  result
 }
 
 export async function onchainPools() {
@@ -68,8 +68,10 @@ export async function onchainPools() {
     for (let i = 0; i < len; i++) {
         let token0 = pools[i].token0.id
         let token1 = pools[i].token1.id
-        data[i] = await onchainQuery(ChainId.BSC,token0,token1)
-        console.log(i,data[i])
+        await onchainQuery(ChainId.BSC,token0,token1).then((res)=>{
+            data[i] = res
+            console.log(i,data[i])
+        })
     }
     let storageData = {
         updateTime: Date.parse(new Date().toString()),
@@ -81,4 +83,6 @@ export async function onchainPools() {
     //DB.insertData(TableName.OnChainPools, data)
     console.log('data',storageData)
 }
-onchainPools()
+//onchainPools()
+let data = onchainQuery(ChainId.BSC,'0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56','0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c')
+console.log(data)
