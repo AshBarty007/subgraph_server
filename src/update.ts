@@ -41,15 +41,16 @@ const scheduleTask = () => {
         console.log(new Date(), 'the DetailedPoolsTable have updated.');
     });
 
-    schedule.scheduleJob('* */5 * * * *', () => {
-        PancakeSwapOnChainQuery(ChainId.MAINNET,'','')
-        QuickSwapOnChainQuery(ChainId.MAINNET,'','')
-        SushiSwapOnChainQuery(ChainId.MAINNET,'','')
-        UniSwapV2OnChainQuery(ChainId.MAINNET,'','')
-        UniSwapV3OnChainQuery(ChainId.MAINNET,'','','')
+    // schedule.scheduleJob('* */5 * * * *', () => {
 
-        console.log(new Date(), 'the OnChainPoolsTable have updated.');
-    });
+    //     PancakeSwapOnChainQuery(ChainId.BSC,'','')
+    //     QuickSwapOnChainQuery(ChainId.POLYGON,'','')
+    //     SushiSwapOnChainQuery(ChainId.POLYGON,'','')
+    //     UniSwapV2OnChainQuery(ChainId.MAINNET,'','')
+    //     UniSwapV3OnChainQuery(ChainId.POLYGON,'','','')
+
+    //     console.log(new Date(), 'the OnChainPoolsTable have updated.');
+    // });
 }
 
 scheduleTask();
