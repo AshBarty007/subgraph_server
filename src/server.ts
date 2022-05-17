@@ -15,7 +15,10 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         let filter = {
             name: dex,
         }
+        console.log('dex',dex)
         dbClient.findData(TableName.SimplePools, filter).then((result:any) => {
+            
+            console.log('result',result)
             let data = [result.length]
             let pools
             for (let i=0;i<result.length;i++){
