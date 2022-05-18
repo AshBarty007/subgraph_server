@@ -23,7 +23,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
             for (let i=0;i<result.length;i++){
                 data[i] = result[i].result.pair
                 if (i>0){
-                    pools = extend(data[0],data[i])
+                    //pools = extend(data[0],data[i])
                 }
             }
             response.writeHead(200, { "Content-Type": "application/json" });
@@ -40,12 +40,6 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
 
 });
 
-function extend(target:any, source:any) {
-    for (var obj in source) {
-        target[obj] = source[obj];
-    }
-    return target;
-}
 
 server.listen(port);
 console.log(`server is running ...`)

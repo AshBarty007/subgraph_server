@@ -40,5 +40,5 @@ export const SUBGRAPH_URL_BY_UNISWAP_V3: { [chainId in ChainId]?: string } = {
       'https://bsc-dataseed.binance.org/',
   }
 
-  export const ETH_PRICE_API = 'https://api.etherscan.io/api?module=stats&action=ethprice&apikey=39M44K1IVEI2QWXV669BE81JIYUZ6JB8TQ'
+  export const ETH_PRICE_API = 'https://api.curve.fi/api/getETHprice'
   

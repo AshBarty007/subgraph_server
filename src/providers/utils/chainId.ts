@@ -18,3 +18,7 @@ export const V2_SUPPORTED = [
 ];
 
 
+export const V3_SUPPORTED = [
+  ChainId.MAINNET,
+  ChainId.POLYGON
+];
