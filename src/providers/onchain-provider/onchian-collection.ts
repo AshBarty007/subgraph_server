@@ -52,12 +52,5 @@ export async function onchainPools(price: number, dexName: swapName, chainId: Ch
     }
     DB.deleteData(TableName.OnChainPools, { name: dexName })
     DB.insertData(TableName.OnChainPools, storageData)
-    console.log('data',storageData)
+    //console.log('data',storageData)
 }
-
-async function a() {
-    let price = await ethPrice()
-    await onchainPools(price,dexName.pancakeswap,ChainId.BSC)
-    console.log('price', price)
-}
-a()
