@@ -5,7 +5,7 @@ import { providers, } from 'ethers'
 import { BarterSwapDB, TableName } from '../../mongodb/client'
 import {ethPrice,dexName} from '../utils/params'
 
-async function onchainQuery(chainId: ChainId, token0Address: string, token1Address: string, price: number){
+async function onchainQuery(chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number){
     let provider = new providers.JsonRpcProvider(CHAIN_RPC[chainId]);
     const token0 = await Fetcher.fetchTokenData(Number(chainId), token0Address, provider)
     const token1 = await Fetcher.fetchTokenData(Number(chainId), token1Address, provider)
@@ -27,6 +27,7 @@ async function onchainQuery(chainId: ChainId, token0Address: string, token1Addre
         reserveUSD = reserveETH * price
     }
     let result = {
+        id,
         reserve0,
         reserve1,
         reserveUSD,
@@ -56,9 +57,10 @@ export async function onchainPools(price:number) {
     let len = pools.length
     let data = [len]
     for (let i = 0; i < len; i++) {
+        let id = pools[i].id
         let token0 = pools[i].token0.id
         let token1 = pools[i].token1.id
-        await onchainQuery(ChainId.BSC,token0,token1,price).then((res)=>{
+        await onchainQuery(ChainId.BSC,id,token0,token1,price).then((res)=>{
             data[i] = res
             console.log(i,data[i])
         })
@@ -70,7 +72,7 @@ export async function onchainPools(price:number) {
         result: data,
     }
     DB.deleteData(TableName.OnChainPools, { name: dexName.pancakeswap })
-    DB.insertData(TableName.OnChainPools, data)
+    DB.insertData(TableName.OnChainPools, storageData)
     console.log('data',storageData)
 }
 
@@ -78,6 +80,7 @@ async function a(){
 let price = await ethPrice()
 let pools = await onchainPools(price)
 //let data = await onchainQuery(ChainId.BSC,'0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56','0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c',price)
-console.log('get',pools)
+console.log('price',price)
+console.log('pools',pools)
 }
 a()
