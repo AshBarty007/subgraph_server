@@ -4,11 +4,7 @@ import { SushiSwapSubgraphProvider } from './providers/subgraph-provider/sushisw
 import { UniSwapV2SubgraphProvider } from './providers/subgraph-provider/uniswapv2-subgraph-provider'
 import { UniSwapV3SubgraphProvider } from './providers/subgraph-provider/uniswapv3-subgraph-provider'
 
-import { onchainQuery as PancakeSwapOnChainQuery } from './providers/onchain-provider/pancakeswap-onchian'
-import { onchainQuery as QuickSwapOnChainQuery} from './providers/onchain-provider/quickswap-onchian'
-import { onchainQuery as SushiSwapOnChainQuery} from './providers/onchain-provider/sushiswap-onchian'
-import { onchainQuery as UniSwapV2OnChainQuery} from './providers/onchain-provider/uniswapv2-onchian'
-import { onchainQuery as UniSwapV3OnChainQuery} from './providers/onchain-provider/uniswapv3-onchain'
+import { onchainPools } from './providers/onchain-provider/onchian-collection'
 
 import { ChainId } from './providers/utils/chainId'
 const schedule = require('node-schedule');

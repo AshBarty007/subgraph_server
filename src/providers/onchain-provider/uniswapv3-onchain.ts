@@ -64,7 +64,7 @@ async function getPoolState(poolContract: ethers.Contract) {
   return PoolState
 }
 
-export async function onchainQuery(chainId: ChainId, poolAddress: string, token0Address: string, token1Address: string) {
+export async function queryUniSwapV3OnChain(chainId: ChainId, poolAddress: string, token0Address: string, token1Address: string,price:number) {
   let DB = new BarterSwapDB();
   const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI, provider)
   const [immutables, state] = await Promise.all([getPoolImmutables(poolContract), getPoolState(poolContract)])
@@ -80,15 +80,8 @@ export async function onchainQuery(chainId: ChainId, poolAddress: string, token0
       id: token1Address,
     }
   }
-    //console.log(result)
-  let data = {
-    updateTime: Date.parse(new Date().toString()),
-    name: "uniswap_v3",
-    chainId: chainId,
-    result: result,
-  }
-  DB.deleteData(TableName.OnChainPools, {name: "uniswap_v2"})
-  DB.insertData(TableName.OnChainPools, data)
+
+  return JSON.stringify(result)
 }
 
 //onchainQuery(ChainId.POLYGON,'0x5777d92f208679db4b9778590fa3cab3ac9e2168','','')
