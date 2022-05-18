@@ -5,8 +5,8 @@ import { UniSwapV2SubgraphProvider } from './providers/subgraph-provider/uniswap
 import { UniSwapV3SubgraphProvider } from './providers/subgraph-provider/uniswapv3-subgraph-provider'
 
 import { onchainPools } from './providers/onchain-provider/onchian-collection'
-
 import { ChainId } from './providers/utils/chainId'
+import { dexName, ethPrice } from './providers/utils/params'
 const schedule = require('node-schedule');
 
 
@@ -37,16 +37,15 @@ const scheduleTask = () => {
         console.log(new Date(), 'the DetailedPoolsTable have updated.');
     });
 
-    // schedule.scheduleJob('* */5 * * * *', () => {
+    schedule.scheduleJob('* */5 * * * *', () => {
+        onchainPools(dexName.pancakeswap,ChainId.BSC)
+        onchainPools(dexName.quickswap,ChainId.POLYGON)
+        onchainPools(dexName.sushiswap,ChainId.POLYGON)
+        onchainPools(dexName.uniswap_v2,ChainId.MAINNET)
+        onchainPools(dexName.uniswap_v3,ChainId.POLYGON)
 
-    //     PancakeSwapOnChainQuery(ChainId.BSC,'','')
-    //     QuickSwapOnChainQuery(ChainId.POLYGON,'','')
-    //     SushiSwapOnChainQuery(ChainId.POLYGON,'','')
-    //     UniSwapV2OnChainQuery(ChainId.MAINNET,'','')
-    //     UniSwapV3OnChainQuery(ChainId.POLYGON,'','','')
-
-    //     console.log(new Date(), 'the OnChainPoolsTable have updated.');
-    // });
+        console.log(new Date(), 'the OnChainPoolsTable have updated.');
+    });
 }
 
 scheduleTask();

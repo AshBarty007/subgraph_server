@@ -1,5 +1,5 @@
 import { BarterSwapDB, TableName } from '../../mongodb/client'
-import { ethPrice, dexName as swapName, dexName } from '../utils/params'
+import { ethPrice, dexName as swapName} from '../utils/params'
 import { ChainId } from '../utils/chainId'
 import { queryPancakeSwapOnChain } from './pancakeswap-onchain'
 import { queryQuickSwapOnChain } from './quickswap-onchain'
@@ -7,7 +7,7 @@ import { querySushiSwapOnChain } from './sushiswap-onchain'
 import { queryUniSwapV2OnChain } from './uniswapv2-onchain'
 import { queryUniSwapV3OnChain } from './uniswapv3-onchain'
 
-export async function onchainPools(price: number, dexName: swapName, chainId: ChainId) {
+export async function onchainPools(dexName: swapName, chainId: ChainId) {
     let DB = new BarterSwapDB();
     let pools: any
     await DB.findData(TableName.SimplePools, { name: dexName }).then((result: any) => {
@@ -35,6 +35,7 @@ export async function onchainPools(price: number, dexName: swapName, chainId: Ch
 
     let len = pools.length
     let data = [len]
+    let price = await ethPrice()
     for (let i = 0; i < len; i++) {
         let id = pools[i].id
         let token0 = pools[i].token0.id
