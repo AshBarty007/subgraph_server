@@ -57,7 +57,7 @@ export async function onchainPools(price: number, dexName: swapName, chainId: Ch
 
 async function a() {
     let price = await ethPrice()
-    await onchainPools(price,dexName.uniswap_v2,ChainId.MAINNET)
+    await onchainPools(price,dexName.pancakeswap,ChainId.BSC)
     console.log('price', price)
 }
 a()
