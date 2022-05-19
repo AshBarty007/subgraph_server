@@ -34,14 +34,14 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     console.log(poolsData)
     let poolsJson = JSON.parse(poolsData)
     let len = poolsJson.length
-    let data = [len]
+    let data = []
 
     for (let i = 0; i < len; i++) {
         let id = poolsJson[i].id
         let token0 = poolsJson[i].token0.id
         let token1 = poolsJson[i].token1.id
         data[i] = await onchainQuery(chainId, id, token0, token1, price)
-        console.log(data[i])
+        console.log(data.length)
     }
     let storageData = {
         updateTime: Date.parse(new Date().toString()),
@@ -51,7 +51,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     }
     DB.deleteData(TableName.OnChainPools, { name: dexName })
     DB.insertData(TableName.OnChainPools, storageData)
-    console.log('data',storageData)
+    //console.log('data',storageData)
 }
 
 function test(){
