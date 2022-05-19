@@ -34,9 +34,10 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     let poolsJson = JSON.parse(poolsData)
     let len = poolsJson.length
     let data = []
-    console.log(swapName)
+    console.log(dexName)
     for (let i = 0; i < len; i++) {
         console.log(i)
+        console.log('data',poolsJson[i])
         console.log('id',poolsJson[i].id)
         console.log('id0',poolsJson[i].token0.id)
         console.log('id1',poolsJson[i].token1.id)
