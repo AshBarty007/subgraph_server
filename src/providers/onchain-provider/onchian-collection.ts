@@ -28,34 +28,34 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             onchainQuery = queryUniSwapV3OnChain
             break;
     }
-
+    console.log(dexName)
     let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
     //console.log('poolData',poolsData)
     let poolsJson = JSON.parse(poolsData)
-    console.log(poolsData)
-    let len = poolsJson[0].result.pairs.length
-    let data = []
-    console.log(dexName)
-    for (let i = 0; i < len; i++) {
-        try{
-            let id = poolsJson[0].result.pairs[i].id
-            let token0 = poolsJson[0].result.pairs[i].token0.id
-            let token1 = poolsJson[0].result.pairs[i].token1.id
-            data[i] = await onchainQuery(chainId, id, token0, token1, price)
-            console.log("data len",data.length)
-        }catch(err){
-            console.log(err)
-        }
-    }
-    let storageData = {
-        updateTime: Date.parse(new Date().toString()),
-        name: dexName,
-        chainId: ChainId.BSC,
-        result: data,
-    }
-    DB.deleteData(TableName.OnChainPools, { name: dexName })
-    DB.insertData(TableName.OnChainPools, storageData)
-    console.log('data len',data.length)
+    console.log(poolsData[0])
+    // let len = poolsJson[0].result.pairs.length
+    // let data = []
+
+    // for (let i = 0; i < len; i++) {
+    //     try{
+    //         let id = poolsJson[0].result.pairs[i].id
+    //         let token0 = poolsJson[0].result.pairs[i].token0.id
+    //         let token1 = poolsJson[0].result.pairs[i].token1.id
+    //         data[i] = await onchainQuery(chainId, id, token0, token1, price)
+    //         console.log("data len",data.length)
+    //     }catch(err){
+    //         console.log(err)
+    //     }
+    // }
+    // let storageData = {
+    //     updateTime: Date.parse(new Date().toString()),
+    //     name: dexName,
+    //     chainId: ChainId.BSC,
+    //     result: data,
+    // }
+    // DB.deleteData(TableName.OnChainPools, { name: dexName })
+    // DB.insertData(TableName.OnChainPools, storageData)
+    // console.log('data len',data.length)
 }
 
 function test(){
