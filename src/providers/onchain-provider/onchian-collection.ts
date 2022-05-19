@@ -38,14 +38,14 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     for (let i = 0; i < len; i++) {
         console.log(i)
         console.log('data',poolsJson)
-        console.log('result',poolsJson.result)
-        console.log('pairs',poolsJson.result.pairs)
-        console.log('id',poolsJson.result.pairs.id)
-        console.log('id0',poolsJson.result.pairs.token0)
-        console.log('id1',poolsJson.result.pairs.token1.id)
-        let id = poolsJson[i].id
-        let token0 = poolsJson[i].token0.id
-        let token1 = poolsJson[i].token1.id
+        console.log('result',poolsJson[0].result)
+        console.log('pairs',poolsJson[0].result.pairs)
+        console.log('id',poolsJson[0].result.pairs.id)
+        console.log('id0',poolsJson[0].result.pairs.token0)
+        console.log('id1',poolsJson[0].result.pairs.token1.id)
+        let id = poolsJson[0].result.pairs.id
+        let token0 = poolsJson[0].result.pairs.token0
+        let token1 = poolsJson[0].result.pairs.token1.id
         data[i] = await onchainQuery(chainId, id, token0, token1, price)
         console.log(data.length)
     }
