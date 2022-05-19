@@ -37,6 +37,8 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     console.log(dexName)
     for (let i = 0; i < len; i++) {
         console.log(i)
+        console.log('data',poolsJson[i])
+        console.log('data',poolsJson[i].result)
         console.log('data',poolsJson[i].result.pair)
         console.log('id',poolsJson[i].id)
         console.log('id0',poolsJson[i].token0.id)
@@ -64,6 +66,5 @@ function test(){
     onchainPools(swapName.sushiswap,ChainId.POLYGON)
     onchainPools(swapName.uniswap_v2,ChainId.MAINNET)
     onchainPools(swapName.uniswap_v3,ChainId.POLYGON)
-    console.log('test pass')
 }
 test()
