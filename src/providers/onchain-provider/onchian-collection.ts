@@ -10,7 +10,6 @@ import { queryUniSwapV3OnChain } from './uniswapv3-onchain'
 export async function onchainPools(dexName: swapName, chainId: ChainId) {
     let DB = new BarterSwapDB();
     let price = await ethPrice()
-    console.log(price)
     let onchainQuery = function(chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number): Promise<string>{return new Promise<string>(() => {})}
     switch (dexName) {
         case swapName.pancakeswap:
@@ -37,6 +36,10 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     let data = []
 
     for (let i = 0; i < len; i++) {
+        console.log(i)
+        console.log('id',poolsJson[i].id)
+        console.log('id0',poolsJson[i].token0.id)
+        console.log('id1',poolsJson[i].token1.id)
         let id = poolsJson[i].id
         let token0 = poolsJson[i].token0.id
         let token1 = poolsJson[i].token1.id
@@ -51,7 +54,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     }
     DB.deleteData(TableName.OnChainPools, { name: dexName })
     DB.insertData(TableName.OnChainPools, storageData)
-    //console.log('data',storageData)
+    console.log('data len',data.length)
 }
 
 function test(){
