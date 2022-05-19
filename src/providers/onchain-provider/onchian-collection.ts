@@ -37,12 +37,12 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     console.log(dexName)
     for (let i = 0; i < len; i++) {
         console.log(i)
-        console.log('data',poolsJson[i])
-        console.log('data',poolsJson[i].result)
-        console.log('data',poolsJson[i].result.pair)
-        console.log('id',poolsJson[i].id)
-        console.log('id0',poolsJson[i].token0.id)
-        console.log('id1',poolsJson[i].token1.id)
+        console.log('data',poolsJson)
+        console.log('result',poolsJson.result)
+        console.log('pairs',poolsJson.result.pairs)
+        console.log('id',poolsJson.result.pairs.id)
+        console.log('id0',poolsJson.result.pairs.token0)
+        console.log('id1',poolsJson.result.pairs.token1.id)
         let id = poolsJson[i].id
         let token0 = poolsJson[i].token0.id
         let token1 = poolsJson[i].token1.id
