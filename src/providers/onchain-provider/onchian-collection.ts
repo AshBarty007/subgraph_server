@@ -32,7 +32,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
     //console.log('poolData',poolsData)
     let poolsJson = JSON.parse(poolsData)
-    let len = poolsJson.length
+    let len = poolsJson[0].result.pairs.length
     let data = []
     console.log(dexName)
     for (let i = 0; i < len; i++) {
@@ -40,12 +40,12 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         console.log('data',poolsJson)
         console.log('result',poolsJson[0].result)
         console.log('pairs',poolsJson[0].result.pairs)
-        console.log('id',poolsJson[0].result.pairs.id)
-        console.log('id0',poolsJson[0].result.pairs.token0)
-        console.log('id1',poolsJson[0].result.pairs.token1.id)
-        let id = poolsJson[0].result.pairs.id
-        let token0 = poolsJson[0].result.pairs.token0
-        let token1 = poolsJson[0].result.pairs.token1.id
+        console.log('id',poolsJson[0].result.pairs[i].id)
+        console.log('id0',poolsJson[0].result.pairs[i].token0)
+        console.log('id1',poolsJson[0].result.pairs[i].token1.id)
+        let id = poolsJson[0].result.pairs[i].id
+        let token0 = poolsJson[0].result.pairs[i].token0
+        let token1 = poolsJson[0].result.pairs[i].token1.id
         data[i] = await onchainQuery(chainId, id, token0, token1, price)
         console.log(data.length)
     }
