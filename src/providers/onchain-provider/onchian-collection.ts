@@ -28,19 +28,26 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             onchainQuery = queryUniSwapV3OnChain
             break;
     }
-    await DB.findData(TableName.SimplePools, { name: dexName }).then((poolsData) => {
-        try{
-            let poolsJson = JSON.parse(poolsData)
+
+    try{
+        let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
+        let poolsJson = JSON.parse(poolsData)
+        if (dexName == swapName.uniswap_v3){
             console.log('poolsJson', dexName, poolsJson)
             console.log('poolsJson.result',dexName,  poolsJson[0].result)
             console.log('poolsJson.result.pairs',dexName,  poolsJson[0].result.pools)
             let len = poolsJson[0].result.pools.length
             console.log('len',dexName,  len)
-        }catch(err){
-            console.log(dexName,err)
+        }else{
+            console.log('poolsJson', dexName, poolsJson)
+            console.log('poolsJson.result',dexName,  poolsJson[0].result)
+            console.log('poolsJson.result.pairs',dexName,  poolsJson[0].result.pairs)
+            let len = poolsJson[0].result.pairs.length
+            console.log('len',dexName,  len)
         }
-
-    })
+    }catch(err){
+        console.log(dexName,err)
+    }
 
 
 
