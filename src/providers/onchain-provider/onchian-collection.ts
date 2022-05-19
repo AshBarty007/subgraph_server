@@ -1,5 +1,5 @@
 import { BarterSwapDB, TableName } from '../../mongodb/client'
-import { ethPrice, dexName as swapName} from '../utils/params'
+import { ethPrice, dexName as swapName } from '../utils/params'
 import { ChainId } from '../utils/chainId'
 import { queryPancakeSwapOnChain } from './pancakeswap-onchain'
 import { queryQuickSwapOnChain } from './quickswap-onchain'
@@ -10,7 +10,7 @@ import { queryUniSwapV3OnChain } from './uniswapv3-onchain'
 export async function onchainPools(dexName: swapName, chainId: ChainId) {
     let DB = new BarterSwapDB();
     let price = await ethPrice()
-    let onchainQuery = function(chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number): Promise<string>{return new Promise<string>(() => {})}
+    let onchainQuery = function (chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number): Promise<string> { return new Promise<string>(() => { }) }
     switch (dexName) {
         case swapName.pancakeswap:
             onchainQuery = queryPancakeSwapOnChain
@@ -28,14 +28,18 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             onchainQuery = queryUniSwapV3OnChain
             break;
     }
-    console.log('dexName',dexName)
-    let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
-    let poolsJson = JSON.parse(poolsData)
-    // console.log('poolsJson',poolsJson)
-    // console.log('poolsJson.result',poolsJson[0].result)
-    // console.log('poolsJson.result.pairs',poolsJson[0].result.pairs)
-    let len = poolsJson[0].result.pairs.length
-    console.log('len',len)
+    console.log('dexName', dexName)
+    await DB.findData(TableName.SimplePools, { name: dexName }).then((poolsData) => {
+        let poolsJson = JSON.parse(poolsData)
+        console.log('poolsJson', poolsJson)
+        console.log('poolsJson.result', poolsJson[0].result)
+        console.log('poolsJson.result.pairs', poolsJson[0].result.pairs)
+        let len = poolsJson[0].result.pairs.length
+        console.log('len', len)
+    })
+
+
+
     // let data = []
 
     // for (let i = 0; i < len; i++) {
@@ -60,11 +64,11 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     // console.log('data len',data.length)
 }
 
-function test(){
-    onchainPools(swapName.pancakeswap,ChainId.BSC)
-    onchainPools(swapName.quickswap,ChainId.POLYGON)
-    onchainPools(swapName.sushiswap,ChainId.POLYGON)
-    onchainPools(swapName.uniswap_v2,ChainId.MAINNET)
-    onchainPools(swapName.uniswap_v3,ChainId.POLYGON)
+function test() {
+    onchainPools(swapName.pancakeswap, ChainId.BSC)
+    onchainPools(swapName.quickswap, ChainId.POLYGON)
+    onchainPools(swapName.sushiswap, ChainId.POLYGON)
+    onchainPools(swapName.uniswap_v2, ChainId.MAINNET)
+    onchainPools(swapName.uniswap_v3, ChainId.POLYGON)
 }
 test()
