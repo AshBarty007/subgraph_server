@@ -29,44 +29,35 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             break;
     }
 
-    try{
-        let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
-        let poolsJson = JSON.parse(poolsData)
-        if (dexName == swapName.uniswap_v3){
-            let len = poolsJson[0].result.pools.length
-            console.log('len',dexName,  len)
-        }else{
-            let len = poolsJson[0].result.pairs.length
-            console.log('len',dexName,  len)
-        }
-    }catch(err){
-        console.log(dexName,err)
+    let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
+    let poolsJson = JSON.parse(poolsData)
+    let len
+    if (dexName == swapName.uniswap_v3){
+        len = poolsJson[0].result.pools.length
+    }else{
+        len = poolsJson[0].result.pairs.length
     }
 
-
-
-    // let data = []
-
-    // for (let i = 0; i < len; i++) {
-    //     try{
-    //         let id = poolsJson[0].result.pairs[i].id
-    //         let token0 = poolsJson[0].result.pairs[i].token0.id
-    //         let token1 = poolsJson[0].result.pairs[i].token1.id
-    //         data[i] = await onchainQuery(chainId, id, token0, token1, price)
-    //         console.log("data len",data.length)
-    //     }catch(err){
-    //         console.log(err)
-    //     }
-    // }
-    // let storageData = {
-    //     updateTime: Date.parse(new Date().toString()),
-    //     name: dexName,
-    //     chainId: ChainId.BSC,
-    //     result: data,
-    // }
-    // DB.deleteData(TableName.OnChainPools, { name: dexName })
-    // DB.insertData(TableName.OnChainPools, storageData)
-    // console.log('data len',data.length)
+    let data = []
+    for (let i = 0; i < len; i++) {
+        try{
+            let id = poolsJson[0].result.pairs[i].id
+            let token0 = poolsJson[0].result.pairs[i].token0.id
+            let token1 = poolsJson[0].result.pairs[i].token1.id
+            data[i] = await onchainQuery(chainId, id, token0, token1, price)
+        }catch(err){
+            console.log(err)
+        }
+    }
+    let storageData = {
+        updateTime: Date.parse(new Date().toString()),
+        name: dexName,
+        chainId: ChainId.BSC,
+        result: data,
+    }
+    DB.deleteData(TableName.OnChainPools, { name: dexName })
+    DB.insertData(TableName.OnChainPools, storageData)
+    console.log('data len',data.length)
 }
 
 function test() {
