@@ -31,9 +31,9 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     await DB.findData(TableName.SimplePools, { name: dexName }).then((poolsData) => {
         try{
             let poolsJson = JSON.parse(poolsData)
-            // console.log('poolsJson', dexName, poolsJson)
-            // console.log('poolsJson.result',dexName,  poolsJson[0].result)
-            // console.log('poolsJson.result.pairs',dexName,  poolsJson[0].result.pairs)
+            console.log('poolsJson', dexName, poolsJson)
+            console.log('poolsJson.result',dexName,  poolsJson[0].result)
+            console.log('poolsJson.result.pairs',dexName,  poolsJson[0].result.pairs)
             let len = poolsJson[0].result.pairs.length
             console.log('len',dexName,  len)
         }catch(err){
@@ -69,10 +69,10 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
 }
 
 function test() {
-    onchainPools(swapName.pancakeswap, ChainId.BSC)
-    onchainPools(swapName.quickswap, ChainId.POLYGON)
-    onchainPools(swapName.sushiswap, ChainId.POLYGON)
-    onchainPools(swapName.uniswap_v2, ChainId.MAINNET)
+    //onchainPools(swapName.pancakeswap, ChainId.BSC)
+    //onchainPools(swapName.quickswap, ChainId.POLYGON)
+    //onchainPools(swapName.sushiswap, ChainId.POLYGON)
+    //onchainPools(swapName.uniswap_v2, ChainId.MAINNET)
     onchainPools(swapName.uniswap_v3, ChainId.POLYGON)
 }
 test()
