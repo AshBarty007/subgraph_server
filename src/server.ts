@@ -16,16 +16,16 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
             name: dex,
         }
         console.log('filter',filter)
-        dbClient.findData(TableName.SimplePools, filter).then((result:any) => {
+        dbClient.findData(TableName.SimplePools,filter).then((result:any) => {
             console.log('result',result)
-            let data = [result.length]
-            let pools
-            for (let i=0;i<result.length;i++){
-                data[i] = result[i].result.pair
-                if (i>0){
-                    //pools = extend(data[0],data[i])
-                }
-            }
+            // let data = [result.length]
+            let pools = {result:result}
+            // for (let i=0;i<result.length;i++){
+            //     data[i] = result[i].result.pair
+            //     if (i>0){
+            //         //pools = extend(data[0],data[i])
+            //     }
+            // }
             response.writeHead(200, { "Content-Type": "application/json" });
             response.end(JSON.stringify(pools));
         }).catch((err) => {

@@ -53,5 +53,15 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     }
     DB.deleteData(TableName.OnChainPools, { name: dexName })
     DB.insertData(TableName.OnChainPools, storageData)
-    //console.log('data',storageData)
+    console.log('data',storageData)
 }
+
+function test(){
+    onchainPools(swapName.pancakeswap,ChainId.BSC)
+    onchainPools(swapName.quickswap,ChainId.POLYGON)
+    onchainPools(swapName.sushiswap,ChainId.POLYGON)
+    onchainPools(swapName.uniswap_v2,ChainId.MAINNET)
+    onchainPools(swapName.uniswap_v3,ChainId.POLYGON)
+    console.log('test pass')
+}
+test()
