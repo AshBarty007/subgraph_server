@@ -9,11 +9,7 @@ import { queryUniSwapV3OnChain } from './uniswapv3-onchain'
 
 export async function onchainPools(dexName: swapName, chainId: ChainId) {
     let DB = new BarterSwapDB();
-    let pools: any
-    await DB.findData(TableName.SimplePools, { name: dexName }).then((result: any) => {
-        pools = result[0].result.pairs
-    })
-
+    let price = await ethPrice()
     let onchainQuery = function(chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number): Promise<string>{return new Promise<string>(() => {})}
     switch (dexName) {
         case swapName.pancakeswap:
@@ -33,17 +29,16 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             break;
     }
 
-    let len = pools.length
+    let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
+    let poolsJson = JSON.parse(poolsData)
+    let len = poolsJson.length
     let data = [len]
-    let price = await ethPrice()
+
     for (let i = 0; i < len; i++) {
-        let id = pools[i].id
-        let token0 = pools[i].token0.id
-        let token1 = pools[i].token1.id
-        await onchainQuery(chainId, id, token0, token1, price).then((res) => {
-            data[i] = res
-            //console.log(i,data[i])
-        })
+        let id = poolsJson[i].id
+        let token0 = poolsJson[i].token0.id
+        let token1 = poolsJson[i].token1.id
+        data[i] = await onchainQuery(chainId, id, token0, token1, price)
     }
     let storageData = {
         updateTime: Date.parse(new Date().toString()),

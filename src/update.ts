@@ -6,7 +6,7 @@ import { UniSwapV3SubgraphProvider } from './providers/subgraph-provider/uniswap
 
 import { onchainPools } from './providers/onchain-provider/onchian-collection'
 import { ChainId } from './providers/utils/chainId'
-import { dexName, ethPrice } from './providers/utils/params'
+import { dexName } from './providers/utils/params'
 const schedule = require('node-schedule');
 
 

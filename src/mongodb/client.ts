@@ -24,7 +24,7 @@ export class BarterSwapDB {
         this.dbName = dbName
     }
 
-    async connectDB():Promise<Res>{
+    private async connectDB():Promise<Res>{
         return new Promise((res, rej) => {
             MongoClient.connect(this.url).then((db) => {
                 res({db:db,Db:db.db(this.dbName)})
@@ -48,12 +48,12 @@ export class BarterSwapDB {
         }
     }
 
-    async findData<Document>(collectionName: string, filter: Filter<Document>){
+    async findData<Document>(collectionName: string, filter: Filter<Document>):Promise<string>{
         let client = await this.connectDB()
         let collection = client.Db.collection(collectionName)
         return new Promise((res,rej)=>{
             collection.find(filter).toArray().then((data)=>{
-                res(data)
+                res(JSON.stringify(data))
             }).catch((err)=>{
                 rej(err)
             })
