@@ -28,12 +28,14 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             onchainQuery = queryUniSwapV3OnChain
             break;
     }
-    console.log(dexName)
+    console.log('dexName',dexName)
     let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
-    //console.log('poolData',poolsData)
     let poolsJson = JSON.parse(poolsData)
-    console.log(poolsJson[0])
-    // let len = poolsJson[0].result.pairs.length
+    console.log('poolsJson',poolsJson)
+    console.log('poolsJson.result',poolsJson[0].result)
+    console.log('poolsJson.result.pairs',poolsJson[0].result.pairs)
+    let len = poolsJson[0].result.pairs.length
+    console.log('len',len)
     // let data = []
 
     // for (let i = 0; i < len; i++) {
