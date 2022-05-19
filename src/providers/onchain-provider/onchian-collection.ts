@@ -32,7 +32,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
     //console.log('poolData',poolsData)
     let poolsJson = JSON.parse(poolsData)
-    console.log(poolsData[0])
+    console.log(poolsJson[0])
     // let len = poolsJson[0].result.pairs.length
     // let data = []
 
