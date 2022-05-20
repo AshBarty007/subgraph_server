@@ -20,15 +20,11 @@ export function queryV2PoolGQL(first:number, tokenType:string) {
         id
         symbol
         decimals
-        totalSupply
-        liquidity
       }
       token1 {
         id
         symbol
         decimals
-        totalSupply
-        liquidity
       }
       token0Price
       token1Price
