@@ -17,20 +17,34 @@ const UniSwapV2Subgraph = new UniSwapV2SubgraphProvider(ChainId.MAINNET)
 const UniSwapV3Subgraph = new UniSwapV3SubgraphProvider(ChainId.POLYGON)
 
 const scheduleTask = () => {
-    schedule.scheduleJob('* */2 * * * *', () => {
-        updateDetailedPools()
+    schedule.scheduleJob('0 */2 * * * *', () => {
+        try{
+            updateSimplePools()
+        }catch(err){
+            console.log("fail to update SimplePools ,error:",err)
+        }
     });
 
-    schedule.scheduleJob('* */5 * * * *', () => {
-        updateSimplePools()
+    schedule.scheduleJob('20 */5 * * * *', () => {
+        try{
+            updateDetailedPools()
+        }catch(err){
+            console.log("fail to update DetailedPools ,error:",err)
+        }
+
     });
 
-    schedule.scheduleJob('* */7 * * * *', () => {
-        updateOnChainPools()
+    schedule.scheduleJob('40 */7 * * * *', () => {
+        try{
+            updateOnChainPools()
+        }catch(err){
+            console.log("fail to update OnChainPools ,error:",err)
+        }
+
     });
 }
 
-async function updateDetailedPools(){
+async function updateSimplePools(){
     await PancakeSwapSubgraph.quickGetPools()
     await QuickSwapSubgraph.quickGetPools()
     await SushiSwapSubgraph.quickGetPools()
@@ -39,7 +53,7 @@ async function updateDetailedPools(){
     console.log(new Date(), 'the SimplePools has updated.');
 }
 
-async function updateSimplePools(){
+async function updateDetailedPools(){
     await PancakeSwapSubgraph.getPools()
     await QuickSwapSubgraph.getPools()
     await SushiSwapSubgraph.getPools()
