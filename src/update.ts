@@ -18,34 +18,43 @@ const UniSwapV3Subgraph = new UniSwapV3SubgraphProvider(ChainId.POLYGON)
 
 const scheduleTask = () => {
     schedule.scheduleJob('* */2 * * * *', () => {
-        PancakeSwapSubgraph.quickGetPools()
-        QuickSwapSubgraph.quickGetPools()
-        SushiSwapSubgraph.quickGetPools()
-        UniSwapV2Subgraph.quickGetPools()
-        UniSwapV3Subgraph.quickGetPools()
-
-        console.log(new Date(), 'the SimplePools has updated.');
+        updateDetailedPools()
     });
 
     schedule.scheduleJob('* */5 * * * *', () => {
-        PancakeSwapSubgraph.getPools()
-        QuickSwapSubgraph.getPools()
-        SushiSwapSubgraph.getPools()
-        UniSwapV2Subgraph.getPools()
-        UniSwapV3Subgraph.getPools()
-
-        console.log(new Date(), 'the DetailedPoolsTable have updated.');
+        updateSimplePools()
     });
 
-    schedule.scheduleJob('* */5 * * * *', () => {
-        onchainPools(dexName.pancakeswap,ChainId.BSC)
-        onchainPools(dexName.quickswap,ChainId.POLYGON)
-        onchainPools(dexName.sushiswap,ChainId.POLYGON)
-        onchainPools(dexName.uniswap_v2,ChainId.MAINNET)
-        onchainPools(dexName.uniswap_v3,ChainId.POLYGON)
-
-        console.log(new Date(), 'the OnChainPoolsTable have updated.');
+    schedule.scheduleJob('* */7 * * * *', () => {
+        updateOnChainPools()
     });
+}
+
+async function updateDetailedPools(){
+    await PancakeSwapSubgraph.quickGetPools()
+    await QuickSwapSubgraph.quickGetPools()
+    await SushiSwapSubgraph.quickGetPools()
+    await UniSwapV2Subgraph.quickGetPools()
+    await UniSwapV3Subgraph.quickGetPools()
+    console.log(new Date(), 'the SimplePools has updated.');
+}
+
+async function updateSimplePools(){
+    await PancakeSwapSubgraph.getPools()
+    await QuickSwapSubgraph.getPools()
+    await SushiSwapSubgraph.getPools()
+    await UniSwapV2Subgraph.getPools()
+    await UniSwapV3Subgraph.getPools()
+    console.log(new Date(), 'the DetailedPoolsTable have updated.');
+}
+
+async function updateOnChainPools(){
+    await onchainPools(dexName.pancakeswap,ChainId.BSC)
+    await onchainPools(dexName.quickswap,ChainId.POLYGON)
+    await onchainPools(dexName.sushiswap,ChainId.POLYGON)
+    await onchainPools(dexName.uniswap_v2,ChainId.MAINNET)
+    await onchainPools(dexName.uniswap_v3,ChainId.POLYGON)
+    console.log(new Date(), 'the OnChainPoolsTable have updated.');
 }
 
 scheduleTask();
