@@ -35,7 +35,7 @@ export class UniSwapV2SubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
-                    this.DB.deleteData(TableName.DetailedPools,{name: dexName.uniswap_v2})
+                    this.DB.deleteData(TableName.DetailedPools,{name: dexName.uniswap_v2},true)
                     this.DB.insertData(TableName.DetailedPools,data)
                 });
             },      
@@ -62,7 +62,7 @@ export class UniSwapV2SubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
-                    this.DB.deleteData(TableName.SimplePools,{name: dexName.uniswap_v2})
+                    this.DB.deleteData(TableName.SimplePools,{name: dexName.uniswap_v2},true)
                     this.DB.insertData(TableName.SimplePools,data)
                 });
             },      

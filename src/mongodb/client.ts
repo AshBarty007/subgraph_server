@@ -65,13 +65,13 @@ export class BarterSwapDB {
         let collection = client.Db.collection(collectionName)
         if (many && Array.isArray(filter)) {
             collection.deleteMany(filter as any)
-            .then((result)=>{console.log("deleteMany result:",result)})
+            //.then((result)=>{console.log("deleteMany result:",result)})
             .catch((err)=>{
                 console.log(err)
             })
         }else{
             collection.deleteOne(filter as any)
-            .then((result)=>{console.log("deleteOne result:",result)})
+            //.then((result)=>{console.log("deleteOne result:",result)})
             .catch((err)=>{
                 console.log(err)
             })

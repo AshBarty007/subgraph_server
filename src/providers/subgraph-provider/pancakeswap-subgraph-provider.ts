@@ -36,7 +36,7 @@ export class PancakeSwapSubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
-                    this.DB.deleteData(TableName.DetailedPools,{name: dexName.pancakeswap})
+                    this.DB.deleteData(TableName.DetailedPools,{name: dexName.pancakeswap},true)
                     this.DB.insertData(TableName.DetailedPools,data)
                 });
             },      
@@ -63,7 +63,7 @@ export class PancakeSwapSubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
-                    this.DB.deleteData(TableName.SimplePools,{name: dexName.pancakeswap})
+                    this.DB.deleteData(TableName.SimplePools,{name: dexName.pancakeswap},true)
                     this.DB.insertData(TableName.SimplePools,data)
                 });
             },      

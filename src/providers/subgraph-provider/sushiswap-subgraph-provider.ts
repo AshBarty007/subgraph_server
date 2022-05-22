@@ -36,7 +36,7 @@ export class SushiSwapSubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
-                    this.DB.deleteData(TableName.DetailedPools,{name: dexName.sushiswap})
+                    this.DB.deleteData(TableName.DetailedPools,{name: dexName.sushiswap},true)
                     this.DB.insertData(TableName.DetailedPools,data)
                 });
             },      
@@ -63,7 +63,7 @@ export class SushiSwapSubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
-                    this.DB.deleteData(TableName.SimplePools,{name: dexName.sushiswap})
+                    this.DB.deleteData(TableName.SimplePools,{name: dexName.sushiswap},true)
                     this.DB.insertData(TableName.SimplePools,data)
                 });
             },      

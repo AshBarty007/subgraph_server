@@ -35,7 +35,7 @@ export class QuickSwapSubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
-                    this.DB.deleteData(TableName.DetailedPools,{name: dexName.quickswap})
+                    this.DB.deleteData(TableName.DetailedPools,{name: dexName.quickswap},true)
                     this.DB.insertData(TableName.DetailedPools,data)
                 });
             },      
@@ -62,7 +62,7 @@ export class QuickSwapSubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
-                    this.DB.deleteData(TableName.SimplePools,{name: dexName.quickswap})
+                    this.DB.deleteData(TableName.SimplePools,{name: dexName.quickswap},true)
                     this.DB.insertData(TableName.SimplePools,data)
                 });
             },      
