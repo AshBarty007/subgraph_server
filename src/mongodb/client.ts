@@ -63,7 +63,7 @@ export class BarterSwapDB {
     async deleteData<Document>(collectionName: string, filter: Filter<Document>, many = false) {
         let client = await this.connectDB()
         let collection = client.Db.collection(collectionName)
-        if (many && Array.isArray(filter)) {
+        if (many) {
             collection.deleteMany(filter as any)
             .then((result)=>{console.log("deleteMany result:",result)})
             .catch((err)=>{
