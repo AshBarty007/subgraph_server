@@ -52,7 +52,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     let storageData = {
         updateTime: Date.parse(new Date().toString()),
         name: dexName,
-        chainId: ChainId.BSC,
+        chainId: chainId,
         result: data,
     }
     DB.deleteData(TableName.OnChainPools, { name: dexName })
