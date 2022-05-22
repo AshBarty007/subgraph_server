@@ -17,10 +17,11 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
             name: {"$in" : dex},
         }
         console.log('filter',filter)
-        dbClient.findData(TableName.SimplePools,filter).then((result:any) => {
-            result = JSON.parse(result.length)
+        dbClient.findData(TableName.SimplePools,filter).then((ret:any) => {
+            let result = JSON.parse(ret.length)
             let pools = new Map();
-            console.log(result)
+            console.log("ret",ret)
+            console.log("result",result)
             for (let i=0;i<dex.length;i++){
                 try{
                     //let data = JSON.parse(result[i])
