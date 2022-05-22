@@ -5,17 +5,18 @@ const url = require('url')
 
 const port = 9002;
 const dbClient = new BarterSwapDB();
-let pools = {
-    pancakeswap: '',
-    quickswap: '',
-    sushiswap: '',
-    uniswap_v2: '',
-    uniswap_v3: '',
+let returnForm = {
+    pancakeswap: String,
+    quickswap: String,
+    sushiswap: String,
+    uniswap_v2: String,
+    uniswap_v3: String,
 }
 
 const server = createServer((request: IncomingMessage, response: ServerResponse) => {
     let http_url = request.url;
     let ok = url.parse(http_url, true);
+    let pools = returnForm
     if (ok.path != '/favicon.ico') {
         let str: any = JSON.stringify(ok.query);
         str = JSON.parse(str);
@@ -62,12 +63,6 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
             });
             response.writeHead(200, { "Content-Type": "text/plain" });
             response.end("url error!");
-        }).finally(()=>{
-            pools.pancakeswap = '',
-            pools.sushiswap = '',
-            pools.quickswap = '',
-            pools.uniswap_v2 = '',
-            pools.uniswap_v3 = ''
         })
     }
 
