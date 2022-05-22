@@ -1,9 +1,7 @@
 import { ethers } from 'ethers'
 import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json'
 import { ChainId } from '../utils/chainId'
-import { BarterSwapDB,TableName } from '../../mongodb/client'
-
-const provider = new ethers.providers.JsonRpcProvider('https://api.mycryptoapi.com/eth')
+import { CHAIN_RPC} from '../utils/url'
 
 interface Immutables {
   factory: string
@@ -65,7 +63,7 @@ async function getPoolState(poolContract: ethers.Contract) {
 }
 
 export async function queryUniSwapV3OnChain(chainId: ChainId, poolAddress: string, token0Address: string, token1Address: string,price:number) {
-  let DB = new BarterSwapDB();
+  const provider = new ethers.providers.JsonRpcProvider(CHAIN_RPC[chainId])
   const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI, provider)
   const [immutables, state] = await Promise.all([getPoolImmutables(poolContract), getPoolState(poolContract)])
 
