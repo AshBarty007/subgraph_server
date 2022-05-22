@@ -18,7 +18,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         }
         console.log('filter',filter)
         dbClient.findData(TableName.SimplePools,filter).then((ret:any) => {
-            let result = JSON.parse(ret.length)
+            let result = JSON.parse(ret)
             let pools = new Map();
             console.log("ret",ret)
             console.log("result",result)
