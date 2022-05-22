@@ -18,7 +18,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         }
         console.log('filter',filter)
         dbClient.findData(TableName.SimplePools,filter).then((result:any) => {
-            result = JSON.parse(result)
+            result = JSON.parse(result.length)
             let pools = new Map();
             for (let i=0;i<dex.length;i++){
                 try{
@@ -26,11 +26,11 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
                     console.log(i,result[i])
                     console.log(dex[i],dexName.uniswap_v3)
                     if (dex[i]!=dexName.uniswap_v3){
-                        console.log(dex[i],result[i].pairs.length)
-                        pools.set(dex[i],result[i].result.pairs)
+                        console.log(dex[i],result[i].result)
+                        //pools.set(dex[i],result[i].result.pairs)
                     }else{
-                        console.log(dex[i],result[i].result.pools.length)
-                        pools.set(dex[i],result[i].result.pools)
+                        console.log(dex[i],result[i].result)
+                        //pools.set(dex[i],result[i].result.pools)
                     }
                 }catch(err){
                     console.log("error by returning db data,",err)
