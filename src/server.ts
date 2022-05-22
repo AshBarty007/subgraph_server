@@ -20,7 +20,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         dbClient.findData(TableName.SimplePools,filter).then((result:any) => {
             result = JSON.parse(result)
             let pools = new Map();
-            //console.log(result)
+            console.log(result)
             for (let i=0;i<dex.length;i++){
                 try{
                     let data = JSON.parse(result[i])
@@ -37,7 +37,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
                 }
             }
             response.writeHead(200, { "Content-Type": "application/json" });
-            response.end(JSON.stringify(result));
+            response.end(JSON.stringify(pools));
         }).catch((err) => {
             console.log(err)
             response.on('error', (err) => {
