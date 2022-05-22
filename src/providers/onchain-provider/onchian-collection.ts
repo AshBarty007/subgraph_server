@@ -46,7 +46,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             let token1 = poolsJson[0].result.pairs[i].token1.id
             data[i] = await onchainQuery(chainId, id, token0, token1, price)
         }catch(err){
-            console.log(err)
+            console.log("fail to fetch",dexName,",error:",err)
         }
     }
     let storageData = {
