@@ -6,11 +6,11 @@ const url = require('url')
 const port = 9002;
 const dbClient = new BarterSwapDB();
 let pools = {
-    pancakeswap: String,
-    quickswap: String,
-    sushiswap: String,
-    uniswap_v2: String,
-    uniswap_v3: String,
+    pancakeswap: '',
+    quickswap: '',
+    sushiswap: '',
+    uniswap_v2: '',
+    uniswap_v3: '',
 }
 
 const server = createServer((request: IncomingMessage, response: ServerResponse) => {
@@ -31,23 +31,23 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
                         case dexName.uniswap_v3:
                             console.log(i,result[i].name)
                             pools.uniswap_v3 = result[i].result.pools;
-                            break
+                            break;
                         case dexName.uniswap_v2:
                             console.log(i,result[i].name)
                             pools.uniswap_v2 = result[i].result.pairs;
-                            break
+                            break;
                         case dexName.sushiswap:
                             console.log(i,result[i].name)
                             pools.sushiswap = result[i].result.pairs;
-                            break
+                            break;
                         case dexName.quickswap:
                             console.log(i,result[i].name)
                             pools.quickswap = result[i].result.pairs;
-                            break
+                            break;
                         case dexName.pancakeswap:
                             console.log(i,result[i].name)
                             pools.pancakeswap = result[i].result.pairs;
-                            break
+                            break;
                     }
                 } catch (err) {
                     console.log("error by returning db data,", err)
@@ -62,6 +62,12 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
             });
             response.writeHead(200, { "Content-Type": "text/plain" });
             response.end("url error!");
+        }).finally(()=>{
+            pools.pancakeswap = '',
+            pools.sushiswap = '',
+            pools.quickswap = '',
+            pools.uniswap_v2 = '',
+            pools.uniswap_v3 = ''
         })
     }
 
