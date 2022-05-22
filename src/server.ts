@@ -24,6 +24,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
                 try{
                     //let data = JSON.parse(result[i])
                     console.log(i,result[i])
+                    console.log(dex[i],dexName.uniswap_v3)
                     if (dex[i]!=dexName.uniswap_v3){
                         console.log(dex[i],result[i].pairs.length)
                         pools.set(dex[i],result[i].result.pairs)
