@@ -5,6 +5,13 @@ const url = require('url')
 
 const port = 9002;
 const dbClient = new BarterSwapDB();
+let pools = {
+    pancakeswap: String,
+    quickswap: String,
+    sushiswap: String,
+    uniswap_v2: String,
+    uniswap_v3: String,
+}
 
 const server = createServer((request: IncomingMessage, response: ServerResponse) => {
     let http_url = request.url;
@@ -14,27 +21,34 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         str = JSON.parse(str);
         let dex = str.protocol.split(',');
         let filter = {
-            name: {"$in" : dex},
+            name: { "$in": dex },
         }
         //console.log('filter',filter)
-        dbClient.findData(TableName.SimplePools,filter).then((ret:any) => {
+        dbClient.findData(TableName.SimplePools, filter).then((ret: any) => {
             let result = JSON.parse(ret)
-            let pools = new Map();
             // console.log("ret",ret)
             // console.log("result",result)
-            for (let i=0;i<dex.length;i++){
-                try{
-                    //console.log(i,result[i])
-                    //console.log(dex[i],dexName.uniswap_v3)
-                    if (dex[i]!=dexName.uniswap_v3){
-                        //console.log(dex[i],result[i].result)
-                        pools.set(dex[i],result[i].result.pairs)
-                    }else{
-                        //console.log(dex[i],result[i].result)
-                        pools.set(dex[i],result[i].result.pools)
+            for (let i = 0; i < dex.length; i++) {
+                try {
+                    switch (dex[i]) {
+                        case dexName.uniswap_v3:
+                            pools.uniswap_v3 = result[i].result.pools;
+                            break
+                        case dexName.uniswap_v2:
+                            pools.uniswap_v2 = result[i].result.pairs;
+                            break
+                        case dexName.sushiswap:
+                            pools.sushiswap = result[i].result.pairs;
+                            break
+                        case dexName.quickswap:
+                            pools.quickswap = result[i].result.pairs;
+                            break
+                        case dexName.pancakeswap:
+                            pools.pancakeswap = result[i].result.pairs;
+                            break
                     }
-                }catch(err){
-                    console.log("error by returning db data,",err)
+                } catch (err) {
+                    console.log("error by returning db data,", err)
                 }
             }
             response.writeHead(200, { "Content-Type": "application/json" });
