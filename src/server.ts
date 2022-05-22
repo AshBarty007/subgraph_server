@@ -27,10 +27,9 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
             //     }catch(err){
             //         console.log("error by returning db data,",err)
             //     }
-
             // }
             response.writeHead(200, { "Content-Type": "application/json" });
-            response.end(JSON.stringify(pools));
+            response.end(JSON.stringify(result));
         }).catch((err) => {
             console.log(err)
             response.on('error', (err) => {
