@@ -23,11 +23,8 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         let filter = {
             name: { "$in": dex },
         }
-        //console.log('filter',filter)
         dbClient.findData(TableName.SimplePools, filter).then((ret: any) => {
             let result = JSON.parse(ret)
-            // console.log("ret",ret)
-            // console.log("result",result)
             for (let i = 0; i < dex.length; i++) {
                 try {
                     switch (dex[i]) {
