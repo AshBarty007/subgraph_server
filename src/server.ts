@@ -18,16 +18,17 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         console.log('filter',filter)
         dbClient.findData(TableName.SimplePools,filter).then((result:any) => {
             let pools = new Map();
-            for (let i=0;i<dex.length;i++){
-                try{
-                    let data = JSON.parse(result[i])
-                    console.log(i,data)
-                    pools.set(dex[i],data.result.pairs)
-                }catch(err){
-                    console.log("error by returning db data,",err)
-                }
+            console.log(result)
+            // for (let i=0;i<dex.length;i++){
+            //     try{
+            //         let data = JSON.parse(result[i])
+            //         console.log(i,data)
+            //         pools.set(dex[i],data.result.pairs)
+            //     }catch(err){
+            //         console.log("error by returning db data,",err)
+            //     }
 
-            }
+            // }
             response.writeHead(200, { "Content-Type": "application/json" });
             response.end(JSON.stringify(pools));
         }).catch((err) => {
