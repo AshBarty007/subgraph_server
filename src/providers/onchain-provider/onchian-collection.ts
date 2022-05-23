@@ -56,7 +56,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     try{ 
         poolsJson[0].result
     }catch(err){
-        console.log("fail to get date from db, error:",poolsJson[0])
+        console.log("fail to get date from db, data:",poolsJson[0])
         console.log("dex name:",dexName,",error:",err)
         return
     }
@@ -74,7 +74,6 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             let token0 = poolsJson[0].result.pools[i].token0.id
             let token1 = poolsJson[0].result.pools[i].token1.id
             try{ 
-                console.log(dexName,id)
                 data[i] = await onchainQuery(chainId, id, token0, token1, price)
             }catch(err){
                 console.log("fail to get pair,id:",id)
@@ -86,7 +85,6 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             let token0 = poolsJson[0].result.pairs[i].token0.id
             let token1 = poolsJson[0].result.pairs[i].token1.id
             try{ 
-                console.log(dexName,id)
                 data[i] = await onchainQuery(chainId, id, token0, token1, price)
             }catch(err){
                 console.log("fail to get pair,id:",id)

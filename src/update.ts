@@ -34,7 +34,7 @@ const scheduleTask = () => {
 
     });
 
-    schedule.scheduleJob('40 */7 * * * *', () => {
+    schedule.scheduleJob('40 */45 * * * *', () => {
         try{
             updateOnChainPools()
         }catch(err){
@@ -63,15 +63,11 @@ async function updateDetailedPools(){
 }
 
 async function updateOnChainPools(){
-    let a = new Date().toLocaleString()
-    await onchainPools(dexName.pancakeswap,ChainId.BSC)
-    await onchainPools(dexName.quickswap,ChainId.POLYGON)
+    //await onchainPools(dexName.pancakeswap,ChainId.BSC)
+    //await onchainPools(dexName.quickswap,ChainId.POLYGON)
     await onchainPools(dexName.sushiswap,ChainId.POLYGON)
-    await onchainPools(dexName.uniswap_v2,ChainId.MAINNET)
-    await onchainPools(dexName.uniswap_v3,ChainId.POLYGON)
-    let b = new Date().toLocaleString()
-    console.log("start",a)
-    console.log("end",b)
+    // await onchainPools(dexName.uniswap_v2,ChainId.MAINNET)
+    // await onchainPools(dexName.uniswap_v3,ChainId.POLYGON)
     console.log(new Date(), 'the OnChainPoolsTable have updated.');
 }
 
