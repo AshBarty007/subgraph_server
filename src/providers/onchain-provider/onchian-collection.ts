@@ -55,6 +55,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         chainId: chainId,
         result: data,
     }
+    console.log("it's okay",dexName)
     DB.deleteData(TableName.OnChainPools, { name: dexName })
     DB.insertData(TableName.OnChainPools, storageData)
 }
