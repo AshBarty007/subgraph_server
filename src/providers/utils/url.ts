@@ -33,7 +33,7 @@ export const SUBGRAPH_URL_BY_UNISWAP_V3: { [chainId in ChainId]?: string } = {
 
   export const CHAIN_RPC:{ [chainId in ChainId]?: string } = {
     [ChainId.MAINNET]:
-      'https://eth-mainnet.token.im',
+      'https://mainnet.infura.io/v3/8cce6b470ad44fb5a3621aa34243647f ',
     [ChainId.POLYGON]:
       'https://polygon-rpc.com/',
     [ChainId.BSC]:
