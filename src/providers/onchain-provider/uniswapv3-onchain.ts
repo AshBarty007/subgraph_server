@@ -78,7 +78,7 @@ export async function queryUniSwapV3OnChain(chainId: ChainId, poolAddress: strin
       id: token1Address,
     }
   }
-console.log(result)
+
   return JSON.stringify(result)
 }
 
