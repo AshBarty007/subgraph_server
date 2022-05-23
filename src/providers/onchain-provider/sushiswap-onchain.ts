@@ -44,5 +44,3 @@ export async function querySushiSwapOnChain(chainId: ChainId, id: string, token0
     
     return JSON.stringify(result)
 }
-
-querySushiSwapOnChain(ChainId.POLYGON,"0x1e67124681b402064cd0abe8ed1b5c79d2e02f64","0x2791bca1f2de4661ed88a30c99a7a9449aa84174","0x2f800db0fdb5223b3c3f354886d907a671414a7f",2000)
