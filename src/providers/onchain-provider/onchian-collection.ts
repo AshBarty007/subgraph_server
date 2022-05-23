@@ -79,7 +79,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             }catch(err){
                 console.log("fail to get pair,id:",id)
                 console.log("dex name:",dexName,",error:",err)
-                return
+                continue
             }
         }else{
             let id = poolsJson[0].result.pairs[i].id
@@ -91,7 +91,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             }catch(err){
                 console.log("fail to get pair,id:",id)
                 console.log("dex name:",dexName,",error:",err)
-                return
+                continue
             }
         }
     }
