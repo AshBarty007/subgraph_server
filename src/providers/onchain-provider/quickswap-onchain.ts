@@ -44,3 +44,5 @@ export async function queryQuickSwapOnChain(chainId: ChainId, id: string, token0
     
     return JSON.stringify(result)
 }
+
+queryQuickSwapOnChain(ChainId.POLYGON,"0x369582d2010b6ed950b571f4101e3bb9b554876f","0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270","0xbbba073c31bf03b8acf7c28ef0738decf3695683",2000)

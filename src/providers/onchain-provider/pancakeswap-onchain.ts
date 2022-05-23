@@ -44,3 +44,5 @@ export async function queryPancakeSwapOnChain(chainId: ChainId, id: string, toke
     
     return JSON.stringify(result)
 }
+
+queryPancakeSwapOnChain(ChainId.BSC,"0x7efaef62fddcca950418312c6c91aef321375a0","0x55d398326f99059ff775485246999027b3197955","0xe9e7cea3dedca5984780bafc599bd69add087d56",2000)
