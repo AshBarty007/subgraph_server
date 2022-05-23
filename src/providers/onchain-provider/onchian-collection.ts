@@ -32,6 +32,13 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
     let poolsJson = JSON.parse(poolsData)
     let len
+    try{ 
+        poolsJson[0].result
+    }catch(err){
+        console.log(poolsJson[0])
+        console.log("fail to fetch",dexName,",error:",err)
+        return
+    }
     if (dexName == swapName.uniswap_v3){
         len = poolsJson[0].result.pools.length
     }else{
@@ -40,12 +47,6 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
 
     let data = []
     for (let i = 0; i < len; i++) {
-        try{ 
-            poolsJson[0].result
-        }catch(err){
-            console.log(poolsJson[0])
-            console.log("fail to fetch",dexName,",error:",err)
-        }
         if (dexName == swapName.uniswap_v3){
             let id = poolsJson[0].result.pools[i].id
             let token0 = poolsJson[0].result.pools[i].token0.id
