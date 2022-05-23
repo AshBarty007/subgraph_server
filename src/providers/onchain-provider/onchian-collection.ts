@@ -6,10 +6,23 @@ import { queryQuickSwapOnChain } from './quickswap-onchain'
 import { querySushiSwapOnChain } from './sushiswap-onchain'
 import { queryUniSwapV2OnChain } from './uniswapv2-onchain'
 import { queryUniSwapV3OnChain } from './uniswapv3-onchain'
+import { default as retry } from 'async-retry';
 
 export async function onchainPools(dexName: swapName, chainId: ChainId) {
     let DB = new BarterSwapDB();
-    let price = await ethPrice()
+    
+    let price = 0
+    await retry(
+        async () => {      
+            price = await ethPrice()
+        },      
+        {retries: 5,maxTimeout: 5000}
+    )
+    if (price == 0){
+        console.log("fail to get eth price")
+        return
+    }
+
     let onchainQuery = function (chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number): Promise<string> { return new Promise<string>(() => { }) }
     switch (dexName) {
         case swapName.pancakeswap:
@@ -29,16 +42,25 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             break;
     }
 
-    let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
-    let poolsJson = JSON.parse(poolsData)
+    let poolsJson:any
+    await retry(
+        async () => {      
+            let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
+            poolsJson = JSON.parse(poolsData)
+        },      
+        {retries: 2,maxTimeout: 5000}
+    )
+
+
     let len
     try{ 
         poolsJson[0].result
     }catch(err){
-        console.log(poolsJson[0])
-        console.log("fail to fetch",dexName,",error:",err)
+        console.log("fail to get date from db, error:",poolsJson[0])
+        console.log("dex name:",dexName,",error:",err)
         return
     }
+
     if (dexName == swapName.uniswap_v3){
         len = poolsJson[0].result.pools.length
     }else{
@@ -51,14 +73,24 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             let id = poolsJson[0].result.pools[i].id
             let token0 = poolsJson[0].result.pools[i].token0.id
             let token1 = poolsJson[0].result.pools[i].token1.id
-            console.log(dexName,id)
-            data[i] = await onchainQuery(chainId, id, token0, token1, price)
+            try{ 
+                data[i] = await onchainQuery(chainId, id, token0, token1, price)
+            }catch(err){
+                console.log("fail to get pair,id:",id)
+                console.log("dex name:",dexName,",error:",err)
+                return
+            }
         }else{
             let id = poolsJson[0].result.pairs[i].id
             let token0 = poolsJson[0].result.pairs[i].token0.id
             let token1 = poolsJson[0].result.pairs[i].token1.id
-            console.log(dexName,id)
-            data[i] = await onchainQuery(chainId, id, token0, token1, price)
+            try{ 
+                data[i] = await onchainQuery(chainId, id, token0, token1, price)
+            }catch(err){
+                console.log("fail to get pair,id:",id)
+                console.log("dex name:",dexName,",error:",err)
+                return
+            }
         }
     }
     let storageData = {
@@ -67,7 +99,6 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         chainId: chainId,
         result: data,
     }
-    console.log("it's okay",dexName)
     DB.deleteData(TableName.OnChainPools, { name: dexName },true)
     DB.insertData(TableName.OnChainPools, storageData)
 }
