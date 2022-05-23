@@ -41,13 +41,23 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     let data = []
     for (let i = 0; i < len; i++) {
         try{ 
-            if(poolsJson[0].result == undefined){
-                let id = poolsJson[0].result.pairs[i].id
-                let token0 = poolsJson[0].result.pairs[i].token0.id
-                let token1 = poolsJson[0].result.pairs[i].token1.id
-                console.log(dexName,id)
-                data[i] = await onchainQuery(chainId, id, token0, token1, price)
-            } 
+            if(poolsJson[0].result != undefined){
+                if (dexName == swapName.uniswap_v3){
+                    let id = poolsJson[0].result.pools[i].id
+                    let token0 = poolsJson[0].result.pools[i].token0.id
+                    let token1 = poolsJson[0].result.pools[i].token1.id
+                    console.log(dexName,id)
+                    data[i] = await onchainQuery(chainId, id, token0, token1, price)
+                }else{
+                    let id = poolsJson[0].result.pairs[i].id
+                    let token0 = poolsJson[0].result.pairs[i].token0.id
+                    let token1 = poolsJson[0].result.pairs[i].token1.id
+                    console.log(dexName,id)
+                    data[i] = await onchainQuery(chainId, id, token0, token1, price)
+                }
+            } else{
+                console.log("result is null -> ",poolsJson[0])
+            }
         }catch(err){
             console.log("fail to fetch",dexName,",error:",err)
         }
