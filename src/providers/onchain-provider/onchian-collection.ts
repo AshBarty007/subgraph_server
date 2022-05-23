@@ -46,6 +46,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     await retry(
         async () => {      
             let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
+            console.log("sushiswap",poolsData)
             poolsJson = JSON.parse(poolsData)
         },      
         {retries: 2,maxTimeout: 5000}
