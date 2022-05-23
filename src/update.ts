@@ -72,4 +72,5 @@ async function updateOnChainPools(){
 }
 
 //scheduleTask();
-updateOnChainPools()
+updateSimplePools()
+//updateOnChainPools()
