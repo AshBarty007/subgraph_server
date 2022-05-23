@@ -67,7 +67,7 @@ async function updateOnChainPools(){
     await onchainPools(dexName.quickswap,ChainId.POLYGON)
     await onchainPools(dexName.sushiswap,ChainId.POLYGON)
     await onchainPools(dexName.uniswap_v2,ChainId.MAINNET)
-    await onchainPools(dexName.uniswap_v3,ChainId.POLYGON)
+    //await onchainPools(dexName.uniswap_v3,ChainId.POLYGON)
     console.log(new Date(), 'the OnChainPoolsTable have updated.');
 }
 
