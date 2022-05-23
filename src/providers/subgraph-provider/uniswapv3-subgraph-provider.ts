@@ -43,7 +43,6 @@ export class UniSwapV3SubgraphProvider implements ISubgraphProvider{
                 retries: this.retries,       
                 maxTimeout: this.maxTimeout,
                 onRetry: (err, retry) => {
-                    
                     console.log("error message:",err,",retry times:",retry)
                 },
             }
