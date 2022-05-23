@@ -71,5 +71,5 @@ async function updateOnChainPools(){
     console.log(new Date(), 'the OnChainPoolsTable have updated.');
 }
 
-scheduleTask();
-
+//scheduleTask();
+updateOnChainPools()
