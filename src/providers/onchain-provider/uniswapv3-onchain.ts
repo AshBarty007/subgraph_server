@@ -63,7 +63,7 @@ async function getPoolState(poolContract: ethers.Contract) {
 }
 
 export async function queryUniSwapV3OnChain(chainId: ChainId, poolAddress: string, token0Address: string, token1Address: string,price:number) {
-  const provider = new ethers.providers.JsonRpcProvider("https://eth-mainnet.token.im")
+  const provider = new ethers.providers.JsonRpcProvider(CHAIN_RPC[chainId])
   const poolContract = new ethers.Contract(poolAddress, IUniswapV3PoolABI, provider)
   const [immutables, state] = await Promise.all([getPoolImmutables(poolContract), getPoolState(poolContract)])
 
