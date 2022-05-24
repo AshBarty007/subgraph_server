@@ -10,15 +10,15 @@ import { default as retry } from 'async-retry';
 
 export async function onchainPools(dexName: swapName, chainId: ChainId) {
     let DB = new BarterSwapDB();
-    
+
     let price = 0
     await retry(
-        async () => {      
+        async () => {
             price = await ethPrice()
-        },      
-        {retries: 5,maxTimeout: 5000}
+        },
+        { retries: 5, maxTimeout: 5000 }
     )
-    if (price == 0){
+    if (price == 0) {
         console.log("fail to get eth price")
         return
     }
@@ -42,55 +42,55 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             break;
     }
 
-    let poolsJson:any
+    let poolsJson: any
     await retry(
-        async () => {      
+        async () => {
             let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
             poolsJson = JSON.parse(poolsData)
-        },      
-        {retries: 2,maxTimeout: 5000}
+        },
+        { retries: 5, maxTimeout: 5000 }
     )
 
 
     let len
-    try{ 
+    try {
         poolsJson[0].result
-    }catch(err){
-        console.log("fail to get date from db, data:",poolsJson[0])
-        console.log("dex name:",dexName,",error:",err)
+    } catch (err) {
+        console.log("fail to get date from db, data:", poolsJson[0])
+        console.log("dex name:", dexName, ",error:", err)
         return
     }
 
-    if (dexName == swapName.uniswap_v3){
+    if (dexName == swapName.uniswap_v3) {
         len = poolsJson[0].result.pools.length
-    }else{
+    } else {
         len = poolsJson[0].result.pairs.length
     }
 
     let data = []
     for (let i = 0; i < len; i++) {
-        if (dexName == swapName.uniswap_v3){
+        if (dexName == swapName.uniswap_v3) {
             let id = poolsJson[0].result.pools[i].id
             let token0 = poolsJson[0].result.pools[i].token0.id
             let token1 = poolsJson[0].result.pools[i].token1.id
-            try{ 
+            try {
                 //console.log(i,dexName,id)
                 data[i] = await onchainQuery(chainId, id, token0, token1, price)
-            }catch(err){
-                console.log("fail to get pair,id:",id)
-                console.log("dex name:",dexName,",error:",err)
+            } catch (err) {
+                console.log("fail to get pair,id:", id)
+                console.log("dex name:", dexName, ",error:", err)
                 continue
             }
-        }else{
+        } else {
             let id = poolsJson[0].result.pairs[i].id
             let token0 = poolsJson[0].result.pairs[i].token0.id
             let token1 = poolsJson[0].result.pairs[i].token1.id
-            try{ 
+            try {
                 //console.log(i,dexName,id)
                 data[i] = await onchainQuery(chainId, id, token0, token1, price)
-            }catch(err){
-                console.log("fail to get pair,id:",id)
-                console.log("dex name:",dexName,",error:",err)
+            } catch (err) {
+                console.log("fail to get pair,id:", id)
+                console.log("dex name:", dexName, ",error:", err)
                 continue
             }
         }
@@ -101,6 +101,11 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         chainId: chainId,
         result: data,
     }
-    DB.deleteData(TableName.OnChainPools, { name: dexName },true)
-    DB.insertData(TableName.OnChainPools, storageData)
+    await retry(
+        async () => {
+            await DB.deleteData(TableName.OnChainPools, { name: dexName }, true)
+            await DB.insertData(TableName.OnChainPools, storageData)
+        },
+        { retries: 5, maxTimeout: 5000 }
+    )
 }
