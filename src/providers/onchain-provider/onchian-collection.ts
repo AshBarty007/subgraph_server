@@ -17,7 +17,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         async () => {
             price = await ethPrice()
         },
-        { retries: 5, maxTimeout: 5000, onRetry: (err, retry) => {console.log("fail to get eth price ,error message:",err,",retry times:",retry)}}
+        { retries: 5, maxTimeout: 5000, onRetry: (err, retry) => { console.log("fail to get eth price ,error message:", err, ",retry times:", retry) } }
     )
     if (price == 0) {
         console.log("fail to get eth price")
@@ -41,6 +41,9 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         case swapName.uniswap_v3:
             onchainQuery = queryUniSwapV3OnChain
             break;
+        default:
+            console.log("unknow dex")
+            return
     }
 
     let poolsJson: any
@@ -49,7 +52,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
             poolsJson = JSON.parse(poolsData)
         },
-        { retries: 5, maxTimeout: 5000, onRetry: (err, retry) => {console.log("fail to find data ,error message:",err,",retry times:",retry)} }
+        { retries: 5, maxTimeout: 5000, onRetry: (err, retry) => { console.log("fail to find data ,error message:", err, ",retry times:", retry) } }
     )
 
 
@@ -68,33 +71,35 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         len = poolsJson[0].result.pairs.length
     }
 
-    let data = []
-    for (let i = 0; i < len; i++) {
-        if (dexName == swapName.uniswap_v3) {
-            let id = poolsJson[0].result.pools[i].id
-            let token0 = poolsJson[0].result.pools[i].token0.id
-            let token1 = poolsJson[0].result.pools[i].token1.id
-            data[i] = concurrent.add(onchainQuery, chainId, id, token0, token1, price)
-        } else {
-            let id = poolsJson[0].result.pairs[i].id
-            let token0 = poolsJson[0].result.pairs[i].token0.id
-            let token1 = poolsJson[0].result.pairs[i].token1.id
-            data[i] = concurrent.add(onchainQuery, chainId, id, token0, token1, price)
-        }
-    }
+    // let data = []
+    // for (let i = 0; i < len; i++) {
+    //     if (dexName == swapName.uniswap_v3) {
+    //         let id = poolsJson[0].result.pools[i].id
+    //         let token0 = poolsJson[0].result.pools[i].token0.id
+    //         let token1 = poolsJson[0].result.pools[i].token1.id
+    //         data[i] = concurrent.add(onchainQuery, chainId, id, token0, token1, price)
+    //     } else {
+    //         let id = poolsJson[0].result.pairs[i].id
+    //         let token0 = poolsJson[0].result.pairs[i].token0.id
+    //         let token1 = poolsJson[0].result.pairs[i].token1.id
+    //         data[i] = concurrent.add(onchainQuery, chainId, id, token0, token1, price)
+    //     }
+    // }
+
+    let data = await concurrent.add(onchainQuery,poolsJson,chainId,price)
     let storageData = {
         updateTime: Date.parse(new Date().toString()),
         name: dexName,
         chainId: chainId,
         result: data,
     }
-    console.log("return data:",data)
+    console.log("return data:", data)
     await retry(
         async () => {
             await DB.deleteData(TableName.OnChainPools, { name: dexName }, true)
             await DB.insertData(TableName.OnChainPools, storageData)
         },
-        { retries: 5, maxTimeout: 5000, onRetry: (err, retry) => {console.log("fail to storage data ,error message:",err,",retry times:",retry)}}
+        { retries: 5, maxTimeout: 5000, onRetry: (err, retry) => { console.log("fail to storage data ,error message:", err, ",retry times:", retry) } }
     )
 }
 
@@ -107,7 +112,8 @@ class Concurrent {
     constructor(count: number = 2) {
         this.maxConcurrent = count;
     }
-    public async add(fn: Function, chainId: ChainId, id: string, token0: string, token1: string, price: number) {
+    public async add(fn: Function, poolsJson: any, chainId: ChainId, price: Number) {
+        let data
         this.currentCount += 1;
         if (this.currentCount > this.maxConcurrent) {
             const wait = new Promise((resolve) => {
@@ -115,20 +121,40 @@ class Concurrent {
             });
             await wait;
         }
-        let ok: any;
-        await retry(
-            async () => {
-                ok = await fn(chainId, id, token0, token1, price);
-            },
-            { retries: 2, maxTimeout: 5000, onRetry: (err, retry) => { console.log("fail to get pair,id:", id, "error message:", err, ",retry times:", retry) } }
-        )
+
+        let len
+        if (poolsJson[0].name == swapName.uniswap_v3) {
+            len = poolsJson[0].result.pools.length
+        } else {
+            len = poolsJson[0].result.pairs.length
+        }
+
+        let id:any
+        for (let i = 0; i < len; i++) {
+            await retry(
+                async () => {
+                    if (poolsJson[0].name == swapName.uniswap_v3) {
+                        id = poolsJson[0].result.pools[i].id
+                        let token0 = poolsJson[0].result.pools[i].token0.id
+                        let token1 = poolsJson[0].result.pools[i].token1.id
+                        data[i] = await fn(chainId, id, token0, token1, price)
+                    } else {
+                        let id = poolsJson[0].result.pairs[i].id
+                        let token0 = poolsJson[0].result.pairs[i].token0.id
+                        let token1 = poolsJson[0].result.pairs[i].token1.id
+                        data[i] = await fn(chainId, id, token0, token1, price)
+                    }
+                },
+                { retries: 2, maxTimeout: 5000, onRetry: (err, retry) => { console.log("fail to get pair,id:", id,",dexName:",poolsJson[0].name,",error message:", err, ",retry times:", retry) } }
+            )
+        }
         this.currentCount -= 1;
         if (this.list.length) {
             const resolveHandler = this.list.shift()!;
             resolveHandler();
         }
-        return ok
+        return data
     }
 }
 
-onchainPools(swapName.uniswap_v2,ChainId.MAINNET)
+onchainPools(swapName.uniswap_v2, ChainId.MAINNET)
