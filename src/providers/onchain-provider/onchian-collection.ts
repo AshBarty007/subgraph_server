@@ -67,32 +67,30 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         len = poolsJson[0].result.pairs.length
     }
 
-    let data = []
+    let data
     for (let i = 0; i < len; i++) {
         if (dexName == swapName.uniswap_v3) {
             let id = poolsJson[0].result.pools[i].id
             let token0 = poolsJson[0].result.pools[i].token0.id
             let token1 = poolsJson[0].result.pools[i].token1.id
-            try {
-                //console.log(i,dexName,id)
-                data[i] = await onchainQuery(chainId, id, token0, token1, price)
-            } catch (err) {
-                console.log("fail to get pair,id:", id)
-                console.log("dex name:", dexName, ",error:", err)
-                continue
-            }
+            await retry(
+                async () => {
+                    //console.log(i,dexName,id)
+                    data[i] = await onchainQuery(chainId, id, token0, token1, price)
+                },
+                { retries: 5, maxTimeout: 5000, onRetry: (err, retry) => { console.log("fail to get pair,id:", id, "dex name:", dexName, "error message:", err, ",retry times:", retry) } }
+            )
         } else {
             let id = poolsJson[0].result.pairs[i].id
             let token0 = poolsJson[0].result.pairs[i].token0.id
             let token1 = poolsJson[0].result.pairs[i].token1.id
-            try {
-                //console.log(i,dexName,id)
-                data[i] = await onchainQuery(chainId, id, token0, token1, price)
-            } catch (err) {
-                console.log("fail to get pair,id:", id)
-                console.log("dex name:", dexName, ",error:", err)
-                continue
-            }
+            await retry(
+                async () => {
+                    //console.log(i,dexName,id)
+                    data[i] = await onchainQuery(chainId, id, token0, token1, price)
+                },
+                { retries: 5, maxTimeout: 5000, onRetry: (err, retry) => { console.log("fail to get pair,id:", id, "dex name:", dexName, "error message:", err, ",retry times:", retry) } }
+            )
         }
     }
     let storageData = {
