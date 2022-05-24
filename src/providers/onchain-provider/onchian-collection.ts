@@ -113,7 +113,9 @@ class Concurrent {
         this.maxConcurrent = count;
     }
     public async add(fn: Function, poolsJson: any, chainId: ChainId, price: Number) {
-        console.log("poolsJson2",poolsJson[0])
+        console.log("poolsJson1",poolsJson[0])
+        console.log("poolsJson2",poolsJson[0].result)
+        console.log("poolsJson3",poolsJson[0].result.pairs)
         let data
         this.currentCount += 1;
         if (this.currentCount > this.maxConcurrent) {
@@ -138,11 +140,13 @@ class Concurrent {
                         id = poolsJson[0].result.pools[i].id
                         let token0 = poolsJson[0].result.pools[i].token0.id
                         let token1 = poolsJson[0].result.pools[i].token1.id
+                        console.log(i,chainId, id, token0, token1, price)
                         data[i] = await fn(chainId, id, token0, token1, price)
                     } else {
                         let id = poolsJson[0].result.pairs[i].id
                         let token0 = poolsJson[0].result.pairs[i].token0.id
                         let token1 = poolsJson[0].result.pairs[i].token1.id
+                        console.log(i,chainId, id, token0, token1, price)
                         data[i] = await fn(chainId, id, token0, token1, price)
                     }
                 },
