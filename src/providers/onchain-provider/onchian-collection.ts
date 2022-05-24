@@ -113,10 +113,6 @@ class Concurrent {
         this.maxConcurrent = count;
     }
     public async add(fn: Function, poolsJson: any, chainId: ChainId, price: Number) {
-        console.log("poolsJson1",poolsJson[0])
-        console.log("poolsJson2",poolsJson[0].result)
-        console.log("poolsJson3",poolsJson[0].result.pairs)
-        let data
         this.currentCount += 1;
         if (this.currentCount > this.maxConcurrent) {
             const wait = new Promise((resolve) => {
@@ -132,6 +128,7 @@ class Concurrent {
             len = poolsJson[0].result.pairs.length
         }
 
+        let data = [len]
         let id:any
         for (let i = 0; i < len; i++) {
             await retry(
