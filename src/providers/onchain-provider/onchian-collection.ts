@@ -88,6 +88,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         chainId: chainId,
         result: data,
     }
+    console.log("return data:",data)
     await retry(
         async () => {
             await DB.deleteData(TableName.OnChainPools, { name: dexName }, true)
