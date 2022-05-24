@@ -17,7 +17,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         async () => {
             price = await ethPrice()
         },
-        { retries: 5, maxTimeout: 5000 }
+        { retries: 5, maxTimeout: 5000, onRetry: (err, retry) => {console.log("fail to get eth price ,error message:",err,",retry times:",retry)}}
     )
     if (price == 0) {
         console.log("fail to get eth price")
@@ -49,7 +49,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
             poolsJson = JSON.parse(poolsData)
         },
-        { retries: 5, maxTimeout: 5000 }
+        { retries: 5, maxTimeout: 5000, onRetry: (err, retry) => {console.log("fail to find data ,error message:",err,",retry times:",retry)} }
     )
 
 
@@ -94,7 +94,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             await DB.deleteData(TableName.OnChainPools, { name: dexName }, true)
             await DB.insertData(TableName.OnChainPools, storageData)
         },
-        { retries: 5, maxTimeout: 5000 }
+        { retries: 5, maxTimeout: 5000, onRetry: (err, retry) => {console.log("fail to storage data ,error message:",err,",retry times:",retry)}}
     )
 }
 
@@ -119,7 +119,7 @@ class Concurrent {
         await retry(
             async () => {
                 ok = await fn(chainId, id, token0, token1, price);
-                console.log(chainId, id)
+                console.log("========",chainId, id,"========")
             },
             { retries: 2, maxTimeout: 5000, onRetry: (err, retry) => { console.log("fail to get pair,id:", id, "error message:", err, ",retry times:", retry) } }
         )
@@ -132,4 +132,4 @@ class Concurrent {
     }
 }
 
-onchainPools(swapName.uniswap_v3,ChainId.BSC)
+onchainPools(swapName.quickswap,ChainId.BSC)
