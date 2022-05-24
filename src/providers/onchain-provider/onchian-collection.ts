@@ -118,6 +118,7 @@ class Concurrent {
         await retry(
             async () => {
                 ok = await fn(chainId, id, token0, token1, price);
+                console.log(chainId, id)
             },
             { retries: 2, maxTimeout: 5000, onRetry: (err, retry) => { console.log("fail to get pair,id:", id, "error message:", err, ",retry times:", retry) } }
         )
@@ -129,3 +130,5 @@ class Concurrent {
         return ok
     }
 }
+
+onchainPools(swapName.pancakeswap,ChainId.BSC)
