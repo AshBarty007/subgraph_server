@@ -85,7 +85,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     //         data[i] = concurrent.add(onchainQuery, chainId, id, token0, token1, price)
     //     }
     // }
-
+    console.log("poolsJson1",poolsJson)
     let data = await concurrent.add(onchainQuery,poolsJson,chainId,price)
     let storageData = {
         updateTime: Date.parse(new Date().toString()),
@@ -113,6 +113,7 @@ class Concurrent {
         this.maxConcurrent = count;
     }
     public async add(fn: Function, poolsJson: any, chainId: ChainId, price: Number) {
+        console.log("poolsJson2",poolsJson)
         let data
         this.currentCount += 1;
         if (this.currentCount > this.maxConcurrent) {
