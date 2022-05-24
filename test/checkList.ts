@@ -33,6 +33,3 @@ async function b() {
     await a(TableName.DetailedPools)
 }
 b()
-
-//数据库没删除
-//api访问次数调查

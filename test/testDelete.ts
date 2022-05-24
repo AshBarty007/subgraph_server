@@ -1,51 +1,54 @@
-import { PancakeSwapSubgraphProvider } from '../src/providers/subgraph-provider/pancakeswap-subgraph-provider'
-import { QuickSwapSubgraphProvider } from '../src/providers/subgraph-provider/quickswap-subgraph-provider'
-import { SushiSwapSubgraphProvider } from '../src/providers/subgraph-provider/sushiswap-subgraph-provider'
-import { UniSwapV2SubgraphProvider } from '../src/providers/subgraph-provider/uniswapv2-subgraph-provider'
-import { UniSwapV3SubgraphProvider } from '../src/providers/subgraph-provider/uniswapv3-subgraph-provider'
+let startTime = Date.now();
+const timeout = (timeout: number, ret: number) => {
+    return (idx?: any) =>
+        new Promise((resolve) => {
+            setTimeout(() => {
+                const compare = Date.now() - startTime;
+                console.log(`At ${Math.floor(compare / 100)}00 return`, ret);
+                resolve(idx);
+            }, timeout);
+        });
+};
 
-import { onchainPools } from '../src/providers/onchain-provider/onchian-collection'
-import { ChainId } from '../src/providers/utils/chainId'
-import { dexName } from '../src/providers/utils/params'
+const timeout1 = timeout(500, 1);
+const timeout2 = timeout(400, 2);
+const timeout3 = timeout(300, 3);
+const timeout4 = timeout(200, 4);
+const timeout5 = timeout(100, 5);
 
-const PancakeSwapSubgraph = new PancakeSwapSubgraphProvider(ChainId.BSC)
-const QuickSwapSubgraph = new QuickSwapSubgraphProvider(ChainId.POLYGON)
-const SushiSwapSubgraph = new SushiSwapSubgraphProvider(ChainId.POLYGON)
-const UniSwapV2Subgraph = new UniSwapV2SubgraphProvider(ChainId.MAINNET)
-const UniSwapV3Subgraph = new UniSwapV3SubgraphProvider(ChainId.POLYGON)
+class Concurrent {
+    private maxConcurrent: number = 2;
 
-
-async function updateSimplePools(){
-    await PancakeSwapSubgraph.quickGetPools()
-    await QuickSwapSubgraph.quickGetPools()
-    await SushiSwapSubgraph.quickGetPools()
-    await UniSwapV2Subgraph.quickGetPools()
-    await UniSwapV3Subgraph.quickGetPools()
-    console.log(new Date(), 'the SimplePools has updated.');
+    constructor(count: number = 2) {
+        this.maxConcurrent = count;
+    }
+    public async useRace(fns: Function[]) {
+        const runing: any[] = [];
+        for (let i = 0; i < this.maxConcurrent; i++) {
+            if (fns.length) {
+                const fn = fns.shift()!;
+                runing.push(fn(i));
+            }
+        }
+        const handle = async () => {
+            if (fns.length) {
+                const idx = await Promise.race<number>(runing);
+                const nextFn = fns.shift()!;
+                runing.splice(idx, 1, nextFn(idx));
+                handle();
+            } else {
+                await Promise.all(runing);
+            }
+        };
+        handle();
+    }
 }
 
-async function updateDetailedPools(){
-    await PancakeSwapSubgraph.getPools()
-    await QuickSwapSubgraph.getPools()
-    await SushiSwapSubgraph.getPools()
-    await UniSwapV2Subgraph.getPools()
-    await UniSwapV3Subgraph.getPools()
-    console.log(new Date(), 'the DetailedPoolsTable have updated.');
-}
+const run = async () => {
+    const concurrent = new Concurrent();
+    startTime = Date.now();
+    await concurrent.useRace([timeout1, timeout2, timeout3, timeout4, timeout5]);
+};
 
-async function updateOnChainPools(){
-    // await onchainPools(dexName.pancakeswap,ChainId.BSC)
-    // await onchainPools(dexName.quickswap,ChainId.POLYGON)
-    // await onchainPools(dexName.sushiswap,ChainId.POLYGON)
-    //await onchainPools(dexName.uniswap_v2,ChainId.MAINNET)
-    await onchainPools(dexName.uniswap_v3,ChainId.POLYGON)
-    console.log(new Date(), 'the OnChainPoolsTable have updated.');
-}
 
-try{
-    updateOnChainPools()
-}catch(err){
-    console.log("fail to update DetailedPools ,error:",err)
-}
-//server
-//onchain v3
+run();
