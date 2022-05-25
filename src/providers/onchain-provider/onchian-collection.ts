@@ -24,7 +24,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         return
     }
 
-    let onchainQuery : Function//function (chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number): Promise<string> { return new Promise<string>(() => { }) }
+    let onchainQuery = function (chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number): Promise<string> { return new Promise<string>(() => { }) }
     switch (dexName) {
         case swapName.pancakeswap:
             onchainQuery = queryPancakeSwapOnChain
@@ -69,9 +69,9 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         len = poolsJson[0].result.pairs.length
     }
 
-    let fns: Function[] = []
+    let fns: any = []
     for (let i = 0; i < len; i++) {
-        let id, token0, token1
+        let id:string, token0:string, token1:string
         if (dexName == swapName.uniswap_v3) {
             id = poolsJson[0].result.pools[i].id
             token0 = poolsJson[0].result.pools[i].token0.id
@@ -81,10 +81,11 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             token0 = poolsJson[0].result.pairs[i].token0.id
             token1 = poolsJson[0].result.pairs[i].token1.id
         }
-        fns[i] = onchainQuery(chainId, id, token0, token1, price)
+        fns[i] = onchainQuery(chainId,id,token0,token1,price)
     }
-
-    let data = await concurrent.useRace(fns)
+    let result = await Promise.race(fns)
+    console.log("result",result)
+    let data = [1]
     let storageData = {
         updateTime: Date.parse(new Date().toString()),
         name: dexName,
@@ -98,24 +99,22 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
 }
 
 class Concurrent {
-    private maxConcurrent: number = 2;
+    private maxConcurrent: number = 100;
 
-    constructor(count: number = 2) {
+    constructor(count: number = 100) {
         this.maxConcurrent = count;
     }
-    public async useRace(fns: Function[]) {
-        console.log("fns",fns)
+    public async useRace(fns: any[]) {
         const runing: any[] = [];
         for (let i = 0; i < this.maxConcurrent; i++) {
             if (fns.length) {
                 const fn = fns.shift()!;
-                console.log("fn",fn(i))
-                runing.push(fn(i));
+                runing.push(fn);
             }
         }
         const handle = async () => {
             if (fns.length) {
-                const idx = await Promise.race<number>(runing);
+                const idx = await Promise.race(runing);
                 const nextFn = fns.shift()!;
                 runing.splice(idx, 1, nextFn(idx));
                 handle();
@@ -123,7 +122,7 @@ class Concurrent {
                 return await Promise.all(runing);
             }
         };
-        return handle();
+        handle();
     }
 }
 
