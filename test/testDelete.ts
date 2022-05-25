@@ -32,10 +32,10 @@ class Concurrent {
 
 
 const run = async () => {
-  const concurrent = new Concurrent(10);
+  const concurrent = new Concurrent(20);
   let start = new Date().toLocaleString()
   console.log("start", start)
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 200; i++) {
     let ok = concurrent.add(queryUniSwapV2OnChain, ChainId.MAINNET, "", "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", 2000,i);
     //concurrent.add(queryUniSwapV2OnChain, ChainId.MAINNET, "", "0x66a0f676479cee1d7373f3dc2e2952778bff5bd6", "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2", 2000,i);
     console.log(ok)
