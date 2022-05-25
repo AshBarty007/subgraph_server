@@ -69,9 +69,9 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         len = poolsJson[0].result.pairs.length
     }
 
-    let fns:any = []
+    let fns: any = []
     for (let i = 0; i < len; i++) {
-        let id,token0,token1
+        let id, token0, token1
         if (dexName == swapName.uniswap_v3) {
             id = poolsJson[0].result.pools[i].id
             token0 = poolsJson[0].result.pools[i].token0.id
@@ -81,7 +81,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             token0 = poolsJson[0].result.pairs[i].token0.id
             token1 = poolsJson[0].result.pairs[i].token1.id
         }
-        fns[i]=onchainQuery(chainId, id, token0, token1, price)
+        fns[i] = onchainQuery(chainId, id, token0, token1, price)
     }
 
     let data = await concurrent.useRace(fns)
@@ -91,7 +91,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         chainId: chainId,
         result: data,
     }
-console.log("storageData",storageData)
+    console.log("storageData", storageData)
     //await DB.deleteData(TableName.OnChainPools, { name: dexName }, true)
     //await DB.insertData(TableName.OnChainPools, storageData)
 
@@ -124,3 +124,5 @@ class Concurrent {
         return handle();
     }
 }
+
+onchainPools(swapName.pancakeswap, ChainId.BSC)
