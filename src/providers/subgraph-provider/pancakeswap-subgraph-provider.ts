@@ -36,8 +36,7 @@ export class PancakeSwapSubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
-                    this.DB.deleteData(TableName.DetailedPools,{name: dexName.pancakeswap},true)
-                    this.DB.insertData(TableName.DetailedPools,data)
+                    this.DB.deleteData(TableName.DetailedPools,{name: dexName.pancakeswap},true).then(()=>{this.DB.insertData(TableName.DetailedPools,data)}).catch(()=>{console.log("fail to delete data,table name",TableName.DetailedPools)})                    
                 });
             },      
             {
@@ -63,8 +62,7 @@ export class PancakeSwapSubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
-                    this.DB.deleteData(TableName.SimplePools,{name: dexName.pancakeswap},true)
-                    this.DB.insertData(TableName.SimplePools,data)
+                    this.DB.deleteData(TableName.SimplePools,{name: dexName.pancakeswap},true).then(()=>{this.DB.insertData(TableName.SimplePools,data)}).catch(()=>{console.log("fail to delete data,table name",TableName.SimplePools)})                  
                 });
             },      
             {
