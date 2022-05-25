@@ -32,7 +32,7 @@ class Concurrent {
 
 
 const run = async () => {
-  const concurrent = new Concurrent(50);
+  const concurrent = new Concurrent(100);
   let start = new Date().toLocaleString()
   console.log("start", start)
   for (let i = 0; i < 1000; i++) {
