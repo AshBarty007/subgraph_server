@@ -104,10 +104,12 @@ class Concurrent {
         this.maxConcurrent = count;
     }
     public async useRace(fns: Function[]) {
+        console.log("fns",fns)
         const runing: any[] = [];
         for (let i = 0; i < this.maxConcurrent; i++) {
             if (fns.length) {
                 const fn = fns.shift()!;
+                console.log("fn",fn(i))
                 runing.push(fn(i));
             }
         }
