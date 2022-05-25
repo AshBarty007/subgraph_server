@@ -17,21 +17,17 @@ const UniSwapV3Subgraph = new UniSwapV3SubgraphProvider(ChainId.POLYGON)
 const scheduleTask = () => {
     schedule.scheduleJob('0 */2 * * * *', () => {
         try{
-            updateSimplePools()
+            PancakeSwapSubgraph.quickGetPools()
+            QuickSwapSubgraph.quickGetPools()
+            SushiSwapSubgraph.quickGetPools()
+            UniSwapV2Subgraph.quickGetPools()
+            UniSwapV3Subgraph.quickGetPools()
+            console.log(new Date(), 'the SimplePools has updated.');
         }catch(err){
             console.log("fail to update SimplePools ,error:",err)
         }
     });
 
-}
-
-async function updateSimplePools(){
-    await PancakeSwapSubgraph.quickGetPools()
-    await QuickSwapSubgraph.quickGetPools()
-    await SushiSwapSubgraph.quickGetPools()
-    await UniSwapV2Subgraph.quickGetPools()
-    await UniSwapV3Subgraph.quickGetPools()
-    console.log(new Date(), 'the SimplePools has updated.');
 }
 
 scheduleTask();

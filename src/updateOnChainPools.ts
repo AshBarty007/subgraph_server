@@ -3,9 +3,6 @@ import { ChainId } from './providers/utils/chainId'
 import { dexName } from './providers/utils/params'
 const schedule = require('node-schedule');
 
-
-
-
 const scheduleTask = () => {
     schedule.scheduleJob('59 */45 * * * *', () => {
         try{
