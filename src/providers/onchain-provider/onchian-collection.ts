@@ -8,8 +8,8 @@ import { queryUniSwapV2OnChain } from './uniswapv2-onchain'
 import { queryUniSwapV3OnChain } from './uniswapv3-onchain'
 import { default as retry } from 'async-retry';
 
+
 export async function onchainPools(dexName: swapName, chainId: ChainId) {
-    const concurrent = new Concurrent(10);
     const DB = new BarterSwapDB();
 
     let price = 0
@@ -49,7 +49,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
             poolsJson = JSON.parse(poolsData)
         },
-        { retries: 5, maxTimeout: 5000 }
+        { retries: 5, maxTimeout: 5000, onRetry: (err, retry) => { console.log("fail to get eth price, error message:", err, ",retry times:", retry) } }
     )
 
 
@@ -62,119 +62,65 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         return
     }
 
+    const concurrent = new Concurrent();
     if (dexName == swapName.uniswap_v3) {
         len = poolsJson[0].result.pools.length
     } else {
         len = poolsJson[0].result.pairs.length
     }
 
-    let data
+    let fns:any = []
     for (let i = 0; i < len; i++) {
+        let id,token0,token1
         if (dexName == swapName.uniswap_v3) {
-            let id = poolsJson[0].result.pools[i].id
-            let token0 = poolsJson[0].result.pools[i].token0.id
-            let token1 = poolsJson[0].result.pools[i].token1.id
-            await retry(
-                async () => {
-                    //console.log(i,dexName,id)
-                    data[i] = await onchainQuery(chainId, id, token0, token1, price)
-                },
-                { retries: 2, maxTimeout: 5000, onRetry: (err, retry) => { console.log("fail to get pair,id:", id, "dex name:", dexName, "error message:", err, ",retry times:", retry) } }
-            )
+            id = poolsJson[0].result.pools[i].id
+            token0 = poolsJson[0].result.pools[i].token0.id
+            token1 = poolsJson[0].result.pools[i].token1.id
         } else {
-            let id = poolsJson[0].result.pairs[i].id
-            let token0 = poolsJson[0].result.pairs[i].token0.id
-            let token1 = poolsJson[0].result.pairs[i].token1.id
-            await retry(
-                async () => {
-                    //console.log(i,dexName,id)
-                    data[i] = await onchainQuery(chainId, id, token0, token1, price)
-                },
-                { retries: 2, maxTimeout: 5000, onRetry: (err, retry) => { console.log("fail to get pair,id:", id, "dex name:", dexName, "error message:", err, ",retry times:", retry) } }
-            )
+            id = poolsJson[0].result.pairs[i].id
+            token0 = poolsJson[0].result.pairs[i].token0.id
+            token1 = poolsJson[0].result.pairs[i].token1.id
         }
+        fns[i]=onchainQuery(chainId, id, token0, token1, price)
     }
+
+    let data = await concurrent.useRace(fns)
     let storageData = {
         updateTime: Date.parse(new Date().toString()),
         name: dexName,
         chainId: chainId,
         result: data,
     }
-    await retry(
-        async () => {
-            await DB.deleteData(TableName.OnChainPools, { name: dexName }, true)
-            await DB.insertData(TableName.OnChainPools, storageData)
-        },
-        { retries: 5, maxTimeout: 5000 }
-    )
+console.log("storageData",storageData)
+    //await DB.deleteData(TableName.OnChainPools, { name: dexName }, true)
+    //await DB.insertData(TableName.OnChainPools, storageData)
+
 }
 
 class Concurrent {
     private maxConcurrent: number = 2;
-    private list: Function[] = [];
-    private currentCount: number = 0;
 
     constructor(count: number = 2) {
         this.maxConcurrent = count;
     }
-    public async add(fn: Function) {
-        this.currentCount += 1;
-        if (this.currentCount > this.maxConcurrent) {
-            const wait = new Promise((resolve) => {
-                this.list.push(resolve);
-            });
-            await wait;
+    public async useRace(fns: Function[]) {
+        const runing: any[] = [];
+        for (let i = 0; i < this.maxConcurrent; i++) {
+            if (fns.length) {
+                const fn = fns.shift()!;
+                runing.push(fn(i));
+            }
         }
-        let ok
-        // await retry(
-        //     async () => {
-        //         ok = await fn();
-        //     },
-        //     { retries: 2, maxTimeout: 5000, onRetry: (err, retry) => { console.log("fail to get pair,id:", id, "dex name:", dexName, "error message:", err, ",retry times:", retry) } }
-        // )
-        try{
-            ok = await fn();
-        }catch(err){
-            console.log("fail to get pair,id:", id, "dex name:", dexName, "error message:", err)
-        }
-
-        this.currentCount -= 1;
-        if (this.list.length) {
-            const resolveHandler = this.list.shift()!;
-            resolveHandler();
-        }
-        return ok
+        const handle = async () => {
+            if (fns.length) {
+                const idx = await Promise.race<number>(runing);
+                const nextFn = fns.shift()!;
+                runing.splice(idx, 1, nextFn(idx));
+                handle();
+            } else {
+                return await Promise.all(runing);
+            }
+        };
+        return handle();
     }
 }
-
-
-// class Concurrent1 {
-//     private maxConcurrent: number = 2;
-  
-//     constructor(count: number = 2) {
-//       this.maxConcurrent = count;
-//     }
-//     public async useRace(fns: Function[]) {
-//       const runing: any[] = [];
-//       for (let i = 0; i < this.maxConcurrent; i++) {
-//         if (fns.length) {
-//           const fn = fns.shift()!;
-//           runing.push(fn(i));
-//         }
-//       }
-
-//       const handle = async () => {
-//         if (fns.length) {
-//           const idx = await Promise.race<number>(runing);
-//           const nextFn = fns.shift()!;
-//           runing.splice(idx, 1, nextFn(idx));
-//           handle();
-//         } else {
-//           await Promise.all(runing);
-//         }
-//       };
-
-//       handle();
-//     }
-//   }
-  
