@@ -1,0 +1,19 @@
+/root/.nvm/versions/node/v17.9.0/lib/node_modules/ts-node/src/index.ts:820
+    return new TSError(diagnosticText, diagnosticCodes);
+           ^
+TSError: ⨯ Unable to compile TypeScript:
+../src/providers/onchain-provider/onchian-collection.ts(138,49): error TS2304: Cannot find name 'id'.
+../src/providers/onchain-provider/onchian-collection.ts(138,66): error TS2304: Cannot find name 'dexName'.
+
+    at createTSError (/root/.nvm/versions/node/v17.9.0/lib/node_modules/ts-node/src/index.ts:820:12)
+    at reportTSError (/root/.nvm/versions/node/v17.9.0/lib/node_modules/ts-node/src/index.ts:824:19)
+    at getOutput (/root/.nvm/versions/node/v17.9.0/lib/node_modules/ts-node/src/index.ts:1014:36)
+    at Object.compile (/root/.nvm/versions/node/v17.9.0/lib/node_modules/ts-node/src/index.ts:1322:43)
+    at Module.m._compile (/root/.nvm/versions/node/v17.9.0/lib/node_modules/ts-node/src/index.ts:1454:30)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1153:10)
+    at Object.require.extensions.<computed> [as .ts] (/root/.nvm/versions/node/v17.9.0/lib/node_modules/ts-node/src/index.ts:1458:12)
+    at Module.load (node:internal/modules/cjs/loader:975:32)
+    at Function.Module._load (node:internal/modules/cjs/loader:822:12)
+    at Module.require (node:internal/modules/cjs/loader:999:19) {
+  diagnosticCodes: [ 2304, 2304 ]
+}
