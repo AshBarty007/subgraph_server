@@ -62,7 +62,6 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         return
     }
 
-    const concurrent = new Concurrent();
     if (dexName == swapName.uniswap_v3) {
         len = poolsJson[0].result.pools.length
     } else {
@@ -98,32 +97,32 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
 
 }
 
-class Concurrent {
-    private maxConcurrent: number = 100;
+// class Concurrent {
+//     private maxConcurrent: number = 100;
 
-    constructor(count: number = 100) {
-        this.maxConcurrent = count;
-    }
-    public async useRace(fns: any[]) {
-        const runing: any[] = [];
-        for (let i = 0; i < this.maxConcurrent; i++) {
-            if (fns.length) {
-                const fn = fns.shift()!;
-                runing.push(fn);
-            }
-        }
-        const handle = async () => {
-            if (fns.length) {
-                const idx = await Promise.race(runing);
-                const nextFn = fns.shift()!;
-                runing.splice(idx, 1, nextFn(idx));
-                handle();
-            } else {
-                return await Promise.all(runing);
-            }
-        };
-        handle();
-    }
-}
+//     constructor(count: number = 100) {
+//         this.maxConcurrent = count;
+//     }
+//     public async useRace(fns: any[]) {
+//         const runing: any[] = [];
+//         for (let i = 0; i < this.maxConcurrent; i++) {
+//             if (fns.length) {
+//                 const fn = fns.shift()!;
+//                 runing.push(fn);
+//             }
+//         }
+//         const handle = async () => {
+//             if (fns.length) {
+//                 const idx = await Promise.race(runing);
+//                 const nextFn = fns.shift()!;
+//                 runing.splice(idx, 1, nextFn(idx));
+//                 handle();
+//             } else {
+//                 return await Promise.all(runing);
+//             }
+//         };
+//         handle();
+//     }
+// }
 
 onchainPools(swapName.pancakeswap, ChainId.BSC)
