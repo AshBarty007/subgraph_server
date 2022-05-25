@@ -24,7 +24,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         return
     }
 
-    let onchainQuery = function (chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number): Promise<string> { return new Promise<string>(() => { }) }
+    let onchainQuery : Function//function (chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number): Promise<string> { return new Promise<string>(() => { }) }
     switch (dexName) {
         case swapName.pancakeswap:
             onchainQuery = queryPancakeSwapOnChain
@@ -69,7 +69,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         len = poolsJson[0].result.pairs.length
     }
 
-    let fns: any = []
+    let fns: Function[] = []
     for (let i = 0; i < len; i++) {
         let id, token0, token1
         if (dexName == swapName.uniswap_v3) {
