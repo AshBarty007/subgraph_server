@@ -83,7 +83,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         fns[i] = onchainQuery(chainId,id,token0,token1,price)
     }
     let result = await Promise.race(fns)
-    console.log("result",result)
+    console.log("result",fns.length,result)
     let data = [1]
     let storageData = {
         updateTime: Date.parse(new Date().toString()),
@@ -125,4 +125,4 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
 //     }
 // }
 
-onchainPools(swapName.pancakeswap, ChainId.BSC)
+onchainPools(swapName.uniswap_v2, ChainId.MAINNET)
