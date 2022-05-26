@@ -85,9 +85,11 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         }
         index++
     }
+    console.log("len",wait.length)
     let result:any
     for (let i=0;i<wait.length;i++){
-        let tmp = await Promise.race(fns)
+        let runfuns = wait.shift()!
+        let tmp = await Promise.race(runfuns)
         console.log("tmp",tmp)
         result.append(tmp) 
     }
