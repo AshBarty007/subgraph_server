@@ -11,7 +11,8 @@ async function start() {
     let fns = []
     let wait = []
     let index = 0
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 400; i++) {
+        console.log("start",i)
         fns[index] = test(i)
         if (index>=4||i==39){
             console.log("index",index)
@@ -20,6 +21,7 @@ async function start() {
             index = index - 5
         }
         index ++
+        console.log("end",i)
     }
     for(let i=0;i<wait.length;i++){
         await Promise.race(wait[i])
