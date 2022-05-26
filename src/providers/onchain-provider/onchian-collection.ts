@@ -89,13 +89,13 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     // await Promise.race(fns)
     // let tmp =await Promise.all(fns);
     // console.log("tmp",tmp,fns.length)
-    for (let i=0;i<wait.length;i++){
-        console.log("length:",i,wait[i].length)
+    //for (let i=0;i<wait.length;i++){
+        //console.log("length:",i,wait[i].length)
         //let ok = wait[i]
         // await Promise.race(ok)
         // let tmp = await Promise.all(ok);
         //console.log("tmp",tmp)
-    }
+    //}
 
     let data = [1]
     let storageData = {
