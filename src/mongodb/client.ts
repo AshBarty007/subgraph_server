@@ -83,11 +83,11 @@ export class BarterSwapDB {
             let collection = client.db(this.dbName).collection(collectionName)
             if (many) {
                 collection.updateMany(filter, updateFilter)
-                    .catch((err) => { console.log("fail to delete many data,error:", err) })
+                    .catch((err) => { console.log("fail to update many data,error:", err) })
                     .finally(() => { client.close() })
             } else {
                 collection.updateOne(filter, updateFilter)
-                    .catch((err) => { console.log("fail to delete a data,error:", err) })
+                    .catch((err) => { console.log("fail to update a data,error:", err) })
                     .finally(() => { client.close() })
             }
         }).catch((err) => {
