@@ -67,7 +67,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     let fns: any = []
     let wait: any = []
     let index = 0
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < len; i++) {
         let id:string, token0:string, token1:string
         if (dexName == swapName.uniswap_v3) {
             id = poolsJson[0].result.pools[i].id
