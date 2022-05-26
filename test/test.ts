@@ -29,4 +29,6 @@ async function start() {
         console.log(i,result)
     }
 }
+
+
 start()
