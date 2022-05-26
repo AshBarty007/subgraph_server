@@ -4,7 +4,7 @@ import { dexName } from './providers/utils/params';
 const url = require('url')
 
 const port = 9002;
-const dbClient = new BarterSwapDB();
+const DB = BarterSwapDB.getInstance();
 
 const server = createServer((request: IncomingMessage, response: ServerResponse) => {
     let http_url = request.url;
@@ -29,7 +29,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
                 let filter = {
                     name: { "$in": dex },
                 }
-                dbClient.findData(TableName.SimplePools, filter).then((ret: any) => {
+                DB.findData(TableName.SimplePools, filter).then((ret: any) => {
                     let result = JSON.parse(ret)
                     for (let i = 0; i < dex.length; i++) {
                         try {

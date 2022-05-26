@@ -9,7 +9,7 @@ import { BarterSwapDB,TableName } from '../../mongodb/client'
 
 export class QuickSwapSubgraphProvider implements ISubgraphProvider{
     private client: GraphQLClient;
-    private DB = new BarterSwapDB();
+    private DB = BarterSwapDB.getInstance();
 
     constructor(    
         private chainId: ChainId,

@@ -10,7 +10,7 @@ import { default as retry } from 'async-retry';
 
 
 export async function onchainPools(dexName: swapName, chainId: ChainId) {
-    const DB = new BarterSwapDB();
+    const DB = BarterSwapDB.getInstance();
 
     let price = 0
     await retry(
@@ -92,37 +92,9 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         result: data,
     }
     console.log("storageData", storageData)
-    //await DB.deleteData(TableName.OnChainPools, { name: dexName }, true)
-    //await DB.insertData(TableName.OnChainPools, storageData)
+    await DB.deleteData(TableName.OnChainPools, { name: dexName }, true)
+    await DB.insertData(TableName.OnChainPools, storageData)
 
 }
-
-// class Concurrent {
-//     private maxConcurrent: number = 100;
-
-//     constructor(count: number = 100) {
-//         this.maxConcurrent = count;
-//     }
-//     public async useRace(fns: any[]) {
-//         const runing: any[] = [];
-//         for (let i = 0; i < this.maxConcurrent; i++) {
-//             if (fns.length) {
-//                 const fn = fns.shift()!;
-//                 runing.push(fn);
-//             }
-//         }
-//         const handle = async () => {
-//             if (fns.length) {
-//                 const idx = await Promise.race(runing);
-//                 const nextFn = fns.shift()!;
-//                 runing.splice(idx, 1, nextFn(idx));
-//                 handle();
-//             } else {
-//                 return await Promise.all(runing);
-//             }
-//         };
-//         handle();
-//     }
-// }
 
 onchainPools(swapName.uniswap_v2, ChainId.MAINNET)

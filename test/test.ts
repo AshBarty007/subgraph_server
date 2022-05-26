@@ -36,8 +36,7 @@ class Concurrent1 {
     }
     public async useRace(fns: Function[]) {
         const runing: any[] = [];
-        // 按并发数，把 Promise 加进去
-        // Promise 会回调一个索引，方便我们知道哪个 Promise 已经 resolve 了
+
         for (let i = 0; i < this.maxConcurrent; i++) {
             if (fns.length) {
                 const fn = fns.shift()!;
@@ -48,11 +47,11 @@ class Concurrent1 {
             if (fns.length) {
                 const idx = await Promise.race<number>(runing);
                 const nextFn = fns.shift()!;
-                // 移除已经完成的 Promise，把新的进去
+
                 runing.splice(idx, 1, nextFn(idx));
                 handle();
             } else {
-                // 如果数组已经被清空了，表面已经没有需要执行的 Promise 了，可以改成 Promise.all
+
                 return await Promise.all(runing);
             }
         };
@@ -135,3 +134,9 @@ const run2 = async () => {
 //run0();
 run1();
 //run2();
+
+// "connections" : {
+//     "current" : NumberLong(334),
+//     "available" : NumberLong(1366),
+//     "totalCreated" : NumberLong(663)
+// },
