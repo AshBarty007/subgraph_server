@@ -17,12 +17,8 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         async () => {
             price = await ethPrice()
         },
-        { retries: 5, maxTimeout: 5000 }
+        { retries: 2, maxTimeout: 2000 }
     )
-    if (price == 0) {
-        console.log("fail to get eth price")
-        return
-    }
 
     let onchainQuery = function (chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number): Promise<string> { return new Promise<string>(() => { }) }
     switch (dexName) {
@@ -49,7 +45,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
             poolsJson = JSON.parse(poolsData)
         },
-        { retries: 5, maxTimeout: 5000, onRetry: (err, retry) => { console.log("fail to get eth price, error message:", err, ",retry times:", retry) } }
+        { retries: 2, maxTimeout: 2000, onRetry: (err, retry) => { console.log("fail to get eth price, error message:", err, ",retry times:", retry) } }
     )
 
 
@@ -92,9 +88,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         result: data,
     }
     console.log("storageData", storageData)
-    await DB.deleteData(TableName.OnChainPools, { name: dexName }, true)
-    await DB.insertData(TableName.OnChainPools, storageData)
-
+    //await DB.deleteData(TableName.OnChainPools, { name: dexName }, true).then(()=>{DB.insertData(TableName.OnChainPools, storageData)}).catch(()=>{console.log("fail to delete data,table name",TableName.OnChainPools)})           
 }
 
 onchainPools(swapName.uniswap_v2, ChainId.MAINNET)

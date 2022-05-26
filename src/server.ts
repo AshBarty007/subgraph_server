@@ -3,7 +3,7 @@ import { BarterSwapDB, TableName } from './mongodb/client'
 import { dexName } from './providers/utils/params';
 const url = require('url')
 
-const port = 9002;
+const port = 9001;
 const DB = new BarterSwapDB();
 
 const server = createServer((request: IncomingMessage, response: ServerResponse) => {

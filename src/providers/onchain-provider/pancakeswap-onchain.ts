@@ -1,12 +1,10 @@
 import { Pair, Fetcher } from '@pancakeswap/sdk'
 import { ChainId } from '../utils/chainId'
-import { CHAIN_RPC} from '../utils/url'
+import { CHAIN_RPC } from '../utils/url'
 import { providers, } from 'ethers'
-import { default as retry } from 'async-retry';
 
-export async function queryPancakeSwapOnChain(chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number){
+export async function queryPancakeSwapOnChain(chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number) {
     let provider = new providers.JsonRpcProvider(CHAIN_RPC[chainId]);
-    
     const token0 = await Fetcher.fetchTokenData(Number(chainId), token0Address, provider)
     const token1 = await Fetcher.fetchTokenData(Number(chainId), token1Address, provider)
     const pair: Pair = await Fetcher.fetchPairData(token0, token1, provider)
@@ -23,7 +21,7 @@ export async function queryPancakeSwapOnChain(chainId: ChainId, id: string, toke
         reserveETH = reserve0 * 2
     }
     let reserveUSD
-    if (price>0){
+    if (price > 0) {
         reserveUSD = reserveETH * price
     }
     let result = {
@@ -43,6 +41,6 @@ export async function queryPancakeSwapOnChain(chainId: ChainId, id: string, toke
             decimals: token1.decimals
         }
     }
-    
+
     return JSON.stringify(result)
 }
