@@ -79,10 +79,11 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             token1 = poolsJson[0].result.pairs[i].token1.id
         }
         fns[index] = onchainQuery(chainId,id,token0,token1,price)
-        if (index>4 ||i == len-1){
+        if (index>=9 ||i == len-1){
             console.log("index",index)
             wait.push(fns)
-            index=index-5
+            fns = []
+            index=index-10
         }
         index++
     }
