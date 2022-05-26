@@ -81,15 +81,18 @@ export class BarterSwapDB {
     async updateData<Document>(collectionName: string, filter: Filter<Document>, updateFilter: Filter<Document>, many = false) {
         await this.connectDB().then((client) => {
             let collection = client.db(this.dbName).collection(collectionName)
-            if (many) {
-                collection.updateMany(filter, updateFilter)
-                    .catch((err) => { console.log("fail to update many data,error:", err) })
-                    .finally(() => { client.close() })
-            } else {
-                collection.updateOne(filter, updateFilter)
-                    .catch((err) => { console.log("fail to update a data,error:", err) })
-                    .finally(() => { client.close() })
-            }
+            collection.replaceOne(filter, updateFilter)
+            .catch((err) => { console.log("fail to update a data,error:", err) })
+            .finally(() => { client.close() })
+            // if (many) {
+            //     collection.updateMany(filter, updateFilter)
+            //         .catch((err) => { console.log("fail to update many data,error:", err) })
+            //         .finally(() => { client.close() })
+            // } else {
+                // collection.updateOne(filter, updateFilter)
+                //     .catch((err) => { console.log("fail to update a data,error:", err) })
+                //     .finally(() => { client.close() })
+            // }
         }).catch((err) => {
             console.log("fail to connect mongoDB,error:", err);
         })
