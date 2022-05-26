@@ -1,33 +1,28 @@
-import {MongoClient,Db,Filter, UpdateFilter} from 'mongodb'
-import MongoDBConfig  from './config'
+import { MongoClient, Filter} from 'mongodb'
+import MongoDBConfig from './config'
 
-interface Res {
-    db: MongoClient
-    Db: Db
-  }
+export enum TableName {
+    DetailedPools = 'DetailedPools',
+    SimplePools = 'SimplePools',
+    OnChainPools = 'OnChainPools',
+}
 
 export class BarterSwapDB {
-    private url:string
-    private dbName:string
-
-    static instance:BarterSwapDB 
-    static getInstance() {
-        if(!BarterSwapDB.instance) this.instance = new BarterSwapDB()
-        return this.instance
-    }
+    private url: string
+    private dbName: string
 
     constructor(
         url = MongoDBConfig.default,
         dbName = MongoDBConfig.database
-    ){
+    ) {
         this.url = url
         this.dbName = dbName
     }
 
-    private async connectDB():Promise<Res>{
+    private async connectDB(): Promise<MongoClient> {
         return new Promise((res, rej) => {
             MongoClient.connect(this.url).then((db) => {
-                res({db:db,Db:db.db(this.dbName)})
+                res(db)
             }).catch((err) => {
                 rej(err)
             })
@@ -35,64 +30,71 @@ export class BarterSwapDB {
     }
 
     async insertData<Document>(collectionName: string, data: Document[] | Document, many = false) {
-        let client = await this.connectDB()
-        let collection = client.Db.collection(collectionName)
-        if (many && Array.isArray(data)) {
-            collection.insertMany(data as any).catch((err)=>{
-                console.log(err)
-            })
-        }else{
-            collection.insertOne(data as any).catch((err)=>{
-                console.log(err)
-            })
-        }
+        await this.connectDB().then((client) => {
+            let collection = client.db(this.dbName).collection(collectionName)
+            if (many) {
+                collection.insertMany(data as Document[])
+                    .catch((err) => { console.log("fail to insert many data,error:", err) })
+                    .finally(() => { client.close() })
+            } else {
+                collection.insertOne(data as Document)
+                    .catch((err) => { console.log("fail to insert a data,error:", err) })
+                    .finally(() => { client.close() })
+            }
+        }).catch((err) => {
+            console.log("fail to connect mongoDB,error:", err);
+        })
     }
 
-    async findData<Document>(collectionName: string, filter: Filter<Document>):Promise<string>{
-        let client = await this.connectDB()
-        let collection = client.Db.collection(collectionName)
+    async findData<Document>(collectionName: string, filter: Filter<Document>): Promise<string> {
         return new Promise((res,rej)=>{
-            collection.find(filter).toArray().then((data)=>{
-                res(JSON.stringify(data))
+            this.connectDB().then((client)=>{
+                let collection = client.db(this.dbName).collection(collectionName)
+                collection.find(filter).toArray()
+                .then((data)=>{res(JSON.stringify(data))})
+                .catch((err)=>{console.log("fail to find data,error:",err),rej(err)})
+                .finally(()=>{client.close()})
             }).catch((err)=>{
+                console.log("fail to connect mongoDB,error:",err);
                 rej(err)
             })
         })
     }
 
     async deleteData<Document>(collectionName: string, filter: Filter<Document>, many = false) {
-        let client = await this.connectDB()
-        let collection = client.Db.collection(collectionName)
-        if (many) {
-            collection.deleteMany(filter as any)
-            .catch((err)=>{
-                console.log(err)
-            })
-        }else{
-            collection.deleteOne(filter as any)
-            .catch((err)=>{
-                console.log(err)
-            })
-        }
+        await this.connectDB().then((client) => {
+            let collection = client.db(this.dbName).collection(collectionName)
+            if (many) {
+                collection.deleteMany(filter)
+                    .catch((err) => { console.log("fail to delete many data,error:", err) })
+                    .finally(() => { client.close() })
+            } else {
+                collection.deleteOne(filter)
+                    .catch((err) => { console.log("fail to delete a data,error:", err) })
+                    .finally(() => { client.close() })
+            }
+        }).catch((err) => {
+            console.log("fail to connect mongoDB,error:", err);
+        })
     }
 
-    async updateData<Document>(collectionName: string, filter: Filter<Document> ,updateFilter: UpdateFilter<Document>, many = false) {
-        let client = await this.connectDB()
-        let collection = client.Db.collection(collectionName)
-        if (many){
-            // await collection.updateMany(filter, updateFilter)
-            // .catch((err)=>{console.log(err)})
-        }else{
-            await collection.updateOne(filter, updateFilter)
-            .catch((err)=>{console.log(err)})
-        }
+    async updateData<Document>(collectionName: string, filter: Filter<Document>, updateFilter: Filter<Document>, many = false) {
+        await this.connectDB().then((client) => {
+            let collection = client.db(this.dbName).collection(collectionName)
+            if (many) {
+                collection.updateMany(filter, updateFilter)
+                    .catch((err) => { console.log("fail to delete many data,error:", err) })
+                    .finally(() => { client.close() })
+            } else {
+                collection.updateOne(filter, updateFilter)
+                    .catch((err) => { console.log("fail to delete a data,error:", err) })
+                    .finally(() => { client.close() })
+            }
+        }).catch((err) => {
+            console.log("fail to connect mongoDB,error:", err);
+        })
     }
 
 }
 
-export enum TableName {
-    DetailedPools = 'DetailedPools',
-    SimplePools = 'SimplePools',
-    OnChainPools = 'OnChainPools',
-  }
 
