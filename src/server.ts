@@ -4,7 +4,7 @@ import { dexName } from './providers/utils/params';
 const url = require('url')
 
 const port = 9002;
-const DB = BarterSwapDB.getInstance();
+const DB = new BarterSwapDB();
 
 const server = createServer((request: IncomingMessage, response: ServerResponse) => {
     let http_url = request.url;

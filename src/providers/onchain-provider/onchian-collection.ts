@@ -10,7 +10,7 @@ import { default as retry } from 'async-retry';
 
 
 export async function onchainPools(dexName: swapName, chainId: ChainId) {
-    const DB = BarterSwapDB.getInstance();
+    const DB = new BarterSwapDB();
 
     let price = 0
     await retry(
