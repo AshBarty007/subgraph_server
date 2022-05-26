@@ -65,6 +65,8 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     }
 
     let fns: any = []
+    let wait: any = []
+    let index = 0
     for (let i = 0; i < len; i++) {
         let id:string, token0:string, token1:string
         if (dexName == swapName.uniswap_v3) {
@@ -76,10 +78,21 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             token0 = poolsJson[0].result.pairs[i].token0.id
             token1 = poolsJson[0].result.pairs[i].token1.id
         }
-        fns[i] = onchainQuery(chainId,id,token0,token1,price)
+        fns[index] = onchainQuery(chainId,id,token0,token1,price)
+        if (i>100){
+            wait.push(fns)
+            index=index-100
+        }
+        index++
     }
-    let result = await Promise.race(fns)
-    console.log("result",fns.length,result)
+    let result:any
+    for (let i=0;i<wait.length;i++){
+        let tmp = await Promise.race(fns)
+        console.log("tmp",tmp)
+        result.append(tmp) 
+    }
+    console.log("result",result)
+
     let data = [1]
     let storageData = {
         updateTime: Date.parse(new Date().toString()),
