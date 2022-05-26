@@ -82,11 +82,11 @@ export class BarterSwapDB {
         await this.connectDB().then((client) => {
             let collection = client.db(this.dbName).collection(collectionName)
             if (many) {
-                collection.updateMany(filter, updateFilter,{upsert:true})
+                collection.updateMany(filter, {$set:updateFilter},{upsert:true})
                     .catch((err) => { console.log("fail to update many data,error:", err) })
                     .finally(() => { client.close() })
             } else {
-                collection.updateOne(filter, updateFilter,{upsert:true})
+                collection.updateOne(filter, {$set:updateFilter},{upsert:true})
                     .catch((err) => { console.log("fail to update a data,error:", err) })
                     .finally(() => { client.close() })
             }
