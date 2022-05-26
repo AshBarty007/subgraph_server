@@ -79,9 +79,9 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             token1 = poolsJson[0].result.pairs[i].token1.id
         }
         fns[index] = onchainQuery(chainId,id,token0,token1,price)
-        if (i>100){
+        if (i>50){
             wait.push(fns)
-            index=index-100
+            index=index-50
         }
         index++
     }
