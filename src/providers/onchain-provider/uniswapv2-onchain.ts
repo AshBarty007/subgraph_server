@@ -41,6 +41,6 @@ export async function queryUniSwapV2OnChain(chainId: ChainId, id: string, token0
             decimals: token1.decimals
         }
     }
-    console.log("?")
+    
     return JSON.stringify(result)
 }

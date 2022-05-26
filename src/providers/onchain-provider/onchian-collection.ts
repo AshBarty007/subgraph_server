@@ -80,7 +80,6 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         }
         fns[index] = onchainQuery(chainId,id,token0,token1,price)
         if (index>=9 ||i == len-1){
-            console.log("index",index)
             wait.push(fns)
             fns = []
             index=index-10
@@ -91,7 +90,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     // let tmp =await Promise.all(fns);
     // console.log("tmp",tmp,fns.length)
     for (let i=0;i<wait.length;i++){
-        console.log("length:",i,wait[i].length,wait[i])
+        console.log("length:",i,wait[i].length)
         //let ok = wait[i]
         // await Promise.race(ok)
         // let tmp = await Promise.all(ok);
