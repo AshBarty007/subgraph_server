@@ -10,7 +10,7 @@ import { BarterSwapDB,TableName } from '../../mongodb/client'
 
 export class SushiSwapSubgraphProvider implements ISubgraphProvider{
     private client: GraphQLClient;
-    private DB = new BarterSwapDB();
+    private DB = BarterSwapDB.getInstance();
 
     constructor(    
         private chainId: ChainId,

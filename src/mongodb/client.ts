@@ -10,7 +10,7 @@ export class BarterSwapDB {
     private url:string
     private dbName:string
 
-    static instance:BarterSwapDB | null
+    static instance:BarterSwapDB 
     static getInstance() {
         if(!BarterSwapDB.instance) this.instance = new BarterSwapDB()
         return this.instance
@@ -95,3 +95,4 @@ export enum TableName {
     SimplePools = 'SimplePools',
     OnChainPools = 'OnChainPools',
   }
+
