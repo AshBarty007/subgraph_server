@@ -32,7 +32,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
                 console.log("request:",filter)
                 DB.findData(TableName.SimplePools, filter).then((ret: any) => {
                     let result = JSON.parse(ret)
-                    for (let i = dex.length-1; i>=0; i--) {
+                    for (let i = 0; i < dex.length; i++) {
                         try {
                             switch (dex[i]) {
                                 case dexName.uniswap_v3:
