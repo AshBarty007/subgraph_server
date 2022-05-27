@@ -86,7 +86,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             data.push(...cache)
             fns = []
             index=index-10
-            console.log("time ",new Date().toDateString())
+            console.log("time ",new Date().toLocaleString())
         }
         index++
     }
