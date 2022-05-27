@@ -79,10 +79,18 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             token0 = poolsJson[0].result.pairs[i].token0.id
             token1 = poolsJson[0].result.pairs[i].token1.id
         }
+try{
+    fns[index] = onchainQuery(chainId,id,token0,token1,price)
+}catch(err){
+console.log("1. error sign",err)
+}
 
-        fns[index] = onchainQuery(chainId,id,token0,token1,price)
         if (index>=9 ||i == len-1){
-            cache = await Promise.all(fns);
+            try{
+                cache = await Promise.all(fns);
+            }catch(err){
+            console.log("1. error sign",err)
+            }
             data.push(...cache)
             fns = []
             index=index-10
