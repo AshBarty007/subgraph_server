@@ -17,7 +17,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         async () => {
             price = await ethPrice()
         },
-        { retries: 2, maxTimeout: 2000 }
+        { retries: 2, maxTimeout: 2000, onRetry: (err, retry) => { console.log("fail to get eth price, error message:", err, ",retry times:", retry) }}
     )
 
     let onchainQuery = function (chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number): Promise<string> { return new Promise<string>(() => { }) }
@@ -45,7 +45,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             let poolsData = await DB.findData(TableName.SimplePools, { name: dexName })
             poolsJson = JSON.parse(poolsData)
         },
-        { retries: 2, maxTimeout: 2000, onRetry: (err, retry) => { console.log("fail to get eth price, error message:", err, ",retry times:", retry) } }
+        { retries: 2, maxTimeout: 2000, onRetry: (err, retry) => { console.log("fail to find data on database, error message:", err, ",retry times:", retry) } }
     )
 
 
@@ -81,17 +81,16 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         }
 
         fns[index] = onchainQuery(chainId, id, token0, token1, price)
-        if (index >= 49 || i == len - 1) {
-            await retry(
-                async () => {
-                    cache = await Promise.all(fns);
-                },
-                { retries: 2, maxTimeout: 2000, onRetry: (err, retry) => { console.log("fail to fetch data on chain, error message:", err, ",retry times:", retry) } }
-            )
+        if (index >= 19 || i == len - 1) {
+            try {
+                cache = await Promise.all(fns);
+            }catch(err){
+                console.log("fail to fetch data on chain, error message: ",err)
+            }
             data.push(...cache)
             fns = []
-            index = index - 50
-            console.log((i + 1) / 50, "time ", new Date().toLocaleString())
+            index = index - 20
+            console.log((i + 1) / 20, "time ", new Date().toLocaleString())
         }
         index++
     }
