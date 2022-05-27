@@ -94,7 +94,7 @@ console.log("1. error sign",err)
             data.push(...cache)
             fns = []
             index=index-10
-            console.log(len/10,"time ",new Date().toLocaleString())
+            console.log(i/10,"time ",new Date().toLocaleString())
         }
         index++
     }
