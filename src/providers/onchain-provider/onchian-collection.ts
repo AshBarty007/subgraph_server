@@ -81,16 +81,17 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         }
 
         fns[index] = onchainQuery(chainId, id, token0, token1, price)
-        if (index >= 19 || i == len - 1) {
-            try {
-                cache = await Promise.all(fns);
-            }catch(err){
-                console.log("fail to fetch data on chain, error message: ",err)
-            }
+        if (index >= 49 || i == len - 1) {
+            await retry(
+                async () => {
+                    cache = await Promise.all(fns);
+                },
+                { retries: 2, maxTimeout: 2000, onRetry: (err, retry) => { console.log("fail to fetch data on chain, error message: ", err, ",retry times:", retry) } }
+            ).catch()//Preventing abnormal exits
             data.push(...cache)
             fns = []
-            index = index - 20
-            console.log((i + 1) / 20, "time ", new Date().toLocaleString())
+            index = index - 50
+            console.log((i + 1) / 50, "time ", new Date().toLocaleString())
         }
         index++
     }
