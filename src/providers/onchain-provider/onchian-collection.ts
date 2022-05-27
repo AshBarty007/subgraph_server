@@ -4,7 +4,7 @@ import { ChainId } from '../utils/chainId'
 import { queryPancakeSwapOnChain } from './pancakeswap-onchain'
 import { queryQuickSwapOnChain } from './quickswap-onchain'
 import { querySushiSwapOnChain } from './sushiswap-onchain'
-import { queryUniSwapV2OnChain,v2number } from './uniswapv2-onchain'
+import { queryUniSwapV2OnChain } from './uniswapv2-onchain'
 import { queryUniSwapV3OnChain } from './uniswapv3-onchain'
 import { default as retry } from 'async-retry';
 
@@ -65,11 +65,11 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     }
 
     let fns: any = []
-    let cache:any[] = []
-    let data:any[] = []
+    let cache: any[] = []
+    let data: any[] = []
     let index = 0
     for (let i = 0; i < len; i++) {
-        let id:string, token0:string, token1:string
+        let id: string, token0: string, token1: string
         if (dexName == swapName.uniswap_v3) {
             id = poolsJson[0].result.pools[i].id
             token0 = poolsJson[0].result.pools[i].token0.id
@@ -79,22 +79,19 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             token0 = poolsJson[0].result.pairs[i].token0.id
             token1 = poolsJson[0].result.pairs[i].token1.id
         }
-try{
-    fns[index] = onchainQuery(chainId,id,token0,token1,price)
-}catch(err){
-console.log("1. error sign",err)
-}
 
-        if (index>=49 ||i == len-1){
-            try{
-                cache = await Promise.all(fns);
-            }catch(err){
-            console.log("2. error sign",err)
-            }
+        fns[index] = onchainQuery(chainId, id, token0, token1, price)
+        if (index >= 49 || i == len - 1) {
+            await retry(
+                async () => {
+                    cache = await Promise.all(fns);
+                },
+                { retries: 2, maxTimeout: 2000, onRetry: (err, retry) => { console.log("fail to fetch data on chain, error message:", err, ",retry times:", retry) } }
+            )
             data.push(...cache)
             fns = []
-            index=index-50
-            console.log((i+1)/50,"time ",new Date().toLocaleString())
+            index = index - 50
+            console.log((i + 1) / 50, "time ", new Date().toLocaleString())
         }
         index++
     }
@@ -105,8 +102,8 @@ console.log("1. error sign",err)
         chainId: chainId,
         result: data,
     }
-    console.log("storageData", storageData)
-    console.log("v2number",v2number)
+    console.log(storageData)
+    console.log("len",data.length)
     //await DB.deleteData(TableName.OnChainPools, { name: dexName }, true).then(()=>{DB.insertData(TableName.OnChainPools, storageData)}).catch(()=>{console.log("fail to delete data,table name",TableName.OnChainPools)})           
 }
 

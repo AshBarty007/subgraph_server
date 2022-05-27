@@ -1,10 +1,9 @@
 import { Pair, Fetcher } from '@uniswap/sdk'
 import { ChainId } from '../utils/chainId'
 import { CHAIN_RPC} from '../utils/url'
-import { providers, } from 'ethers'
-export let v2number =0
+import { providers } from 'ethers'
+
 export async function queryUniSwapV2OnChain(chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number){
-    v2number ++
     let provider = new providers.JsonRpcProvider(CHAIN_RPC[chainId]);
     const token0 = await Fetcher.fetchTokenData(Number(chainId), token0Address, provider)
     const token1 = await Fetcher.fetchTokenData(Number(chainId), token1Address, provider)
