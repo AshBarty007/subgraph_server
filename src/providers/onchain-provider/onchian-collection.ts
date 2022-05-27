@@ -85,7 +85,7 @@ try{
 console.log("1. error sign",err)
 }
 
-        if (index>=9 ||i == len-1){
+        if (index>=49 ||i == len-1){
             try{
                 cache = await Promise.all(fns);
             }catch(err){
@@ -93,8 +93,8 @@ console.log("1. error sign",err)
             }
             data.push(...cache)
             fns = []
-            index=index-10
-            console.log(i/10,"time ",new Date().toLocaleString())
+            index=index-50
+            console.log((i+1)/50,"time ",new Date().toLocaleString())
         }
         index++
     }
