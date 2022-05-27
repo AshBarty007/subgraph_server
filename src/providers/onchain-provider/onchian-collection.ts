@@ -87,7 +87,9 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
                     cache = await Promise.all(fns);
                 },
                 { retries: 2, maxTimeout: 2000, onRetry: (err, retry) => { console.log("fail to fetch data on chain, error message: ", err, ",retry times:", retry) } }
-            ).catch()//Preventing abnormal exits
+            ).catch((err)=>{
+                console.log("fail to fetch data on chain, error message: ", err)
+            })
             data.push(...cache)
             fns = []
             index = index - 50
