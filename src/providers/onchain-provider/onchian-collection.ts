@@ -65,7 +65,8 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
     }
 
     let fns: any = []
-    let wait: any = []
+    let cache:any[] = []
+    let data:any[] = []
     let index = 0
     for (let i = 0; i < len; i++) {
         let id:string, token0:string, token1:string
@@ -78,25 +79,18 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             token0 = poolsJson[0].result.pairs[i].token0.id
             token1 = poolsJson[0].result.pairs[i].token1.id
         }
+
         fns[index] = onchainQuery(chainId,id,token0,token1,price)
         if (index>=9 ||i == len-1){
-            wait.push(fns)
+            cache = await Promise.all(fns);
+            data.push(...cache)
             fns = []
             index=index-10
+            console.log("time ",new Date().toDateString())
         }
         index++
     }
-    // await Promise.race(fns)
-    // let tmp =await Promise.all(fns);
-    // console.log("tmp",tmp,fns.length)
-    for (let i=0;i<wait.length;i++){
-        console.log("length:",i,wait[i].length,wait[i])
-        await Promise.race(wait[i])
-        let tmp = await Promise.all(wait[i]);
-        console.log("tmp",tmp)
-    }
 
-    let data = [1]
     let storageData = {
         updateTime: Date.parse(new Date().toString()),
         name: dexName,

@@ -2,6 +2,7 @@
 async function test(n:Number) {
     return new Promise(function (resolve, reject) {
         setTimeout(function () {
+            console.log("n",n)
             resolve(n);
         }, 1000);
     })
@@ -31,4 +32,15 @@ async function start() {
 }
 
 
-start()
+async function run(){
+    let result
+    let ret = []
+    for(let i = 0; i < 2; i++){
+        // await Promise.race(data)
+        result = await Promise.all([test(1),test(2),test(3)]);
+        ret.push(...result)
+    }
+    console.log(result,ret)
+}
+
+run()
