@@ -4,7 +4,7 @@ import { ChainId } from '../utils/chainId'
 import { queryPancakeSwapOnChain } from './pancakeswap-onchain'
 import { queryQuickSwapOnChain } from './quickswap-onchain'
 import { querySushiSwapOnChain } from './sushiswap-onchain'
-import { queryUniSwapV2OnChain } from './uniswapv2-onchain'
+import { queryUniSwapV2OnChain,v2number } from './uniswapv2-onchain'
 import { queryUniSwapV3OnChain } from './uniswapv3-onchain'
 import { default as retry } from 'async-retry';
 
@@ -106,6 +106,7 @@ console.log("1. error sign",err)
         result: data,
     }
     console.log("storageData", storageData)
+    console.log("v2number",v2number)
     //await DB.deleteData(TableName.OnChainPools, { name: dexName }, true).then(()=>{DB.insertData(TableName.OnChainPools, storageData)}).catch(()=>{console.log("fail to delete data,table name",TableName.OnChainPools)})           
 }
 
