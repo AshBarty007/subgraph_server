@@ -89,7 +89,7 @@ console.log("1. error sign",err)
             try{
                 cache = await Promise.all(fns);
             }catch(err){
-            console.log("1. error sign",err)
+            console.log("2. error sign",err)
             }
             data.push(...cache)
             fns = []
