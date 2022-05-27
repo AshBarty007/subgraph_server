@@ -28,7 +28,8 @@ try{
     onchainPools(dexName.uniswap_v3,ChainId.POLYGON)
 }catch(err){
     console.log("fail to update OnChainPools ,error:",err)
+}finally{
+    let end = new Date().toLocaleString()
+    console.log(start)
+    console.log(end)
 }
-let end = new Date().toLocaleString()
-console.log(start)
-console.log(end)
