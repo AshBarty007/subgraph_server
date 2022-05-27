@@ -81,7 +81,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         }
 
         fns[index] = onchainQuery(chainId, id, token0, token1, price)
-        if (index >= 49 || i == len - 1) {
+        if (index >= 19 || i == len - 1) {
             await retry(
                 async () => {
                     cache = await Promise.all(fns);
@@ -92,7 +92,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             })
             data.push(...cache)
             fns = []
-            index = index - 50
+            index = index - 20
         }
         index++
     }

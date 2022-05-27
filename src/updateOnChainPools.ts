@@ -18,6 +18,7 @@ const scheduleTask = () => {
     });
 }
 
+let start = new Date().toLocaleString()
 //scheduleTask();
 try{
     onchainPools(dexName.pancakeswap,ChainId.BSC)
@@ -28,3 +29,6 @@ try{
 }catch(err){
     console.log("fail to update OnChainPools ,error:",err)
 }
+let end = new Date().toLocaleString()
+console.log(start)
+console.log(end)
