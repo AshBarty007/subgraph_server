@@ -93,7 +93,6 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             data.push(...cache)
             fns = []
             index = index - 50
-            console.log((i + 1) / 50, "time ", new Date().toLocaleString())
         }
         index++
     }
@@ -104,9 +103,5 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         chainId: chainId,
         result: data,
     }
-    console.log(storageData)
-    console.log("len",data.length)
-    //await DB.deleteData(TableName.OnChainPools, { name: dexName }, true).then(()=>{DB.insertData(TableName.OnChainPools, storageData)}).catch(()=>{console.log("fail to delete data,table name",TableName.OnChainPools)})           
+    await DB.deleteData(TableName.OnChainPools, { name: dexName }, true).then(()=>{DB.insertData(TableName.OnChainPools, storageData)}).catch(()=>{console.log("fail to delete data,table name",TableName.OnChainPools)})           
 }
-
-onchainPools(swapName.uniswap_v2, ChainId.MAINNET)

@@ -18,5 +18,13 @@ const scheduleTask = () => {
     });
 }
 
-scheduleTask();
-
+//scheduleTask();
+try{
+    onchainPools(dexName.pancakeswap,ChainId.BSC)
+    onchainPools(dexName.quickswap,ChainId.POLYGON)
+    onchainPools(dexName.sushiswap,ChainId.POLYGON)
+    onchainPools(dexName.uniswap_v2,ChainId.MAINNET)
+    onchainPools(dexName.uniswap_v3,ChainId.POLYGON)
+}catch(err){
+    console.log("fail to update OnChainPools ,error:",err)
+}
