@@ -83,3 +83,6 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
 
 server.listen(port);
 console.log(`server is running ...`)
+process.on('uncaughtException', function (err) {
+    console.log('Caught exception: ' + err);
+});
