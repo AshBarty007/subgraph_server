@@ -35,3 +35,7 @@ scheduleTask();
 process.on('uncaughtException', function (err) {
     console.log('Caught exception: ' + err);
 });
+
+process.on('unhandledRejection', (err) => {
+    console.log('unhandled exception', err);
+})

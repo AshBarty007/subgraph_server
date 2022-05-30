@@ -83,6 +83,11 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
 
 server.listen(port);
 console.log(`server is running ...`)
+
+process.on('unhandledRejection', (err) => {
+    console.log('unhandled exception', err);
+})
+
 process.on('uncaughtException', function (err) {
     console.log('Caught exception: ' + err);
 });
