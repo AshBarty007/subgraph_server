@@ -18,9 +18,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             price = await ethPrice()
         },
         { retries: 2, maxTimeout: 2000, onRetry: (err, retry) => { console.log("fail to get eth price, error message:", err, ",retry times:", retry) }}
-    ).catch((err)=>{
-        console.log("retry end! fail to get eth price, error message:",err)
-    })
+    )
 
     let onchainQuery = function (chainId: ChainId, id: string, token0Address: string, token1Address: string, price: number): Promise<string> { return new Promise<string>(() => { }) }
     switch (dexName) {
@@ -48,9 +46,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
             poolsJson = JSON.parse(poolsData)
         },
         { retries: 2, maxTimeout: 2000, onRetry: (err, retry) => { console.log("fail to find data on database, error message:", err, ",retry times:", retry) } }
-    ).catch((err)=>{
-        console.log("retry end! fail to find data on database, error message:",err)
-    })
+    )
 
 
     let len
@@ -91,8 +87,8 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
                     cache = await Promise.all(fns);
                 },
                 { retries: 2, maxTimeout: 2000, onRetry: (err, retry) => { console.log("fail to fetch data on chain, error message: ", err, ",retry times:", retry) } }
-            ).catch((err)=>{
-                console.log("retry end! fail to fetch data on chain, error message:",err)
+            ).catch(()=>{
+                //Preventing abnormal exits
             })
             data.push(...cache)
             fns = []

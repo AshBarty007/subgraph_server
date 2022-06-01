@@ -7,6 +7,7 @@ export enum LiquidityMoreThan90Percent {
   ApeSwap = 100,
   UniSwap_V2 = 550,
   UniSwap_V3 = 10,
+  Curve = 44
 }
 
 //gql needed to query graph data
@@ -99,4 +100,66 @@ export function quickQueryV3PoolGQL(first:number) {
             }
           }
 `;
+}
+
+export function queryCurvePoolGQL(first:number) {
+
+  return gql`
+  query MyQuery {
+      pools(first: ${first}, orderBy: cumulativeVolumeUSD, orderDirection: desc) {
+        address
+        assetType
+        baseApr
+        basePool
+        coinDecimals
+        coinNames
+        coins
+        creationBlock
+        creationDate
+        creationTx
+        cumulativeVolume
+        cumulativeVolumeUSD
+        id
+        isV2
+        lpToken
+        metapool
+        name
+        poolType
+        symbol
+        virtualPrice
+      }
+    }
+  `;
+
+}
+
+export function quickQueryCurvePoolGQL(first:number) {
+
+  return gql`
+  query MyQuery {
+      pools(first: ${first}, orderBy: cumulativeVolumeUSD, orderDirection: desc) {
+        address
+        assetType
+        baseApr
+        basePool
+        coinDecimals
+        coinNames
+        coins
+        creationBlock
+        creationDate
+        creationTx
+        cumulativeVolume
+        cumulativeVolumeUSD
+        id
+        isV2
+        lpToken
+        metapool
+        name
+        poolType
+        symbol
+        virtualPrice
+      }
+    }
+  `;
+
 }

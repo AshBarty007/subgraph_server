@@ -31,6 +31,11 @@ export const SUBGRAPH_URL_BY_UNISWAP_V3: { [chainId in ChainId]?: string } = {
       'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon',
   };
 
+export const SUBGRAPH_URL_BY_CURVE: { [chainId in ChainId]?: string } = {
+    [ChainId.MAINNET]:
+      'https://api.thegraph.com/subgraphs/name/convex-community/volume-mainnet',
+  };
+
   export const CHAIN_RPC:{ [chainId in ChainId]?: string } = {
     [ChainId.MAINNET]:
       'https://mainnet.infura.io/v3/8cce6b470ad44fb5a3621aa34243647f ',
