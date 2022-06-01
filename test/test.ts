@@ -1,41 +1,28 @@
-import { default as retry } from 'async-retry';
-const schedule = require('node-schedule');
 
-// setInterval(() => {
-//     let time = new Date()
-//     console.log('still running',time.toLocaleString);
-// }, 2000);
+import curve from '@curvefi/api';
 
-async function Test() {
-    await retry(
-        async (bail, number) => {
-            console.log("retry number", number)
-            //bail(new Error('Unauthorized'));
-            throw("test error")
-        },
-        { retries: 2, maxTimeout: 2000, onRetry: (err, retry) => { console.log("fail to get eth price, error message:", err, ",retry times:", retry) } }
-    )
-    .catch((err) => {
-        console.log("retry catch",err)
-        //Preventing abnormal exits
-    })
+async function main() {
+  await curve.init(
+    'JsonRpc',
+    {
+      url: 'https://mainnet.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+      privateKey:
+        'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b',
+    },
+    { chainId: 1 }
+  );
 
-    console.log("print me")
+  const tri = new curve.Pool('tricrypto2');
+  const { route, output } = await curve.getBestRouteAndOutput(
+    "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    //"0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+    "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+    '40000'
+  );
+  console.log(route, output);
 }
-schedule.scheduleJob('1 * * * * *', () => {
-    // try{
-    //     Test()
-    // }catch(err){
-    //     console.log('catch err: ' + err);
-    // }
-    throw("test error")
-})
 
-
-process.on('uncaughtException', function (err) {
-    console.log('Caught exception: ' + err);
+main().catch((error) => {
+  console.error(error);
+  process.exitCode = 1;
 });
-
-process.on('unhandledRejection', (err) => {
-    console.log('unhandled exception', err);
-})
