@@ -34,6 +34,8 @@ export const SUBGRAPH_URL_BY_UNISWAP_V3: { [chainId in ChainId]?: string } = {
 export const SUBGRAPH_URL_BY_CURVE: { [chainId in ChainId]?: string } = {
     [ChainId.MAINNET]:
       'https://api.thegraph.com/subgraphs/name/convex-community/volume-mainnet',
+      [ChainId.POLYGON]:
+      'https://api.curve.fi/api/getPools/polygon/main',
   };
 
   export const CHAIN_RPC:{ [chainId in ChainId]?: string } = {
