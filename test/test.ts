@@ -21,5 +21,5 @@ let filter = {name:"curve"}
 const DB = new BarterSwapDB();
 DB.findData(TableName.SimplePools, filter).then((ret: any) => {
   let result = JSON.parse(ret)
-  console.log(result)
+  console.log(result[0].result.pools)
 })
