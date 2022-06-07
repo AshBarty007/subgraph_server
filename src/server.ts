@@ -57,7 +57,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
                                     pools.pancakeswap = result[i].result.pairs;
                                     break;
                                 case dexName.curve:
-                                    console.log(i, result[i].name)
+                                    console.log(i, result[i],result[i].result)
                                     pools.curve = result[i].result;
                                     break;
                             }
