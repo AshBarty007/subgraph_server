@@ -2,7 +2,7 @@ import { GraphQLClient } from 'graphql-request';
 import { default as retry } from 'async-retry';
 import { ChainId } from '../utils/chainId'
 import { dexName } from '../utils/params'
-import { SUBGRAPH_URL_BY_CURVE,API_URL_BY_CURVE } from '../utils/url'
+import { SUBGRAPH_URL_BY_CURVE, API_URL_BY_CURVE } from '../utils/url'
 import { ISubgraphProvider, RawCurveSubgraphPool } from '../utils/interfaces'
 import { LiquidityMoreThan90Percent, queryCurvePoolGQL, quickQueryCurvePoolGQL } from '../utils/gql'
 import { BarterSwapDB, TableName } from '../../mongodb/client'
@@ -81,86 +81,93 @@ export class CurveSubgraphProvider implements ISubgraphProvider {
             async () => {
                 axios.get(API_URL_BY_CURVE[this.chainId])
                     .then((res: any) => {
-                        //console.log("pools",res.data.data.poolData)
                         let tmp = JSON.stringify(res.data.data.poolData)
-                        let ok = JSON.parse(tmp)
+                        const ok = JSON.parse(tmp)
                         let array = []
                         let index = 0
                         for (let key in ok) {
-                            // console.log("index",index)
-                            // console.log("coin",ok[key].coins.length)
-                            if (ok[key].coins.length == 4){
-                                array[index]= ok[key]; 
+                            if (ok[key].coins.length == 2) {
+                                array[index] = ok[key];
                             }else if (ok[key].coins.length == 3){
+                                let copyCoinsAddresses = ok[key].coinsAddresses
+                                let copyDecimals = ok[key].decimals
+                                let copyUnderlyingDecimals = ok[key].underlyingDecimals
+                                let copyCoins = ok[key].coins
+
                                 let copy1 = ok[key]
-                                copy1.coinsAddresses = [ok[key].coinsAddresses[0],ok[key].coinsAddresses[1]]
-                                copy1.decimals = [ok[key].decimals[0],ok[key].decimals[1]]
-                                copy1.underlyingDecimals = [ok[key].underlyingDecimals[0],ok[key].underlyingDecimals[1]]
-                                copy1.coins = [ok[key].coins[0],ok[key].coins[1]]
+                                copy1.coinsAddresses = [copyCoinsAddresses[0],copyCoinsAddresses[1]]
+                                copy1.decimals = [copyDecimals[0],copyDecimals[1]]
+                                copy1.underlyingDecimals = [copyUnderlyingDecimals[0],copyUnderlyingDecimals[1]]
+                                copy1.coins = [copyCoins[0],copyCoins[1]]
                                 array[index] = copy1 
                                 index++
 
                                 let copy2 = ok[key]
-                                copy2.coinsAddresses = [ok[key].coinsAddresses[0],ok[key].coinsAddresses[2]]
-                                copy2.decimals = [ok[key].decimals[0],ok[key].decimals[2]]
-                                copy2.underlyingDecimals = [ok[key].underlyingDecimals[0],ok[key].underlyingDecimals[2]]
-                                copy2.coins = [ok[key].coins[0],ok[key].coins[2]]
+                                copy2.coinsAddresses = [copyCoinsAddresses[0],copyCoinsAddresses[2]]
+                                copy2.decimals = [copyDecimals[0],copyDecimals[2]]
+                                copy2.underlyingDecimals = [copyUnderlyingDecimals[0],copyUnderlyingDecimals[2]]
+                                copy2.coins = [copyCoins[0],copyCoins[2]]
                                 array[index] = copy2 
                                 index++
 
                                 let copy3 = ok[key]
-                                copy3.coinsAddresses = [ok[key].coinsAddresses[1],ok[key].coinsAddresses[2]]
-                                copy3.decimals = [ok[key].decimals[1],ok[key].decimals[2]]
-                                copy3.underlyingDecimals = [ok[key].underlyingDecimals[1],ok[key].underlyingDecimals[2]]
-                                copy3.coins = [ok[key].coins[1],ok[key].coins[2]]
+                                copy3.coinsAddresses = [copyCoinsAddresses[1],copyCoinsAddresses[2]]
+                                copy3.decimals = [copyDecimals[1],copyDecimals[2]]
+                                copy3.underlyingDecimals = [copyUnderlyingDecimals[1],copyUnderlyingDecimals[2]]
+                                copy3.coins = [copyCoins[1],copyCoins[2]]
                                 array[index] = copy3 
                                 index++
-                            }else if (ok[key].coins.length == 2){
+                            }else if (ok[key].coins.length == 4){
+                                let copyCoinsAddresses = ok[key].coinsAddresses
+                                let copyDecimals = ok[key].decimals
+                                let copyUnderlyingDecimals = ok[key].underlyingDecimals
+                                let copyCoins = ok[key].coins
+
                                 let copy1 = ok[key]
-                                copy1.coinsAddresses = [ok[key].coinsAddresses[0],ok[key].coinsAddresses[1]]
-                                copy1.decimals = [ok[key].decimals[0],ok[key].decimals[1]]
-                                copy1.underlyingDecimals = [ok[key].underlyingDecimals[0],ok[key].underlyingDecimals[1]]
-                                copy1.coins = [ok[key].coins[0],ok[key].coins[1]]
+                                copy1.coinsAddresses = [copyCoinsAddresses[0],copyCoinsAddresses[1]]
+                                copy1.decimals = [copyDecimals[0],copyDecimals[1]]
+                                copy1.underlyingDecimals = [copyUnderlyingDecimals[0],copyUnderlyingDecimals[1]]
+                                copy1.coins = [copyCoins[0],copyCoins[1]]
                                 array[index] = copy1 
                                 index++
 
                                 let copy2 = ok[key]
-                                copy2.coinsAddresses = [ok[key].coinsAddresses[0],ok[key].coinsAddresses[2]]
-                                copy2.decimals = [ok[key].decimals[0],ok[key].decimals[2]]
-                                copy2.underlyingDecimals = [ok[key].underlyingDecimals[0],ok[key].underlyingDecimals[2]]
-                                copy2.coins = [ok[key].coins[0],ok[key].coins[2]]
+                                copy2.coinsAddresses = [copyCoinsAddresses[0],copyCoinsAddresses[2]]
+                                copy2.decimals = [copyDecimals[0],copyDecimals[2]]
+                                copy2.underlyingDecimals = [copyUnderlyingDecimals[0],copyUnderlyingDecimals[2]]
+                                copy2.coins = [copyCoins[0],copyCoins[2]]
                                 array[index] = copy2 
                                 index++
 
                                 let copy3 = ok[key]
-                                copy3.coinsAddresses = [ok[key].coinsAddresses[1],ok[key].coinsAddresses[2]]
-                                copy3.decimals = [ok[key].decimals[1],ok[key].decimals[2]]
-                                copy3.underlyingDecimals = [ok[key].underlyingDecimals[1],ok[key].underlyingDecimals[2]]
-                                copy3.coins = [ok[key].coins[1],ok[key].coins[2]]
+                                copy3.coinsAddresses = [copyCoinsAddresses[1],copyCoinsAddresses[2]]
+                                copy3.decimals = [copyDecimals[1],copyDecimals[2]]
+                                copy3.underlyingDecimals = [copyUnderlyingDecimals[1],copyUnderlyingDecimals[2]]
+                                copy3.coins = [copyCoins[1],copyCoins[2]]
                                 array[index] = copy3 
                                 index++
 
                                 let copy4 = ok[key]
-                                copy4.coinsAddresses = [ok[key].coinsAddresses[0],ok[key].coinsAddresses[3]]
-                                copy4.decimals = [ok[key].decimals[0],ok[key].decimals[3]]
-                                copy4.underlyingDecimals = [ok[key].underlyingDecimals[0],ok[key].underlyingDecimals[3]]
-                                copy4.coins = [ok[key].coins[0],ok[key].coins[3]]
+                                copy4.coinsAddresses = [copyCoinsAddresses[0],copyCoinsAddresses[3]]
+                                copy4.decimals = [copyDecimals[0],copyDecimals[3]]
+                                copy4.underlyingDecimals = [copyUnderlyingDecimals[0],copyUnderlyingDecimals[3]]
+                                copy4.coins = [copyCoins[0],copyCoins[3]]
                                 array[index] = copy4 
                                 index++
 
                                 let copy5 = ok[key]
-                                copy5.coinsAddresses = [ok[key].coinsAddresses[1],ok[key].coinsAddresses[3]]
-                                copy5.decimals = [ok[key].decimals[1],ok[key].decimals[3]]
-                                copy5.underlyingDecimals = [ok[key].underlyingDecimals[1],ok[key].underlyingDecimals[3]]
-                                copy5.coins = [ok[key].coins[1],ok[key].coins[3]]
+                                copy5.coinsAddresses = [copyCoinsAddresses[1],copyCoinsAddresses[3]]
+                                copy5.decimals = [copyDecimals[1],copyDecimals[3]]
+                                copy5.underlyingDecimals = [copyUnderlyingDecimals[1],copyUnderlyingDecimals[3]]
+                                copy5.coins = [copyCoins[1],copyCoins[3]]
                                 array[index] = copy5 
                                 index++
 
                                 let copy6 = ok[key]
-                                copy6.coinsAddresses = [ok[key].coinsAddresses[2],ok[key].coinsAddresses[3]]
-                                copy6.decimals = [ok[key].decimals[2],ok[key].decimals[3]]
-                                copy6.underlyingDecimals = [ok[key].underlyingDecimals[2],ok[key].underlyingDecimals[3]]
-                                copy6.coins = [ok[key].coins[2],ok[key].coins[3]]
+                                copy6.coinsAddresses = [copyCoinsAddresses[2],copyCoinsAddresses[3]]
+                                copy6.decimals = [copyDecimals[2],copyDecimals[3]]
+                                copy6.underlyingDecimals = [copyUnderlyingDecimals[2],copyUnderlyingDecimals[3]]
+                                copy6.coins = [copyCoins[2],copyCoins[3]]
                                 array[index] = copy6 
                                 index++
                             }
@@ -171,9 +178,9 @@ export class CurveSubgraphProvider implements ISubgraphProvider {
                             chainId: this.chainId,
                             result: array,
                         }
-                        //console.log(data.result,data.result.length)
+                        //console.log(data.result, data.result.length)
                         this.DB.deleteData(TableName.SimplePools, { name: dexName.curve }, true).then(() => { this.DB.insertData(TableName.SimplePools, data) }).catch(() => { console.log("fail to delete data,table name", TableName.SimplePools) })
-                    }).catch((err:any)=>{ console.log("cannot get data from api,err:",err) })
+                    }).catch((err: any) => { console.log("cannot get data from api,err:", err) })
             },
             {
                 retries: this.retries,
@@ -186,12 +193,3 @@ export class CurveSubgraphProvider implements ISubgraphProvider {
     }
 
 }
-
-// let ok = new CurveSubgraphProvider(ChainId.MAINNET)
-// ok.getPoolsByApi()
-
-//aave
-//ren
-//atricrypto
-//atricrypto3
-//eurtusd
