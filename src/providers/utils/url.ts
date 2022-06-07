@@ -35,7 +35,7 @@ export const SUBGRAPH_URL_BY_CURVE: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]:
     'https://api.thegraph.com/subgraphs/name/convex-community/volume-mainnet',
   [ChainId.POLYGON]:
-    'https://api.curve.fi/api/getTVLPolygon',
+    'https://api.thegraph.com/subgraphs/name/convex-community/volume-matic',
 };
 
 export const API_URL_BY_CURVE: { [chainId in ChainId]?: string } = {
