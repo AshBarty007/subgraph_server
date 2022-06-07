@@ -187,8 +187,8 @@ export class CurveSubgraphProvider implements ISubgraphProvider {
 
 }
 
-let ok = new CurveSubgraphProvider(ChainId.MAINNET)
-ok.getPoolsByApi()
+// let ok = new CurveSubgraphProvider(ChainId.MAINNET)
+// ok.getPoolsByApi()
 
 //aave
 //ren
