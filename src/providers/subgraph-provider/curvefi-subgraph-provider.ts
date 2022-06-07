@@ -81,7 +81,7 @@ export class CurveSubgraphProvider implements ISubgraphProvider {
             async () => {
                 axios.get(API_URL_BY_CURVE[this.chainId])
                     .then((res: any) => {
-                        console.log("pools",res.data.data.pools)
+                        //console.log("pools",res.data.data.pools)
                         let tmp = JSON.stringify(res.data.data.pools)
                         let ok = JSON.parse(tmp)
                         let array = []
