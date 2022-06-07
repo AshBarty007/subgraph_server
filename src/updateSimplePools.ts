@@ -24,7 +24,7 @@ const scheduleTask = () => {
             SushiSwapSubgraph.quickGetPools()
             UniSwapV2Subgraph.quickGetPools()
             UniSwapV3Subgraph.quickGetPools()
-            CurveSubgraph.quickGetPools()
+            CurveSubgraph.getPoolsByApi()
             console.log(new Date(), 'the SimplePools has updated.');
         }catch(err){
             console.log("fail to update SimplePools ,error:",err)

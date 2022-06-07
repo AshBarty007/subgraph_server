@@ -2,11 +2,12 @@ import { GraphQLClient } from 'graphql-request';
 import { default as retry } from 'async-retry';
 import { ChainId } from '../utils/chainId'
 import { dexName } from '../utils/params'
-import { SUBGRAPH_URL_BY_CURVE } from '../utils/url'
+import { SUBGRAPH_URL_BY_CURVE,API_URL_BY_CURVE } from '../utils/url'
 import { ISubgraphProvider, RawCurveSubgraphPool } from '../utils/interfaces'
 import { LiquidityMoreThan90Percent, queryCurvePoolGQL, quickQueryCurvePoolGQL } from '../utils/gql'
 import { BarterSwapDB, TableName } from '../../mongodb/client'
 
+const axios = require('axios');
 
 export class CurveSubgraphProvider implements ISubgraphProvider {
     private client: GraphQLClient;
@@ -62,8 +63,40 @@ export class CurveSubgraphProvider implements ISubgraphProvider {
                         chainId: this.chainId,
                         result: res,
                     }
-                    this.DB.deleteData(TableName.SimplePools, { name: dexName.curve }, true).then(() => { this.DB.insertData(TableName.SimplePools, data) }).catch(() => { console.log("fail to delete data,table name", TableName.SimplePools) })
+                    //this.DB.deleteData(TableName.SimplePools, { name: dexName.curve }, true).then(() => { this.DB.insertData(TableName.SimplePools, data) }).catch(() => { console.log("fail to delete data,table name", TableName.SimplePools) })
                 });
+            },
+            {
+                retries: this.retries,
+                maxTimeout: this.maxTimeout,
+                onRetry: (err, retry) => {
+                    console.log("error message:", err, ",retry times:", retry)
+                },
+            }
+        );
+    }
+
+    async getPoolsByApi() {
+        await retry(
+            async () => {
+                axios.get(API_URL_BY_CURVE[this.chainId])
+                    .then((res: any) => {
+                        let ok = JSON.parse(JSON.stringify(res.data.data.pools))
+                        let array = []
+                        let index = 0
+                        for (let key in ok) {
+                            array[index]= ok[key]; 
+                            index++;
+                        }
+                        let data = {
+                            updateTime: Date.parse(new Date().toString()),
+                            name: dexName.curve,
+                            chainId: this.chainId,
+                            result: array,
+                        }
+                        //console.log("data",data)
+                        this.DB.deleteData(TableName.SimplePools, { name: dexName.curve }, true).then(() => { this.DB.insertData(TableName.SimplePools, data) }).catch(() => { console.log("fail to delete data,table name", TableName.SimplePools) })
+                    }).catch((err:any)=>{ console.log("cannot get data from api,err:",err) })
             },
             {
                 retries: this.retries,
@@ -77,5 +110,6 @@ export class CurveSubgraphProvider implements ISubgraphProvider {
 
 }
 
-//tvl(usd) 1953997517
-//
+let ok = new CurveSubgraphProvider(ChainId.POLYGON)
+ok.getPoolsByApi()
+
