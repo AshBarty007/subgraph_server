@@ -81,12 +81,16 @@ export class CurveSubgraphProvider implements ISubgraphProvider {
             async () => {
                 axios.get(API_URL_BY_CURVE[this.chainId])
                     .then((res: any) => {
+                        //console.log(res.data.data.poolData)
                         let tmp = JSON.stringify(res.data.data.poolData)
                         const ok = JSON.parse(tmp)
                         let array = []
                         let index = 0
                         for (let key in ok) {
                             if (ok[key].coins.length == 2) {
+                                ok[key].coinsAddresses.length = 2
+                                ok[key].decimals.length = 2
+                                ok[key].underlyingDecimals.length = 2
                                 array[index] = ok[key];
                             }else if (ok[key].coins.length == 3){
                                 let copyCoinsAddresses = ok[key].coinsAddresses
@@ -178,9 +182,10 @@ export class CurveSubgraphProvider implements ISubgraphProvider {
                             chainId: this.chainId,
                             result: array,
                         }
-                        //console.log(data.result, data.result.length)
+                        //console.log(array, data.result.length)
                         this.DB.deleteData(TableName.SimplePools, { name: dexName.curve }, true).then(() => { this.DB.insertData(TableName.SimplePools, data) }).catch(() => { console.log("fail to delete data,table name", TableName.SimplePools) })
-                    }).catch((err: any) => { console.log("cannot get data from api,err:", err) })
+                    })
+                    .catch((err: any) => { console.log("cannot get data from api,err:", err) })
             },
             {
                 retries: this.retries,

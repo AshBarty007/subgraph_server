@@ -42,7 +42,7 @@ export const API_URL_BY_CURVE: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]:
     'https://api.curve.fi/api/getPools/ethereum/main',
   [ChainId.POLYGON]:
-    'https://api.curve.fi/api/getTVLPolygon',
+    'https://api.curve.fi/api/getPools/polygon/main',
 };
 
 export const CHAIN_RPC: { [chainId in ChainId]?: string } = {
