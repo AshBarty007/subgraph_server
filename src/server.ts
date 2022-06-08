@@ -15,7 +15,8 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
         sushiswap: String,
         uniswap_v2: String,
         uniswap_v3: String,
-        curve: String
+        curve: String,
+        balancer: String
     }
 
     if (ok.path != '/favicon.ico') {
@@ -62,7 +63,7 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
                                     break;
                                 case dexName.balancer:
                                     console.log(i, result[i].name)
-                                    pools.curve = result[i].result;
+                                    pools.balancer = result[i].result;
                                     break;
                             }
                         } catch (err) {
