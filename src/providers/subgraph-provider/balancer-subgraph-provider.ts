@@ -188,5 +188,3 @@ export class BalancerSubgraphProvider implements ISubgraphProvider{
         );
     }
 }
-let  a = new BalancerSubgraphProvider(ChainId.POLYGON)
-a.quickGetPools()
