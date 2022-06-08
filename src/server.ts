@@ -60,6 +60,10 @@ const server = createServer((request: IncomingMessage, response: ServerResponse)
                                     console.log(i, result[i].name)
                                     pools.curve = result[i].result;
                                     break;
+                                case dexName.balancer:
+                                    console.log(i, result[i].name)
+                                    pools.curve = result[i].result;
+                                    break;
                             }
                         } catch (err) {
                             console.log("error by returning db data,", err)

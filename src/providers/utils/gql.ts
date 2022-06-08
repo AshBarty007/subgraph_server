@@ -7,10 +7,13 @@ export enum LiquidityMoreThan90Percent {
   ApeSwap = 100,
   UniSwap_V2 = 550,
   UniSwap_V3 = 10,
-  Curve = 44
+  Curve = 44,
+  Balancer = 15
 }
 
-//gql needed to query graph data
+// gql needed to query graph data
+
+// quickswap\uniswap\pancakeswap\sushiswap
 export function queryV2PoolGQL(first:number, tokenType:string) {
 
   return gql`
@@ -102,6 +105,7 @@ export function quickQueryV3PoolGQL(first:number) {
 `;
 }
 
+// curve
 export function queryCurvePoolGQL(first:number) {
 
   return gql`
@@ -162,4 +166,33 @@ export function quickQueryCurvePoolGQL(first:number) {
     }
   `;
 
+}
+
+// balancer
+export function queryBalancerPoolGQL(first:number){
+  return gql`
+  query MyQuery {
+    pools(first: ${first}, orderDirection: desc, orderBy: totalLiquidity) {
+      id
+      name
+      symbol
+      totalLiquidity
+      tokensList
+    }
+  }
+  `
+}
+
+export function quickQueryBalancerPoolGQL(first:number){
+  return gql`
+  query MyQuery {
+    pools(first: ${first}, orderDirection: desc, orderBy: totalLiquidity) {
+      id
+      name
+      symbol
+      totalLiquidity
+      tokensList
+    }
+  }
+  `
 }

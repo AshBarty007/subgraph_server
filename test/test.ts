@@ -3,6 +3,7 @@ const axios = require('axios');
 // https://api.curve.fi/api/getPools/polygon/main
 // https://api.curve.fi/api/getPools/polygon/crypto
 // https://api.curve.fi/api/getPools/polygon/factory
+
 axios.get('https://api.curve.fi/api/getPools/polygon/main')
   .then((res:any) => {
     console.log(res.data);
@@ -17,3 +18,4 @@ axios.get('https://api.curve.fi/api/getPools/polygon/main')
   .catch((err:any) => {
     console.log(err);
   });
+  //https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-polygon-v2

@@ -26,4 +26,5 @@ export enum dexName {
     uniswap_v2 = 'uniswap_v2',
     uniswap_v3 = 'uniswap_v3',
     curve = 'curve',
+    balancer = 'balancer'
 }

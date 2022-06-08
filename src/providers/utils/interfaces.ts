@@ -101,3 +101,11 @@ export type RawCurveSubgraphPool = {
   symbol: string,
   virtualPrice: string
 };
+
+export type RawBalancerSubgraphPool = {
+  id: string;
+  name: string;
+  symbol: string;
+  totalLiquidity: string;
+  tokensList: string;
+};

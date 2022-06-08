@@ -45,6 +45,13 @@ export const API_URL_BY_CURVE: { [chainId in ChainId]?: string } = {
     'https://api.curve.fi/api/getPools/polygon/main',
 };
 
+export const SUBGRAPH_URL_BY_BALANCER: { [chainId in ChainId]?: string } = {
+  [ChainId.MAINNET]:
+    'https://thegraph.com/legacy-explorer/subgraph/balancer-labs/balancer-v2',
+  [ChainId.POLYGON]:
+    'https://api.thegraph.com/subgraphs/name/balancer-labs/balancer-polygon-v2',
+};
+
 export const CHAIN_RPC: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]:
     'https://mainnet.infura.io/v3/8cce6b470ad44fb5a3621aa34243647f',

@@ -92,6 +92,7 @@ export class CurveSubgraphProvider implements ISubgraphProvider {
                                 ok[key].decimals.length = 2
                                 ok[key].underlyingDecimals.length = 2
                                 array[index] = ok[key];
+                                index++;
                             }else if (ok[key].coins.length == 3){
                                 let copyCoinsAddresses = ok[key].coinsAddresses
                                 let copyDecimals = ok[key].decimals
