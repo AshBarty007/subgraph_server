@@ -27,13 +27,126 @@ export class BalancerSubgraphProvider implements ISubgraphProvider{
         await retry(
             async () => {
                 await this.client.request<{
-                    pairs: RawBalancerSubgraphPool[];
+                    pools: RawBalancerSubgraphPool[];
                 }>(queryBalancerPoolGQL(LiquidityMoreThan90Percent.Balancer)).then((res)=>{
+                    let tmp = JSON.stringify(res.pools)
+                    const ok = JSON.parse(tmp)
+                    let array = []
+                    let index = 0
+                    for (let key in ok) {
+                        if (ok[key].tokensList.length == 2) {
+                            array[index] = ok[key];
+                            index++;
+                        }else if (ok[key].tokensList.length == 3){
+                            let copyCoinsAddresses = ok[key].tokensList
+
+                            let copy1 = ok[key]
+                            copy1.tokensList = [copyCoinsAddresses[0],copyCoinsAddresses[1]]
+                            array[index] = copy1 
+                            index++
+
+                            let copy2 = ok[key]
+                            copy2.tokensList = [copyCoinsAddresses[0],copyCoinsAddresses[2]]
+                            array[index] = copy2 
+                            index++
+
+                            let copy3 = ok[key]
+                            copy3.tokensList = [copyCoinsAddresses[1],copyCoinsAddresses[2]]               
+                            array[index] = copy3 
+                            index++
+                        }else if (ok[key].tokensList.length == 4){
+                            let copyCoinsAddresses = ok[key].tokensList         
+
+                            let copy1 = ok[key]
+                            copy1.tokensList = [copyCoinsAddresses[0],copyCoinsAddresses[1]]
+                            array[index] = copy1 
+                            index++
+
+                            let copy2 = ok[key]
+                            copy2.tokensList = [copyCoinsAddresses[0],copyCoinsAddresses[2]]
+                            array[index] = copy2 
+                            index++
+
+                            let copy3 = ok[key]
+                            copy3.tokensList = [copyCoinsAddresses[1],copyCoinsAddresses[2]]
+                            array[index] = copy3 
+                            index++
+
+                            let copy4 = ok[key]
+                            copy4.tokensList = [copyCoinsAddresses[0],copyCoinsAddresses[3]]
+
+                            array[index] = copy4 
+                            index++
+
+                            let copy5 = ok[key]
+                            copy5.tokensList = [copyCoinsAddresses[1],copyCoinsAddresses[3]]
+                            array[index] = copy5 
+                            index++
+
+                            let copy6 = ok[key]
+                            copy6.tokensList = [copyCoinsAddresses[2],copyCoinsAddresses[3]]
+                            array[index] = copy6 
+                            index++
+                        }else if (ok[key].tokensList.length == 5){
+                            let copyCoinsAddresses = ok[key].tokensList         
+
+                            let copy1 = ok[key]
+                            copy1.tokensList = [copyCoinsAddresses[0],copyCoinsAddresses[1]]
+                            array[index] = copy1 
+                            index++
+
+                            let copy2 = ok[key]
+                            copy2.tokensList = [copyCoinsAddresses[0],copyCoinsAddresses[2]]
+                            array[index] = copy2 
+                            index++
+
+                            let copy3 = ok[key]
+                            copy3.tokensList = [copyCoinsAddresses[1],copyCoinsAddresses[2]]
+                            array[index] = copy3 
+                            index++
+
+                            let copy4 = ok[key]
+                            copy4.tokensList = [copyCoinsAddresses[0],copyCoinsAddresses[3]]
+                            array[index] = copy4 
+                            index++
+
+                            let copy5 = ok[key]
+                            copy5.tokensList = [copyCoinsAddresses[1],copyCoinsAddresses[3]]
+                            array[index] = copy5 
+                            index++
+
+                            let copy6 = ok[key]
+                            copy6.tokensList = [copyCoinsAddresses[2],copyCoinsAddresses[3]]
+                            array[index] = copy6 
+                            index++
+
+                            let copy7 = ok[key]
+                            copy7.tokensList = [copyCoinsAddresses[0],copyCoinsAddresses[4]]
+                            array[index] = copy7 
+                            index++
+
+                            let copy8 = ok[key]
+                            copy8.tokensList = [copyCoinsAddresses[1],copyCoinsAddresses[4]]
+                            array[index] = copy8 
+                            index++
+
+                            let copy9 = ok[key]
+                            copy9.tokensList = [copyCoinsAddresses[2],copyCoinsAddresses[4]]
+                            array[index] = copy9 
+                            index++
+
+                            let copy10 = ok[key]
+                            copy10.tokensList = [copyCoinsAddresses[3],copyCoinsAddresses[4]]
+                            array[index] = copy10 
+                            index++
+                        }
+                    }
+
                     let data = {
                         updateTime: Date.parse(new Date().toString()),
                         name: dexName.balancer,
                         chainId :this.chainId,
-                        result : res,
+                        result : array,
                     }
                     this.DB.deleteData(TableName.DetailedPools,{name: dexName.balancer},true).then(()=>{this.DB.insertData(TableName.DetailedPools,data)}).catch(()=>{console.log("fail to delete data,table name",TableName.DetailedPools)})                     
                 });

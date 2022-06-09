@@ -18,27 +18,27 @@ const axios = require('axios');
     await curve.init(
         'JsonRpc',
         {
-            url: 'https://api.polygonscan.com/',
+            url: 'https://polygon-mainnet.infura.io/v3/8cce6b470ad44fb5a3621aa34243647f',
             privateKey:
-                'UTYYCCKKM1J4K3BEBRSDEVWC1BFKIH5CPG',
+                'b87b1f26c7d0ffe0f65c25dbc09602e0ac9c0d14acc979b5d67439cade6cdb7b',
         },
         { chainId: 137 }
     );
-
-    // console.log('=============================================')
-    // const aave = new curve.Pool('aave');
-    // console.log(aave.symbol)
-    // console.log(aave.coins)
-    // console.log(aave.coinAddresses)
-    // console.log(aave.decimals)
-    // console.log(aave.lpToken)
-    // console.log('=============================================')
-    // const ren = new curve.Pool('ren');
-    // console.log(ren.symbol)
-    // console.log(ren.coins)
-    // console.log(ren.coinAddresses)
-    // console.log(ren.decimals)
-    // console.log(ren.lpToken)
+    console.log(curve.getPoolList());
+    console.log('=============================================')
+    const aave = new curve.Pool('aave');
+    console.log(aave.symbol)
+    console.log(aave.coins)
+    console.log(aave.coinAddresses)
+    console.log(aave.decimals)
+    console.log(aave.lpToken)
+    console.log('=============================================')
+    const ren = new curve.Pool('ren');
+    console.log(ren.symbol)
+    console.log(ren.coins)
+    console.log(ren.coinAddresses)
+    console.log(ren.decimals)
+    console.log(ren.lpToken)
     // console.log('=============================================')
     // const atricrypto = new curve.Pool('atricrypto');
     // console.log(atricrypto.symbol)
@@ -46,20 +46,20 @@ const axios = require('axios');
     // console.log(atricrypto.coinAddresses)
     // console.log(atricrypto.decimals)
     // console.log(atricrypto.lpToken)
-    // console.log('=============================================')
-    // const atricrypto3 = new curve.Pool('atricrypto3');
-    // console.log(atricrypto3.symbol)
-    // console.log(atricrypto3.coins)
-    // console.log(atricrypto3.coinAddresses)
-    // console.log(atricrypto3.decimals)
-    // console.log(atricrypto3.lpToken)
-    // console.log('=============================================')
-    // const eurtusd = new curve.Pool('eurtusd');
-    // console.log(eurtusd.symbol)
-    // console.log(eurtusd.coins)
-    // console.log(eurtusd.coinAddresses)
-    // console.log(eurtusd.decimals)
-    // console.log(eurtusd.lpToken)
+    console.log('=============================================')
+    const atricrypto3 = new curve.Pool('atricrypto3');
+    console.log(atricrypto3.symbol)
+    console.log(atricrypto3.coins)
+    console.log(atricrypto3.coinAddresses)
+    console.log(atricrypto3.decimals)
+    console.log(atricrypto3.lpToken)
+    console.log('=============================================')
+    const eurtusd = new curve.Pool('eurtusd');
+    console.log(eurtusd.symbol)
+    console.log(eurtusd.coins)
+    console.log(eurtusd.coinAddresses)
+    console.log(eurtusd.decimals)
+    console.log(eurtusd.lpToken)
 })()
 
 
