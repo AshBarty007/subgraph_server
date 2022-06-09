@@ -15,7 +15,7 @@ const QuickSwapSubgraph = new QuickSwapSubgraphProvider(ChainId.POLYGON)
 const SushiSwapSubgraph = new SushiSwapSubgraphProvider(ChainId.POLYGON)
 const UniSwapV2Subgraph = new UniSwapV2SubgraphProvider(ChainId.MAINNET)
 const UniSwapV3Subgraph = new UniSwapV3SubgraphProvider(ChainId.POLYGON)
-const CurveApi = new CurveSubgraphProvider(ChainId.MAINNET)
+const CurveApi = new CurveSubgraphProvider(ChainId.POLYGON)
 const BalancerSubgraph = new BalancerSubgraphProvider(ChainId.POLYGON)
 
 const scheduleTask = () => {
