@@ -173,11 +173,21 @@ export function queryBalancerPoolGQL(first:number){
   return gql`
   query MyQuery {
     pools(first: ${first}, orderDirection: desc, orderBy: totalLiquidity) {
+      address
       id
       name
+      poolType
+      swapEnabled
+      swapFee
+      swapsCount
       symbol
-      totalLiquidity
       tokensList
+      totalLiquidity
+      totalShares
+      totalSwapFee
+      totalSwapVolume
+      totalWeight
+      tx
     }
   }
   `

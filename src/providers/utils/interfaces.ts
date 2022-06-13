@@ -103,9 +103,19 @@ export type RawCurveSubgraphPool = {
 };
 
 export type RawBalancerSubgraphPool = {
+  address: string;
   id: string;
   name: string;
+  poolType: string;
+  swapEnabled: string;
+  swapFee: string;
+  swapsCount: string;
   symbol: string;
-  totalLiquidity: string;
   tokensList: string;
+  totalLiquidity: string;
+  totalShares: string;
+  totalSwapFee: string;
+  totalSwapVolume: string;
+  totalWeight: string;
+  tx: string;
 };

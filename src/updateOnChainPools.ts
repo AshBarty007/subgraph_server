@@ -1,3 +1,4 @@
+import { queryBalancerSwapOnChain } from './providers/onchain-provider/balancer-onchain';
 import { onchainPools } from './providers/onchain-provider/onchian-collection'
 import { ChainId } from './providers/utils/chainId'
 import { dexName } from './providers/utils/params'
@@ -11,6 +12,7 @@ const scheduleTask = () => {
             onchainPools(dexName.sushiswap,ChainId.POLYGON)
             onchainPools(dexName.uniswap_v2,ChainId.MAINNET)
             onchainPools(dexName.uniswap_v3,ChainId.POLYGON)
+            queryBalancerSwapOnChain(dexName.balancer,ChainId.POLYGON)
         }catch(err){
             console.log("fail to update OnChainPools ,error:",err)
         }

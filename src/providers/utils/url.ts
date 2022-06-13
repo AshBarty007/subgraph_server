@@ -56,7 +56,7 @@ export const CHAIN_RPC: { [chainId in ChainId]?: string } = {
   [ChainId.MAINNET]:
     'https://mainnet.infura.io/v3/8cce6b470ad44fb5a3621aa34243647f',
   [ChainId.POLYGON]:
-    'https://polygon-rpc.com/',
+    'https://polygon-mainnet.infura.io/v3/8cce6b470ad44fb5a3621aa34243647f',
   [ChainId.BSC]:
     'https://bsc-dataseed.binance.org/',
 }

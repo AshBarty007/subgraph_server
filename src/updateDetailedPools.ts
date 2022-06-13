@@ -14,7 +14,7 @@ const QuickSwapSubgraph = new QuickSwapSubgraphProvider(ChainId.POLYGON)
 const SushiSwapSubgraph = new SushiSwapSubgraphProvider(ChainId.POLYGON)
 const UniSwapV2Subgraph = new UniSwapV2SubgraphProvider(ChainId.MAINNET)
 const UniSwapV3Subgraph = new UniSwapV3SubgraphProvider(ChainId.POLYGON)
-const CurveSubgraph = new CurveSubgraphProvider(ChainId.MAINNET)
+const CurveSubgraph = new CurveSubgraphProvider(ChainId.POLYGON)
 
 const scheduleTask = () => {
     schedule.scheduleJob('30 */5 * * * *', () => {
