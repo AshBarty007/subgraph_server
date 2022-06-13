@@ -6,10 +6,17 @@ import { queryQuickSwapOnChain } from './quickswap-onchain'
 import { querySushiSwapOnChain } from './sushiswap-onchain'
 import { queryUniSwapV2OnChain } from './uniswapv2-onchain'
 import { queryUniSwapV3OnChain } from './uniswapv3-onchain'
+import { queryBalancerSwapOnChain } from './balancer-onchain'
 import { default as retry } from 'async-retry';
 
 
 export async function onchainPools(dexName: swapName, chainId: ChainId) {
+
+    if (dexName == swapName.balancer){
+        queryBalancerSwapOnChain(dexName,chainId)
+        return
+    }
+
     const DB = new BarterSwapDB();
 
     let price = 0
