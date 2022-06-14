@@ -18,6 +18,7 @@ export async function onchainPools(dexName: swapName, chainId: ChainId) {
         return
     }else if(dexName == swapName.curve){
         queryCurveOnChain(dexName,chainId)
+        return
     }
 
     const DB = new BarterSwapDB()
