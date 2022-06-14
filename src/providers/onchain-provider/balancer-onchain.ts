@@ -1,4 +1,4 @@
-import { BalancerSDK, SubgraphPoolBase, BalancerSdkConfig } from '@balancer-labs/sdk';
+import { BalancerSDK, SubgraphPoolBase } from '@balancer-labs/sdk';
 import { BarterSwapDB, TableName } from '../../mongodb/client'
 import { dexName } from '../utils/params'
 import { CHAIN_RPC } from '../utils/url'

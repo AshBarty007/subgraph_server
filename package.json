@@ -11,7 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@balancer-labs/sdk": "^0.1.12",
-    "@curvefi/api": "^1.25.1",
+    "@curvefi/api": "^2.1.0",
     "@davidwgrossman/quickswap-sdk": "^3.0.8",
     "@ethersproject/address": "^5.6.0",
     "@ethersproject/contracts": "^5.6.0",

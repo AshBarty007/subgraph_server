@@ -116,7 +116,6 @@ export function queryCurvePoolGQL(first:number) {
         baseApr
         basePool
         coinDecimals
-        coinNames
         coins
         creationBlock
         creationDate
@@ -143,25 +142,7 @@ export function quickQueryCurvePoolGQL(first:number) {
   query MyQuery {
       pools(first: ${first}, orderBy: cumulativeVolumeUSD, orderDirection: desc) {
         address
-        assetType
-        baseApr
-        basePool
-        coinDecimals
-        coinNames
         coins
-        creationBlock
-        creationDate
-        creationTx
-        cumulativeVolume
-        cumulativeVolumeUSD
-        id
-        isV2
-        lpToken
-        metapool
-        name
-        poolType
-        symbol
-        virtualPrice
       }
     }
   `;

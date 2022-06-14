@@ -1,2 +1,2 @@
-import { DictInterface, PoolDataInterface, ICurve } from "../interfaces";
-export declare function getFactoryPoolsDataFromApi(this: ICurve, isCrypto: boolean): Promise<DictInterface<PoolDataInterface>>;
+import { IDict, IPoolData, ICurve } from "../interfaces";
+export declare function getFactoryPoolsDataFromApi(this: ICurve, isCrypto: boolean): Promise<IDict<IPoolData>>;

@@ -1,4 +1,3 @@
-import { queryBalancerSwapOnChain } from './providers/onchain-provider/balancer-onchain';
 import { onchainPools } from './providers/onchain-provider/onchian-collection'
 import { ChainId } from './providers/utils/chainId'
 import { dexName } from './providers/utils/params'
