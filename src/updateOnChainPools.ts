@@ -12,6 +12,7 @@ const scheduleTask = () => {
             onchainPools(dexName.uniswap_v2,ChainId.MAINNET)
             onchainPools(dexName.uniswap_v3,ChainId.POLYGON)
             onchainPools(dexName.balancer,ChainId.POLYGON)
+            onchainPools(dexName.curve,ChainId.POLYGON)
         }catch(err){
             console.log("fail to update OnChainPools ,error:",err)
         }
