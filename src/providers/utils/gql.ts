@@ -6,7 +6,7 @@ export enum LiquidityMoreThan90Percent {
   PancakeSwap = 10,
   ApeSwap = 100,
   UniSwap_V2 = 550,
-  UniSwap_V3 = 10,
+  UniSwap_V3 = 12,
   Curve = 44,
   Balancer = 15
 }
@@ -45,7 +45,7 @@ export function queryV3PoolGQL(first:number) {
 
   return  gql`
         {
-            pools(first: ${first}, orderBy: liquidity, orderDirection: desc) {
+            pools(first: ${first}, orderBy: totalValueLockedUSD, orderDirection: desc) {
               id
               feeTier
               liquidity
