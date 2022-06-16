@@ -90,7 +90,7 @@ export function quickQueryV3PoolGQL(first:number) {
 
   return  gql`
         {
-            pools(first: ${first}, orderBy: liquidity, orderDirection: desc) {
+            pools(first: ${first}, orderBy: totalValueLockedUSD, orderDirection: desc) {
               id
               token0 {
                 id
