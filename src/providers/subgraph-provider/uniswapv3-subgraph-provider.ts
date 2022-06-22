@@ -61,7 +61,8 @@ export class UniSwapV3SubgraphProvider implements ISubgraphProvider{
                         chainId :this.chainId,
                         result : res,
                     }
-                    this.DB.deleteData(TableName.SimplePools,{name: dexName.uniswap_v3},true).then(()=>{this.DB.insertData(TableName.SimplePools,data)}).catch(()=>{console.log("fail to delete data,table name",TableName.SimplePools)})  
+                    console.log(data.result.pools)
+                    //this.DB.deleteData(TableName.SimplePools,{name: dexName.uniswap_v3},true).then(()=>{this.DB.insertData(TableName.SimplePools,data)}).catch(()=>{console.log("fail to delete data,table name",TableName.SimplePools)})  
                 });
             },      
             {
@@ -74,3 +75,6 @@ export class UniSwapV3SubgraphProvider implements ISubgraphProvider{
         );
     }
 }
+
+let data = new UniSwapV3SubgraphProvider(ChainId.POLYGON)
+data.quickGetPools()
