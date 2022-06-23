@@ -6,7 +6,7 @@ const DB = new BarterSwapDB();
 @Injectable()
 export class AppService {
 
-  async getPools(dex: any):Promise<void> {
+  async getPools(dex: string[]): Promise<void> {
     let pools = {
       pancakeswap: String,
       quickswap: String,
@@ -20,7 +20,7 @@ export class AppService {
     let filter = {
       name: { "$in": dex },
     }
-console.log('filter',filter)
+
     await DB.findData(TableName.SimplePools, filter).then((ret: any) => {
       let result = JSON.parse(ret)
       for (let i = 0; i < dex.length; i++) {

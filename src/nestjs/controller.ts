@@ -3,10 +3,11 @@ import { AppService } from './service';
 
 @Controller('get-pools')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly appService: AppService) { }
 
   @Get()
-  findAll(@Query('protocol') protocol:any): Promise<void> {
-    return this.appService.getPools(protocol);
+  findAll(@Query('protocol') protocol: string) {
+    let dex = protocol.split('/');
+    return this.appService.getPools(dex);
   }
 }
