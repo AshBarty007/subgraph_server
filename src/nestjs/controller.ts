@@ -7,7 +7,8 @@ export class AppController {
 
   @Get()
   findAll(@Query('protocol') protocol: string) {
-    let dex = protocol.split('/');
+    let dex = protocol.split(',');
+    console.log('dex',dex)
     return this.appService.getPools(dex);
   }
 }
