@@ -23,7 +23,7 @@ export class AppService {
 
     await DB.findData(TableName.SimplePools, filter).then((ret: any) => {
       let result = JSON.parse(ret)
-
+      console.log('result',ret)
       for (let i = 0; i < dex.length; i++) {
         try {
           switch (result[i].name) {
@@ -53,6 +53,7 @@ export class AppService {
           console.log("error by returning db data,", err);
         }
       }
+      console.log('pools',pools)
       return JSON.stringify(pools);
     }).catch((err) => {
       console.log('fail to fetch data, err' + err);

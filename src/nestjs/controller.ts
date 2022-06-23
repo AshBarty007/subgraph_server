@@ -10,6 +10,7 @@ export class AppController {
     let dex = protocol.split(',');
     this.appService.getPools(dex)
     .then((data)=>{
+      console.log('data',data)
       return data;
     }).catch((err)=>{
       console.log('controller error: ' + err)
