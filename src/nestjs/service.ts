@@ -20,7 +20,7 @@ export class AppService {
     let filter = {
       name: { "$in": dex },
     }
-
+    console.log('filter',filter)
     await DB.findData(TableName.SimplePools, filter).then((ret: any) => {
       let result = JSON.parse(ret)
       console.log('result',ret)
