@@ -2,9 +2,9 @@ import { BarterSwapDB, TableName } from '../mongodb/client'
 import { Injectable, Query } from '@nestjs/common';
 import { dexName } from '../providers/utils/params';
 
+const DB = new BarterSwapDB();
 @Injectable()
 export class AppService {
-  private DB = new BarterSwapDB();
 
   async getPools(dex: any):Promise<void> {
     let pools = {
@@ -21,7 +21,7 @@ export class AppService {
       name: { "$in": dex },
     }
 console.log('filter',filter)
-    await this.DB.findData(TableName.SimplePools, filter).then((ret: any) => {
+    await DB.findData(TableName.SimplePools, filter).then((ret: any) => {
       let result = JSON.parse(ret)
       for (let i = 0; i < dex.length; i++) {
         try {
