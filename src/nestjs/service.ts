@@ -20,50 +20,40 @@ export class AppService {
     let filter = {
       name: { "$in": dex },
     }
-    console.log('filter',filter)
+
     await DB.findData(TableName.SimplePools, filter).then((ret: any) => {
       let result = JSON.parse(ret)
-      console.log('result',ret)
+
       for (let i = 0; i < dex.length; i++) {
         try {
           switch (result[i].name) {
             case dexName.uniswap_v3:
-              console.log(i, result[i].name)
               pools.uniswap_v3 = result[i].result.pools;
               break;
             case dexName.uniswap_v2:
-              console.log(i, result[i].name)
               pools.uniswap_v2 = result[i].result.pairs;
               break;
             case dexName.sushiswap:
-              console.log(i, result[i].name)
               pools.sushiswap = result[i].result.pairs;
               break;
             case dexName.quickswap:
-              console.log(i, result[i].name)
               pools.quickswap = result[i].result.pairs;
               break;
             case dexName.pancakeswap:
-              console.log(i, result[i].name)
               pools.pancakeswap = result[i].result.pairs;
               break;
             case dexName.curve:
-              console.log(i, result[i].name)
               pools.curve = result[i].result;
               break;
             case dexName.balancer:
-              console.log(i, result[i].name)
               pools.balancer = result[i].result;
               break;
           }
-
-          return JSON.stringify(pools)
         } catch (err) {
           console.log("error by returning db data,", err);
-          return 'fail to fetch data, err' + err;
         }
       }
-      return pools;
+      return JSON.stringify(pools);
     }).catch((err) => {
       console.log('fail to fetch data, err' + err);
       return 'fail to fetch data, err' + err;

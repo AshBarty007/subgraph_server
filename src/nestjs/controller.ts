@@ -6,9 +6,13 @@ export class AppController {
   constructor(private readonly appService: AppService) { }
 
   @Get()
-  findAll(@Query('protocol') protocol: string) {
+  async findAll(@Query('protocol') protocol: string) {
     let dex = protocol.split(',');
-    console.log('dex',dex)
-    return this.appService.getPools(dex);
+    this.appService.getPools(dex)
+    .then((data)=>{
+      return data;
+    }).catch((err)=>{
+      console.log('controller error: ' + err)
+    });
   }
 }
