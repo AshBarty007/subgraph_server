@@ -6,14 +6,17 @@ export class AppController {
   constructor(private readonly appService: AppService) { }
 
   @Get()
-  async findAll(@Query('protocol') protocol: string) {
+  async findAll(@Query('protocol') protocol: string):Promise<string> {
     let dex = protocol.split(',');
-    this.appService.getPools(dex)
+    let returnData : string;
+    await this.appService.getPools(dex)
     .then((data)=>{
       console.log('data',data)
-      return data;
+      returnData = data;
     }).catch((err)=>{
+      returnData = 'server error'
       console.log('controller error: ' + err)
     });
+    return returnData;
   }
 }
